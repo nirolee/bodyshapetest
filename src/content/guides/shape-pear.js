@@ -8,7 +8,7 @@ export default {
   "layout": {
    "eyebrow": "Shapes · Pear",
    "h1": "Pear body shape",
-   "lead": "Pear is not one rule. On this site it is an editorial grouping for two FFIT results in which the hips lead the bust: Triangle, where the hips are at least 3.6 inches larger than the bust with a modest waist drop, and Spoon, where the hips are more than 2 inches larger, the waist is at least 7 inches under the hips, and the high hip flares. Bottom Hourglass — hips 3.6 to 10 inches over the bust with a 9-inch waist drop and no flare — is filed under hourglass by FFIT but sits on this family’s edge. The thresholds differ, and one of them needs a measurement most people have never taken.",
+   "lead": "Pear is not one rule. On this site it is an editorial grouping for two FFIT results in which the hips lead the bust: Triangle — hips at least 3.6 inches over the bust with a waist drop under 9 inches, or a waist larger than the bust and no larger than the hips — and Spoon, where the hips are more than 2 inches larger, the waist is at least 7 inches under the hips, and the high hip flares. Bottom Hourglass — hips at least 3.6 and less than 10 inches over the bust, a 9-inch waist drop and high hip ÷ waist below 1.193 — is filed under hourglass by FFIT; it is listed here because the hips lead the bust. The thresholds differ, and one of them needs a measurement most people have never taken.",
    "ctaHead": "Run it on your own numbers",
    "ctaNote": "The calculator shows the rule that fired and how far a single measurement is from changing the result. Measurements are processed in your browser and not sent to this site.",
    "updated": "2026-09-15"
@@ -45,7 +45,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "The shared feature is that the hips measure larger than the bust — but the amount differs by rule: at least 3.6 inches (9.1 cm) for Triangle’s first clause, more than 2 inches for Spoon. The rules then differ on the waist. Triangle has hips minus waist between 0 and 9 inches; its second clause, added in 2020, also covers a bust smaller than the waist with the waist no larger than the hips, regardless of the hip lead. Spoon requires hips minus waist of 7 or more and high hip ÷ waist of at least 1.193. Bottom Hourglass requires hips minus waist of 9 or more and a ratio below 1.193."
+    "s": "The shared feature is that the hips measure larger than the bust — but the amount differs by rule: at least 3.6 inches (9.1 cm) for Triangle’s first clause, more than 2 inches for Spoon. The rules then differ on the waist. Triangle’s first clause has hips minus waist between 0 and 9 inches; its second clause, added in 2020, covers a bust smaller than the waist with the waist no larger than the hips, regardless of the hip lead and without the 9-inch limit — bust 30, waist 31, hips 40 inches returns Triangle with a hips-to-waist difference of exactly 9. Spoon requires hips minus waist of 7 or more and high hip ÷ waist of at least 1.193. Bottom Hourglass requires hips minus waist of 9 or more and a ratio below 1.193."
    },
    {
     "t": "table"
@@ -56,7 +56,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "High hip is the circumference around the upper hip, below the waist and above the fullest part of the hips; this site’s convention is about 3 inches (7–8 cm) below the natural waist. It appears only in the Spoon and Bottom Hourglass rules, and it is the one FFIT measurement most people have never taken. When the first three numbers satisfy the other conditions of either rule, the calculator cannot resolve the result without it and asks. In our ANSUR II analysis (1,986 Army women, chest for bust, no high hip recorded) 34.7% of records fell into that zone — a figure about that sample under that substitution, not a general rate. Without the high hip, the result for those measurements is undetermined."
+    "s": "High hip is the circumference around the upper hip, below the waist and above the fullest part of the hips; this site’s convention is about 3 inches (7–8 cm) below the natural waist. It appears only in the Spoon and Bottom Hourglass rules, and it is the one FFIT measurement most people have never taken. When no earlier rule has matched and the first three numbers satisfy the other conditions of either rule, the calculator cannot resolve the result without it and asks. In our ANSUR II analysis (1,986 Army women, ANSUR’s chest and navel-level waist fields applied to the rules, no high hip recorded) 34.7% of records fell into that zone — a figure about that experiment, not a general rate. Without the high hip, the result for those measurements is undetermined."
    },
    {
     "t": "h2",
@@ -64,11 +64,11 @@ export default {
    },
    {
     "t": "p",
-    "s": "Rectangle requires bust and hips less than 3.6 inches apart and a waist smaller than both within the rule’s limits, and no earlier rule matching. In our ANSUR II stability analysis, the transitions between Rectangle and Triangle, and between Rectangle and the undetermined high-hip zone, were the most frequent single-measurement flips, and the bust was the measurement most often responsible — a bust measured over a padded bra or with the tape dropping at the back can move by enough to change the result."
+    "s": "Rectangle requires bust and hips less than 3.6 inches apart and a waist smaller than both within the rule’s limits, and no earlier rule matching. In our ANSUR II stability analysis, the transitions between Rectangle and Triangle, and between Rectangle and the undetermined high-hip zone, were the most frequent single-measurement flips, and under the procedure’s tie-break the bust was the measurement most often responsible."
    },
    {
     "t": "p",
-    "s": "Hourglass requires the hips to lead the bust by less than 3.6 inches with the 9- or 10-inch waist drop. Bottom Hourglass, described above, is where a pear-family body with a 9-inch waist drop and no high-hip flare is filed by FFIT."
+    "s": "Hourglass requires the hips to lead the bust by less than 3.6 inches with the 9- or 10-inch waist drop. Bottom Hourglass, described above, is where a body with hips leading the bust, a 9-inch waist drop and high hip ÷ waist below 1.193 is filed by FFIT."
    },
    {
     "t": "h2",

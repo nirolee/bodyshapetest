@@ -24,12 +24,12 @@ export default {
     [
      "Hourglass",
      "bust − hips ≤ 1; hips − bust < 3.6; and (bust − waist ≥ 9 or hips − waist ≥ 10)",
-     "Rectangle: waist condition not met (and other Rectangle conditions hold). Top hourglass: bust more than 1 inch over hips. Spoon: can match first when hips exceed bust by more than 2 with a flaring high hip"
+     "Rectangle: waist condition not met and the Rectangle conditions hold, with no earlier rule matching. Top hourglass: bust more than 1 inch (and under 10) over hips with the 9-inch drop"
     ],
     [
      "Top hourglass",
      "1 < bust − hips < 10; bust − waist ≥ 9",
-     "Inverted triangle: same bust lead without the 9-inch waist condition"
+     "Inverted triangle needs bust at least 3.6 over hips and bust − waist under 9 — a different range, not the same lead without the waist drop"
     ],
     [
      "Bottom hourglass",
@@ -49,7 +49,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "In our ANSUR II analysis (1,986 Army women, chest circumference standing in for bust), 0.6% of records met the hourglass rule. That sample is not representative and the chest substitution under-reads the bust, so the figure says only that the rule’s waist condition is a large drop."
+    "s": "In our ANSUR II analysis (1,986 Army women, applying ANSUR’s chest and navel-level waist fields to the rules), 0.6% of records met the full hourglass rule. That sample is not representative and the measurement protocols differ from this site’s, so the figure describes that experiment only."
    },
    {
     "t": "table"
@@ -68,7 +68,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "Results are decided by the full rule set in order, so a single number crossing a threshold does not by itself guarantee a particular other result. With that said: if the waist condition fails and the other Rectangle conditions hold (bust and hips less than 3.6 inches apart, waist smaller than both), the result is Rectangle. If the bust moves more than an inch ahead of the hips with the 9-inch waist drop intact, Top hourglass. If the hips move 3.6 or more ahead of the bust, the result depends on the waist and high hip: Bottom hourglass, Spoon or Triangle. And because Spoon is checked before Triangle and Rectangle, a body with hips more than 2 inches over the bust, a waist 7 or more under the hips and a flaring high hip can return Spoon even when the waist drop is just short of the hourglass threshold. The calculator reports which measurement, changed by how much, would alter your result."
+    "s": "Results are decided by the full rule set in order, so a single number crossing a threshold does not by itself guarantee a particular other result. With that said: if the waist condition fails, the Rectangle conditions hold (bust and hips less than 3.6 inches apart, waist no larger than either and within the limits) and no earlier rule matches, the result is Rectangle. If the bust moves more than an inch and less than 10 ahead of the hips with the 9-inch bust-to-waist drop intact, Top hourglass. If the hips move 3.6 or more ahead of the bust, the result depends on the waist and high hip: Bottom hourglass, Spoon or Triangle. Spoon is checked after Hourglass but before Triangle and Rectangle, so a body that misses the hourglass waist condition, has hips more than 2 inches over the bust and a waist 7 or more under the hips, and has high hip ÷ waist of 1.193 or more returns Spoon rather than Rectangle — bust 37.5, waist 30.1, hips 40, high hip 37 inches, for example. The calculator reports which measurement, changed by how much, would alter your result."
    },
    {
     "t": "h2",
@@ -111,7 +111,7 @@ export default {
    ],
    [
     "I have a small waist but the result says rectangle. Why?",
-    "Rectangle needs bust and hips less than 3.6 inches apart, a waist smaller than both by less than 9 and 10 inches respectively, and no earlier rule matching. A waist that is smaller than both but by less than the hourglass drop, with the other conditions met, returns Rectangle; the result shows how far below the cut-off you are."
+    "Rectangle needs bust and hips less than 3.6 inches apart, a waist no larger than either and smaller than the bust by less than 9 inches and than the hips by less than 10, and no earlier rule matching. A waist that is smaller than both but by less than the hourglass drop, with those conditions met, returns Rectangle; the result shows how far below the cut-off you are."
    ],
    [
     "Is hourglass the ideal shape?",

@@ -112,7 +112,7 @@ export default {
    ],
    [
     "Does spoon change the suggestions?",
-    "It adds one: Spoon results have a measured flare below the waist (high hip ÷ waist ≥ 1.193), so if you want ease there, styles that widen just below the waistband are worth trying."
+    "It adds one: a Spoon result means high hip ÷ waist is 1.193 or more — the circumference a few inches below the waist is notably larger than the waist — so if you want ease there, styles that widen just below the waistband are worth trying."
    ],
    [
     "Are these rules?",

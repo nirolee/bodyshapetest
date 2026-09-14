@@ -8,7 +8,7 @@ export default {
   "layout": {
    "eyebrow": "Shapes · Comparison",
    "h1": "Apple vs rectangle",
-   "lead": "On this site, apple is an editorial grouping for two FFIT results, Oval and Diamond; some other calculators use “apple” for Inverted Triangle. Oval requires the waist circumference to exceed the hips while remaining no larger than the bust; Diamond requires the waist to exceed both. Rectangle requires bust and hips less than 3.6 inches apart and a waist smaller than both within set limits. Because the rules are checked in order, a waist larger than the hips does not by itself guarantee Oval or Diamond. This page sets out the conditions, a worked example, and which measurement to take again.",
+   "lead": "On this site, apple is an editorial grouping for two FFIT results, Oval and Diamond; some other calculators use “apple” for Inverted Triangle. Oval requires the waist circumference to exceed the hips while remaining no larger than the bust; Diamond requires the waist to exceed both. Rectangle requires bust and hips less than 3.6 inches apart and a waist no larger than either, within set limits. Because the rules are checked in order, a waist larger than the hips does not by itself guarantee Oval or Diamond. This page sets out the conditions, a worked example, and which measurement to take again.",
    "ctaHead": "Run it on your own numbers",
    "ctaNote": "The calculator shows the rule that fired and how far a single measurement is from changing the result. Measurements are processed in your browser and not sent to this site.",
    "updated": "2026-09-15"
@@ -39,7 +39,7 @@ export default {
     [
      "Earlier rules that can match first",
      "e.g. Top hourglass: 1 < bust − hips < 10 and bust − waist ≥ 9",
-     "a waist larger than the hips can still return Top hourglass, or Triangle via its second clause"
+     "a waist larger than the hips can still return Top hourglass, which has no hips − waist condition"
     ]
    ]
   },
@@ -54,7 +54,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "Rectangle needs the waist to be no larger than either the bust or the hips: its lower bounds of zero on bust − waist and hips − waist are part of the rule. Oval and Diamond need the waist to be larger than the hips. So the immediate difference is whether the waist exceeds the hips — but only after the rules above have been checked. Top hourglass, for example, has no condition on hips − waist, so a body with a bust more than an inch over the hips, a 9-inch bust-to-waist drop and a waist slightly larger than the hips returns Top hourglass, not Oval. Triangle’s second clause (bust smaller than waist, waist no larger than hips) sits right beside this boundary as well."
+    "s": "Rectangle needs the waist to be no larger than either the bust or the hips: its lower bounds of zero on bust − waist and hips − waist are part of the rule. Oval and Diamond need the waist to be larger than the hips. So the immediate difference is whether the waist exceeds the hips — but only after the rules above have been checked. Top hourglass, for example, has no condition on hips − waist, so a body with a bust more than an inch over the hips, a 9-inch bust-to-waist drop and a waist slightly larger than the hips returns Top hourglass, not Oval. Triangle’s second clause (bust smaller than waist, waist no larger than hips) sits on the other side of this boundary: it requires hips − waist ≥ 0, so it cannot match a waist larger than the hips."
    },
    {
     "t": "table"
@@ -73,7 +73,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "The one the stability note names; near this boundary it is usually the waist. Take it at the point this site’s measuring page describes, not at the level where a waistband sits, and read it twice. If your two readings fall on either side of your hip measurement, the classification is sensitive to how you measured, and the honest summary is that waist and hips are close in circumference; the label is less informative than that fact."
+    "s": "The one the stability note names. Take it at the point this site’s measuring page describes, not at the level where a waistband sits, and read it twice. If your two readings fall on either side of your hip measurement, the classification is sensitive to how you measured, and the honest summary is that waist and hips are close in circumference; the label is less informative than that fact."
    },
    {
     "t": "h2",
@@ -81,7 +81,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "Most calculators reproduce the 2007 FFIT formulas, which have no lower bounds on the waist differences and no Oval or Diamond rule. Under those formulas a waist larger than the hips can return Rectangle, Triangle or Inverted Triangle depending on the other numbers, or match nothing. The 2020 revision this site runs adds the lower bounds and the two rules. A different result elsewhere usually reflects a different formula set or rule order, or an input close to a threshold, not a measurement error on either side."
+    "s": "Some calculators reproduce the 2007 FFIT formulas — calculator.net publishes that set — which have no lower bounds on the waist differences and no Oval or Diamond rule. Under those formulas a waist larger than the hips can return Rectangle, Triangle or Inverted Triangle depending on the other numbers, or match nothing. The 2020 revision this site runs adds the lower bounds and the two rules. A different result elsewhere can reflect a different formula set or rule order, or an input close to a threshold."
    },
    {
     "t": "h2",
@@ -106,15 +106,15 @@ export default {
    ],
    [
     "Is a waist larger than the hips always apple?",
-    "Not on this site. Top hourglass and Triangle’s second clause are checked before Oval and Diamond and can match. The calculator shows which rule fired."
+    "Not on this site. Top hourglass is checked before Oval and Diamond and has no condition on hips − waist, so it can match first. The calculator shows which rule fired."
    ],
    [
     "Why did another calculator not give me apple?",
-    "It probably runs the 2007 FFIT formulas, which have no Oval or Diamond rule and no lower bounds on the waist differences; those formulas can return Rectangle, Triangle or Inverted Triangle for a waist larger than the hips. This site runs the 2020 revision."
+    "It may run the 2007 FFIT formulas (calculator.net publishes that set), which have no Oval or Diamond rule and no lower bounds on the waist differences; those formulas can return Rectangle, Triangle or Inverted Triangle for a waist larger than the hips. This site runs the 2020 revision."
    ],
    [
     "Which measurement should I re-take?",
-    "The one the stability note names — near this boundary usually the waist. Measure at the point described on the measuring page, twice, and compare with your hip measurement."
+    "The one the stability note names. Measure at the point described on the measuring page, twice, and compare with your other measurements."
    ],
    [
     "Does the result change what I should wear?",
