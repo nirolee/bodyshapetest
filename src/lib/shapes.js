@@ -33,5 +33,5 @@ export const MALE = {
   inverted_triangle: { name: 'Inverted triangle', def: 'Chest at least 3.6 inches larger than hips, with less than 9 inches between chest and waist.' },
   rectangle:         { name: 'Rectangle',         def: 'Chest and hips within 3.6 inches, waist less than 9 inches smaller than the chest.' },
   triangle:          { name: 'Triangle',          def: 'Hips at least 3.6 inches larger than the chest.' },
-  oval:              { name: 'Oval',              def: 'Waist equal to or larger than the chest or the hips.' },
+  oval:              { name: 'Oval',              def: 'Waist larger than the hips and no larger than the bust.' },
 };

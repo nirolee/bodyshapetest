@@ -23,8 +23,8 @@ export default {
    "rows": [
     [
      "hips − bust",
-     "under 3.6 in (and bust − hips ≤ 1)",
-     "3.6 in or more (Triangle, Bottom hourglass); over 2 in for Spoon"
+     "less than 3.6 in (and bust − hips ≤ 1)",
+     "3.6 in or more for Triangle and Bottom hourglass; more than 2 in for Spoon"
     ],
     [
      "waist definition",
@@ -38,8 +38,8 @@ export default {
     ],
     [
      "the number to re-check",
-     "bust",
-     "bust"
+     "whichever the stability note names — in our sample, most often the bust",
+     "same"
     ]
    ]
   },
@@ -90,23 +90,23 @@ export default {
   "faq": [
    [
     "What is the difference between hourglass and pear?",
-    "Hips minus bust. Under 3.6 inches with a defined waist is hourglass; 3.6 or more is the pear family (triangle, spoon, or bottom hourglass, which FFIT groups with hourglass). The waist condition is similar in both."
+    "Mainly hips minus bust. Hourglass allows the hips to lead by less than 3.6 inches with a defined waist; Triangle and Bottom hourglass need 3.6 or more; Spoon needs more than 2 plus a flaring high hip and is checked first. The waist conditions differ slightly between rules."
    ],
    [
     "Can I be both?",
-    "You can sit on the boundary. Bottom hourglass and spoon are exactly that: hips 3.6 inches or more ahead of the bust with a defined waist. The calculator names which and says how far you are from plain hourglass."
+    "Results are single, but you can sit close to a threshold. The calculator names the result and says how far one measurement is from changing it."
    ],
    [
     "Which measurement matters most here?",
-    "The bust, because the boundary is bust-to-hip difference and the bust is the harder one to measure repeatably. Re-measure it over a thin bra with the tape level."
+    "The stability note tells you. In our ANSUR II analysis it was most often the bust. Re-measure it over a thin bra with the tape level."
    ],
    [
-    "Does the styling advice differ much?",
-    "The waist advice is the same. The pear side adds balancing the hip with width above, if wanted. On the line, use the waist and treat the rest as preference."
+    "Do the outfit options differ much?",
+    "The waist options are the same. The pear page adds options for hips that measure larger than the bust, if wanted. Near the threshold, take what you like from both."
    ],
    [
     "Why does the calculator ask me for a high hip?",
-    "Because on this boundary, spoon and bottom hourglass are separated only by high hip ÷ waist at 1.193."
+    "Because when the other conditions of Spoon or Bottom hourglass hold, high hip ÷ waist at 1.193 decides the result, and it cannot be resolved without it."
    ]
   ]
  }

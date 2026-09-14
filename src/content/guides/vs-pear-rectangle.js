@@ -33,13 +33,13 @@ export default {
     ],
     [
      "the number to re-check",
-     "bust",
-     "bust"
+     "whichever the stability note names — most often the bust in our sample",
+     "same"
     ],
     [
-     "how many sit near it",
-     "the largest group of any boundary in the ANSUR II test",
-     "same"
+     "in our ANSUR II analysis",
+     "Rectangle → Triangle was the second most frequent single-measurement flip (371 of 1,297)",
+     "Triangle → Rectangle: 195"
     ]
    ]
   },
@@ -90,7 +90,7 @@ export default {
   "faq": [
    [
     "What separates pear from rectangle?",
-    "Hips minus bust at 3.6 inches (9.1 cm). Under it is rectangle, at or over it is triangle, which is the FFIT name for pear."
+    "Rectangle requires bust and hips less than 3.6 inches apart; Triangle’s first clause requires the hips at least 3.6 over the bust. Spoon and the high-hip zone are checked first and can apply at smaller differences."
    ],
    [
     "Why does my result keep switching between the two?",
@@ -101,8 +101,8 @@ export default {
     "The one the stability note names — in our sample, most often the bust. Over a thin bra, tape level at the back, arms down."
    ],
    [
-    "If I am on the line, which advice applies?",
-    "Both. The pear page’s advice about the hip is still true in fact; the rectangle page’s two options are both open. The label adds nothing the tape did not already tell you."
+    "If I am near the threshold, which page applies?",
+    "Both. The pear page’s options for hips larger than the bust are still relevant in fact; the rectangle page’s options are open too. The label adds nothing the tape did not."
    ],
    [
     "Is one of the two better?",

@@ -100,7 +100,7 @@ export default {
   "faq": [
    [
     "What is the best outfit for an hourglass shape?",
-    "There is no single best. The conventional advice is that pieces which narrow at the natural waist — wrap dresses, belted coats, high-rise trousers with a tucked top — follow the shape, and that equal visual weight above and below keeps it balanced. Pieces that do not narrow at the waist give a longer line and are equally valid."
+    "There is no best. Pieces that narrow at the measured waist — wrap dresses, belted coats, high-rise trousers with a tucked top — follow the shape; pieces that do not narrow at the waist give a longer line. Both are valid; neither is required."
    ],
    [
     "Should an hourglass avoid oversized clothes?",

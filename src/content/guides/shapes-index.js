@@ -29,7 +29,7 @@ export default {
     [
      "Pear",
      "Triangle, Spoon",
-     "hips 3.6 or more over bust (Spoon: over 2, with a flaring high hip)"
+     "Triangle: hips 3.6 or more over bust with a modest waist drop, or waist over bust and not over hips; Spoon: hips over 2 above bust, waist 7 under hips, flaring high hip"
     ],
     [
      "Rectangle",
@@ -44,7 +44,7 @@ export default {
     [
      "Apple",
      "Oval, Diamond",
-     "waist larger than hips (Diamond: larger than bust too)"
+     "waist over hips; Oval: not over bust, Diamond: over bust too — checked after all other rules"
     ]
    ]
   },
