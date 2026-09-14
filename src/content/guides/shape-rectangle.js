@@ -9,7 +9,7 @@ export default { path: '/shapes/rectangle/', en: {
   ] },
   blocks: [
     { t: 'h2', s: 'What the rule says' },
-    { t: 'p', s: 'Four conditions. The absolute difference between bust and hips is under 3.6 inches (9.1 cm). Bust minus waist is between 0 and 9 inches, so the waist is not larger than the bust and not dramatically smaller. Hips minus waist is between 0 and 10 inches, the same idea for the hips. The lower bounds of zero were added in the 2020 revision; before that a waist larger than the bust or hips matched nothing.' },
+    { t: 'p', s: 'Four conditions. The absolute difference between bust and hips is under 3.6 inches (9.1 cm). Bust minus waist is between 0 and 9 inches, so the waist is not larger than the bust and not dramatically smaller. Hips minus waist is between 0 and 10 inches, the same idea for the hips. The lower bounds of zero were added in the 2020 revision; without them a waist larger than the bust or hips could be returned as Rectangle.' },
     { t: 'table' },
     { t: 'h2', s: 'Why it is the most common result' },
     { t: 'p', s: 'Because it is defined by moderate differences, which are common in measured samples. The other shapes require a gap of 3.6 inches between the ends or 9–10 inches between an end and the waist; rectangle is everything inside those gaps. In the ANSUR II sample of 1,986 women, run through the rules with the high hip unknown, 46.6% of records returned rectangle. Chest circumference under-reads the bust and pushes results toward rectangle, and the sample is Army personnel, so the figure describes that analysis rather than women in general.' },
