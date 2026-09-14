@@ -1,0 +1,113 @@
+---
+/**
+ * 女性體型計算器。規則在 src/lib/body-shape.js（FFIT 2020），這裡只管輸入、顯示與三個差異點：
+ *   1. 把觸發的規則和三個差值攤開給用戶看（公開算式，calculator.net 有、第二名沒有）
+ *   2. 標籤穩定性：最少改多少 cm 會翻成別的型——ANSUR 女性有 43.6% 在 2cm 以內
+ *   3. 腰臀比在 NHANES 成人裡的百分位（腰臀有、胸圍沒有，所以只做這一個）
+ * 高臀圍只在需要時才問：FFIT 的 Spoon / Bottom Hourglass 靠它區分，34.7% 的人會落到這一步。
+ * 全部在瀏覽器裡算，不上傳。
+ */
+export interface Props { compact?: boolean }
+const { compact = false } = Astro.props;
+---
+<div class="bsc" data-compact={compact ? '1' : '0'}>
+  <form class="bsc-form" novalidate>
+    <div class="bsc-units" role="radiogroup" aria-label="Units">
+      <label><input type="radio" name="unit" value="cm" checked /> cm</label>
+      <label><input type="radio" name="unit" value="in" /> inches</label>
+    </div>
+    <div class="bsc-grid">
+      <label>Bust <span class="muted">fullest point</span><input name="bust" type="number" inputmode="decimal" step="0.1" min="0" required /></label>
+      <label>Waist <span class="muted">narrowest point</span><input name="waist" type="number" inputmode="decimal" step="0.1" min="0" required /></label>
+      <label>Hips <span class="muted">fullest point</span><input name="hips" type="number" inputmode="decimal" step="0.1" min="0" required /></label>
+      <label class="bsc-hh" hidden>High hip <span class="muted">about 3 in / 7 cm below the waist</span><input name="highHip" type="number" inputmode="decimal" step="0.1" min="0" /></label>
+    </div>
+    <p class="bsc-hh-note muted" hidden></p>
+    <div class="btn-row"><button class="btn" type="submit">Find my shape</button><span class="muted">Nothing is uploaded. Where to measure: <a href="/how-to-measure/">how to measure</a>.</span></div>
+    <p class="bsc-err" role="alert" hidden></p>
+  </form>
+  <div class="bsc-out" hidden></div>
+</div>
+
+<script>
+  import { classifyFemale, flipDistance, percentileOf, NEEDS_HIGH_HIP, IN } from '../lib/body-shape.js';
+  import { SHAPES, GROUPS } from '../lib/shapes.js';
+  import pct from '../data/whr_percentiles.json';
+
+  const fmt = (n: number) => (Math.round(n * 10) / 10).toString();
+  const inch = (cm: number) => fmt(cm * IN);
+  const RULE_TEXT: Record<string, string> = {
+    hourglass: 'bust − hips ≤ 1 in, hips − bust < 3.6 in, and (bust − waist ≥ 9 in or hips − waist ≥ 10 in)',
+    bottom_hourglass: 'hips − bust between 3.6 and 10 in, hips − waist ≥ 9 in, high hip ÷ waist < 1.193',
+    top_hourglass: 'bust − hips between 1 and 10 in, bust − waist ≥ 9 in',
+    spoon: 'hips − bust > 2 in, hips − waist ≥ 7 in, high hip ÷ waist ≥ 1.193',
+    triangle: 'hips − bust ≥ 3.6 in, and 0 ≤ hips − waist < 9 in (or waist above bust with hips ≥ waist)',
+    inverted_triangle: 'bust − hips ≥ 3.6 in, bust − waist < 9 in, hips ≥ waist',
+    rectangle: 'bust and hips within 3.6 in, 0 ≤ bust − waist < 9 in, 0 ≤ hips − waist < 10 in',
+    diamond: 'waist larger than both bust and hips',
+    oval: 'waist larger than hips but not larger than bust',
+  };
+
+  for (const root of document.querySelectorAll<HTMLElement>('.bsc')) {
+    const form = root.querySelector('form')!, out = root.querySelector<HTMLElement>('.bsc-out')!;
+    const err = root.querySelector<HTMLElement>('.bsc-err')!, hh = root.querySelector<HTMLElement>('.bsc-hh')!, hhNote = root.querySelector<HTMLElement>('.bsc-hh-note')!;
+    const unit = () => (form.querySelector<HTMLInputElement>('input[name=unit]:checked')!.value);
+    const read = (name: string) => { const v = parseFloat((form.elements.namedItem(name) as HTMLInputElement).value); return isFinite(v) && v > 0 ? (unit() === 'in' ? v / IN : v) : null; };
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault(); err.hidden = true; out.hidden = true;
+      const bust = read('bust'), waist = read('waist'), hips = read('hips'), highHip = hh.hidden ? null : read('highHip');
+      if (bust === null || waist === null || hips === null) { err.textContent = 'Please fill in bust, waist and hips.'; err.hidden = false; return; }
+      for (const [k, v] of Object.entries({ bust, waist, hips })) if (v < 45 || v > 220) { err.textContent = `${k} of ${fmt(unit() === 'in' ? v * IN : v)} ${unit()} is outside the range of measured adults — check the number and the unit.`; err.hidden = false; return; }
+      const input = { bust, waist, hips, highHip };
+      const shape = classifyFemale(input);
+      if (shape === NEEDS_HIGH_HIP) {
+        hh.hidden = false; hhNote.hidden = false;
+        hhNote.textContent = 'Your hips are clearly wider than your bust and your waist is well defined. Under the FFIT rules that is either Spoon or Bottom Hourglass, and the one measurement that separates them is the high hip — the circumference about 7 cm (3 in) below your waist. Add it and press the button again.';
+        hh.querySelector('input')!.focus(); return;
+      }
+      const meta = SHAPES[shape], group = GROUPS[meta.group];
+      const flip = flipDistance(input);
+      const whr = waist / hips, p = percentileOf(whr, pct.whr.female);
+      const dIn = (a: number, b: number) => `${inch(a - b)} in (${fmt(a - b)} cm)`;
+      const aka = meta.aka.length ? ` Also called: ${meta.aka.join(', ')}.` : '';
+      const stable = flip ? (flip.cm <= 2
+        ? `<strong>Near a boundary.</strong> If your ${flip.measure} were ${flip.cm} cm ${flip.direction > 0 ? 'larger' : 'smaller'}, the label would read <em>${SHAPES[flip.to]?.name ?? flip.to}</em>. That is within the error of a tape measure, so measure your ${flip.measure} once more before relying on the label.`
+        : `<strong>Stable.</strong> The nearest other label is <em>${SHAPES[flip.to]?.name ?? flip.to}</em>, and your ${flip.measure} would have to be ${flip.cm} cm ${flip.direction > 0 ? 'larger' : 'smaller'} to get there.`)
+        : '<strong>Stable.</strong> No single measurement change of up to 15 cm moves you to another label.';
+      out.innerHTML = `
+        <div class="card">
+          <span class="eyebrow">Your shape under the FFIT rules</span>
+          <h3 style="margin-top:6px">${meta.name}${group.name !== meta.name ? ` <span class="muted">— ${group.name} family</span>` : ''}</h3>
+          <p>${meta.def}${aka}</p>
+          <div class="formula">
+            <h4>The numbers the rule used</h4>
+            <code>bust − hips = ${dIn(bust, hips)}<br>bust − waist = ${dIn(bust, waist)}<br>hips − waist = ${dIn(hips, waist)}${highHip ? `<br>high hip ÷ waist = ${fmt(highHip / waist * 1000) / 1000}` : ''}</code>
+            <p class="muted">Rule that fired: ${RULE_TEXT[shape]}. Rules are the FFIT set as revised in 2020; see <a href="/methodology/">how the classification works</a>.</p>
+          </div>
+          <h4>How stable is this label?</h4>
+          <p>${stable}</p>
+          <h4>Waist-to-hip ratio</h4>
+          <p>${whr.toFixed(2)} — higher than about ${p}% of ${pct.n.female.toLocaleString()} adult women measured in NHANES (2017–2023). This is a proportion, not a health score. <a href="/waist-to-hip-ratio/">More on this ratio</a>.</p>
+          <p class="btn-row"><a class="btn" href="/shapes/${meta.slug}/">What ${group.name.toLowerCase()} means</a><a class="btn plain" href="/shapes/${meta.slug}/outfits/">What tends to suit it</a></p>
+        </div>`;
+      out.hidden = false; out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  }
+</script>
+
+<style is:global>
+  .bsc-units { display: flex; gap: 18px; margin-bottom: 14px; font-size: 14px; }
+  .bsc-units label { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
+  .bsc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px 18px; }
+  .bsc-grid label { display: flex; flex-direction: column; gap: 4px; font-weight: 600; font-size: 14px; }
+  .bsc-grid label .muted { font-weight: 400; font-size: 12.5px; }
+  .bsc-grid input { font: inherit; font-size: 17px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--ink); width: 100%; }
+  .bsc-grid input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .bsc .btn-row { margin-top: 16px; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .bsc-err { color: #b3261e; margin-top: 10px; font-size: 14px; }
+  .bsc-hh-note { margin-top: 12px; max-width: 64ch; }
+  .bsc-out { margin-top: 22px; }
+  .bsc-out h4 { margin-top: 18px; }
+  .bsc-out .formula code { display: block; white-space: pre-wrap; line-height: 1.7; }
+</style>

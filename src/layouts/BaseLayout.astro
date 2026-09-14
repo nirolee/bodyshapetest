@@ -1,0 +1,116 @@
+---
+import Analytics from '../components/Analytics.astro';
+import { SITE_URL, SUPPORT_EMAIL } from '../lib/site-config';
+import { UI, LANGS, ROOT_LANG, LOCALE, LANG_NAME, OG_LOCALE, altPath, localePath, langFromPath, type Lang } from '../i18n';
+import '../styles/global.css';
+
+export interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogImage?: string;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  noindex?: boolean;
+  /** 頁面自己排分區（band）時設 true；預設把 slot 包進一個 prose 版心 */
+  bleed?: boolean;
+  lang?: Lang;
+}
+const here = Astro.url.pathname;
+const {
+  title, description, canonical, ogImage = '/og-default.png', jsonLd,
+  noindex = false, bleed = false, lang = langFromPath(here),
+} = Astro.props;
+const t = UI[lang];
+const canonicalUrl = canonical ?? new URL(here, SITE_URL).toString();
+const ogImageUrl = new URL(ogImage, SITE_URL).toString();
+const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+// 每個語言互指；x-default 給英文，因為它服務的語言範圍最廣。
+// 依 LANGS 產生，加語言不用再改這裡。
+const alt = altPath(here);
+const alternates = LANGS.map((l) => [LOCALE[l], new URL(alt[l], SITE_URL).toString()] as const);
+const hrefEn = new URL(alt.en, SITE_URL).toString();
+// 語言選單：列出「除了當前語言以外」的全部語言。兩種語言時看起來就是一顆切換鈕，
+// 三種以上自動變成一排——加語言不用再改版面。
+// （原本是單顆按鈕 + 「其餘語言切回根語言」的保守規則，加日文後那個規則會讓
+//   繁中頁的按鈕指向日文，語意不對，所以在這裡一併換掉。）
+const otherLangs = LANGS.filter((l) => l !== lang);
+---
+<!DOCTYPE html>
+<html lang={LOCALE[lang]}>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonicalUrl} />
+  {!noindex && alternates.map(([code, href]) => <link rel="alternate" hreflang={code} href={href} />)}
+  {!noindex && <link rel="alternate" hreflang="x-default" href={hrefEn} />}
+  {noindex && <meta name="robots" content="noindex, follow" />}
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:image" content={ogImageUrl} />
+  <meta property="og:locale" content={OG_LOCALE[lang]} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImageUrl} />
+  <meta name="theme-color" content="#141417" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="sitemap" href="/sitemap-index.xml" />
+  {/* 標題字自託管（不走 Google Fonts）：整站零外部請求，照片不上傳的說法在 DevTools 裡驗得過。
+      拉丁與中日韓分成兩個 unicode-range，英文頁只會下載小的那個。 */}
+  <link rel="preload" href="/fonts/noto-serif-lat-500.woff2" as="font" type="font/woff2" crossorigin />
+  {jsonLdArray.map((obj) => (
+    <script type="application/ld+json" set:html={JSON.stringify(obj)} />
+  ))}
+  <Analytics />
+</head>
+<body>
+  <header class="site">
+    <div class="in">
+      <a class="brand" href={localePath(lang, '/')}>{t.siteName}<i>.</i></a>
+      <nav>
+        {t.nav.map(([href, label]) => {
+          const to = localePath(lang, href);
+          return <a href={to} aria-current={here === to ? 'page' : undefined}>{label}</a>;
+        })}
+        {otherLangs.map((l) => (
+          <a class="lang" href={alt[l]} hreflang={LOCALE[l]} aria-label={t.switchLabel}>{LANG_NAME[l]}</a>
+        ))}
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    {bleed ? <slot /> : <div class="band tight"><div class="wrap prose"><slot /></div></div>}
+  </main>
+
+  <footer class="site">
+    <div class="in">
+      <div class="cols">
+        <div>
+          <span class="brand">{t.siteName}</span>
+          <p style="max-width:36ch">{t.footer.blurb}</p>
+        </div>
+        <div>
+          <h4>{t.footer.toolsHead}</h4>
+          <ul>{t.footer.tools.map(([href, label]) => <li><a href={localePath(lang, href)}>{label}</a></li>)}</ul>
+        </div>
+        <div>
+          <h4>{t.footer.aboutHead}</h4>
+          <ul>{t.footer.about.map(([href, label]) => <li><a href={localePath(lang, href)}>{label}</a></li>)}
+            <li>{t.footer.support}: <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="fine">
+        <span>© {new Date().getFullYear()} {t.siteName}</span>
+        <span>{t.footer.disclaimer}</span>
+        {otherLangs.map((l) => <a href={alt[l]} hreflang={LOCALE[l]}>{LANG_NAME[l]}</a>)}
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

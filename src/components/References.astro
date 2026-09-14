@@ -1,0 +1,36 @@
+---
+/**
+ * 頁尾的參考文獻區塊。給 GuideLayout 與 ToolPage 共用。
+ * refs 為空就整節不渲染——寧可沒有，也不要掛一節空的。
+ */
+import { UI, type Lang } from '../i18n';
+export interface Props { lang: Lang; refs: any[] }
+const { lang, refs } = Astro.props;
+const R = UI[lang].refs;
+---
+{refs.length > 0 && (
+  <section class="band">
+    <div class="wrap prose">
+      <h2>{R.head}</h2>
+      <p class="muted" style="max-width:64ch">{R.intro}</p>
+      <ol class="reflist">
+        {refs.map((r) => (
+          <li>
+            <a href={r.url} target="_blank" rel="noopener nofollow">{r.authors} ({r.year}). {r.title}</a>
+            <span class="venue">{r.venue} · {r.id}</span>
+            <span class="note">{r.note[lang]}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+)}
+
+<style is:global>
+  .reflist { list-style: decimal; padding-left: 22px; margin-top: 16px; }
+  .reflist li { margin: 0 0 18px; font-size: 14px; line-height: 1.65; }
+  .reflist a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--line); }
+  .reflist a:hover { border-bottom-color: var(--accent); }
+  .reflist .venue { display: block; font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); margin-top: 3px; }
+  .reflist .note { display: block; color: var(--ink-2); margin-top: 6px; max-width: 68ch; }
+</style>

@@ -1,0 +1,19 @@
+---
+/** 指南／知識頁的動態路由。每個 src/content/guides/<key>.js 匯出 { path, en: {...} }，path 決定 URL。 */
+import GuideLayout from '../../components/GuideLayout.astro';
+import GuideBlocks from '../../components/GuideBlocks.astro';
+const mods = import.meta.glob('../../content/guides/*.js', { eager: true });
+const all = Object.values(mods).map((m: any) => m.default).filter((d: any) => d && d.path && d.en);
+export function getStaticPaths() {
+  const mods = import.meta.glob('../../content/guides/*.js', { eager: true });
+  return Object.values(mods).map((m: any) => m.default).filter((d: any) => d && d.path && d.en)
+    .map((d: any) => ({ params: { path: d.path.replace(/^\/|\/$/g, '') } }));
+}
+const { path } = Astro.params;
+const d = all.find((x: any) => x.path.replace(/^\/|\/$/g, '') === path)!.en;
+---
+<GuideLayout lang="en" title={d.meta.title} description={d.meta.description}
+  eyebrow={d.layout.eyebrow} h1={d.layout.h1} lead={d.layout.lead}
+  faq={d.faq} ctaHead={d.layout.ctaHead} ctaNote={d.layout.ctaNote} updated={d.layout.updated}>
+  <GuideBlocks blocks={d.blocks} tableKey={null} tableData={d.tableData ?? null} lang="en" />
+</GuideLayout>

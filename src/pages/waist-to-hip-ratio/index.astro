@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RatioCalculator from '../../components/RatioCalculator.astro';
+import References from '../../components/References.astro';
+import { refsFor } from '../../lib/references.js';
+import pct from '../../data/whr_percentiles.json';
+const title = 'Waist-to-Hip Ratio Calculator with Percentiles from 11,119 Measured Adults';
+const description = 'Divide your waist by your hips and see where the ratio sits among adults measured in NHANES 2017–2023 — 5,890 women and 5,229 men — as a percentile, not a verdict. Free, nothing uploaded.';
+const faq: [string, string][] = [
+  ['How is waist-to-hip ratio calculated?', 'Waist circumference divided by hip circumference, both in the same unit. A waist of 80 cm and hips of 100 cm give 0.80.'],
+  ['What is a normal waist-to-hip ratio?', `In the NHANES adults this page compares against, the median is ${pct.whr.female[49].toFixed(2)} for women and ${pct.whr.male[49].toFixed(2)} for men, with the middle half of women between ${pct.whr.female[24].toFixed(2)} and ${pct.whr.female[74].toFixed(2)}. Those are descriptions of a measured sample, not thresholds.`],
+  ['Is this a health test?', 'No. Waist-to-hip ratio is used in some health research, but this page reports only where your ratio sits among measured adults and makes no health claim. A percentile is not a diagnosis.'],
+  ['Where do the percentiles come from?', 'Two NHANES cycles (2017–2018 and August 2021–August 2023), adults 18 and over with both measurements recorded: 5,890 women and 5,229 men. The figures are unweighted, so they describe the examined sample rather than the US population exactly.'],
+  ['How does this relate to body shape?', 'Hips minus waist is one of the differences the FFIT shape rules use, so a low ratio tends to go with a defined waist (hourglass family) and a ratio above 1.0 with the apple family (waist wider than hips). The shape calculator uses the bust as well, which this page does not.'],
+];
+const jsonLd = [{ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) }];
+const rowsF = [10, 25, 50, 75, 90].map((q) => [`${q}th`, pct.whr.female[q - 1].toFixed(2), pct.whr.male[q - 1].toFixed(2)]);
+---
+<BaseLayout title={title} description={description} jsonLd={jsonLd} lang="en" bleed>
+  <section class="band dark tight"><div class="wrap prose"><span class="eyebrow">Free · Nothing uploaded</span><h1>Waist-to-hip ratio calculator</h1><p class="lead" style="margin-top:14px">Waist divided by hips, placed against the same ratio for {(pct.n.female + pct.n.male).toLocaleString()} adults measured by trained staff in a US national health survey. You get a percentile, which is a position, not a grade.</p></div></section>
+  <section class="band"><div class="wrap"><RatioCalculator mode="whr" /></div></section>
+  <section class="band warm"><div class="wrap prose">
+    <h2>What the measured adults look like</h2>
+    <table class="gt"><thead><tr><th>Percentile</th><th>Women (n = {pct.n.female.toLocaleString()})</th><th>Men (n = {pct.n.male.toLocaleString()})</th></tr></thead><tbody>{rowsF.map(([p, f, m]) => <tr><td class="k">{p}</td><td>{f}</td><td>{m}</td></tr>)}</tbody></table>
+    <p class="muted">NHANES 2017–2018 and Aug 2021–Aug 2023, adults 18+, unweighted. The distribution is wide: half of all measured women fall between the 25th and 75th percentiles above, a range of about {(pct.whr.female[74] - pct.whr.female[24]).toFixed(2)}.</p>
+    <p>The ratio is one of the two differences the <a href="/">body shape calculator</a> uses (the other involves the bust). It is also the number the <a href="/how-to-measure/">measuring page</a> is most concerned about, because the waist changes with breath and tape tension more than any other circumference.</p>
+  </div></section>
+  <References lang="en" refs={refsFor('/waist-to-hip-ratio/')} />
+  <section class="band"><div class="wrap prose"><span class="eyebrow">FAQ</span><h2>Questions people ask</h2><div class="faq" style="margin-top:22px">{faq.map(([q, a]) => <details><summary>{q}</summary><p>{a}</p></details>)}</div></div></section>
+</BaseLayout>

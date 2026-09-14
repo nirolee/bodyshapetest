@@ -1,0 +1,31 @@
+---
+/**
+ * 指南頁的「一眼看完」決策表。
+ *
+ * 為什麼要它：競品的眼鏡指南在詳述之前先放一張「Frame | Best for | Why」的表，讀者五秒就能
+ * 選好再往下讀細節；我們 12 篇指南一個表格都沒有，同樣的資訊要讀完八段才選得出來。
+ * 表放在原則之後、詳述之前——先給結論，再給理由，和報告那邊的口徑一致。
+ *
+ * 表格在窄螢幕會橫向捲動（外層 overflow-x），不擠壓文字。
+ */
+export interface Props { head: string; cols: [string, string, string]; rows: [string, string, string][] }
+const { head, cols, rows } = Astro.props;
+---
+<h2>{head}</h2>
+<div class="gt-wrap">
+  <table class="gt">
+    <thead><tr>{cols.map((c) => <th>{c}</th>)}</tr></thead>
+    <tbody>
+      {rows.map(([a, b, c]) => <tr><td class="k">{a}</td><td>{b}</td><td>{c}</td></tr>)}
+    </tbody>
+  </table>
+</div>
+
+<style is:global>
+  .gt-wrap { overflow-x: auto; margin: 16px 0 26px; -webkit-overflow-scrolling: touch; }
+  .gt { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 14px; background: var(--paper); }
+  .gt th, .gt td { border: 1px solid var(--line); padding: 9px 12px; text-align: left; vertical-align: top; line-height: 1.6; }
+  .gt th { background: #f2efea; font-size: 12px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; white-space: nowrap; }
+  .gt td.k { font-weight: 600; white-space: nowrap; }
+  .gt tbody tr:nth-child(even) { background: #faf9f6; }
+</style>

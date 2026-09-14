@@ -1,0 +1,11 @@
+node_modules/
+# 不帶斜線的那條：worktree 裡把 node_modules 做成軟連結時，
+# 只寫 node_modules/ 匹配不到軟連結，會被 git add -A 收進版本庫。
+node_modules
+dist/
+.astro/
+.wrangler/
+.dev.vars
+*.log
+.DS_Store
+.secrets/

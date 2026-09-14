@@ -1,0 +1,35 @@
+export default { path: '/shapes/rectangle/', en: {
+  meta: { title: 'Rectangle Body Shape: The Rule, the Boundaries and Why It Is the Most Common Result', description: 'A rectangle under the FFIT rules has bust and hips within 3.6 inches and a waist less than 9 inches below the bust and 10 below the hips. Why most measured bodies land here, which boundaries are closest, and what the label does and does not say.' },
+  layout: { eyebrow: 'Shapes · Rectangle', h1: 'Rectangle body shape', lead: 'Rectangle is the shape the rules return when nothing is far from anything else: bust and hips within 3.6 inches of each other, and a waist that is smaller than both but by less than 9 inches from the bust and 10 from the hips. It is the most common result the calculator gives, and the one most often sitting close to a boundary. Here is the rule, the neighbours, and what “rectangle” does not mean.', ctaHead: 'See how far you are from the next shape', ctaNote: 'Rectangle results are the most likely to be within 2 cm of another label; the calculator tells you which measurement decides it.', updated: '2026-09-15' },
+  tableData: { head: 'Rectangle and its four neighbours', cols: ['Boundary', 'Crossing it means', 'The number to watch'], rows: [
+    ['hips − bust reaches 3.6 in', 'Triangle (pear)', 'bust, hips'],
+    ['bust − hips reaches 3.6 in', 'Inverted triangle', 'bust, hips'],
+    ['bust − waist reaches 9 in or hips − waist reaches 10 in', 'Hourglass', 'waist'],
+    ['waist exceeds hips (and bust)', 'Oval (or Diamond)', 'waist'],
+  ] },
+  blocks: [
+    { t: 'h2', s: 'What the rule says' },
+    { t: 'p', s: 'Four conditions. The absolute difference between bust and hips is under 3.6 inches (9.1 cm). Bust minus waist is between 0 and 9 inches, so the waist is not larger than the bust and not dramatically smaller. Hips minus waist is between 0 and 10 inches, the same idea for the hips. The lower bounds of zero were added in the 2020 revision; before that a waist larger than the bust or hips matched nothing.' },
+    { t: 'table' },
+    { t: 'h2', s: 'Why it is the most common result' },
+    { t: 'p', s: 'Because it is the shape of moderate differences, and moderate differences are common. The other shapes require a gap of 3.6 inches between the ends or 9–10 inches between an end and the waist; rectangle is everything inside those gaps. In the ANSUR II sample of 1,986 women, run through the rules with the high hip unknown, 46.6% came out rectangle — and the share would be lower with bust rather than chest measurements, since chest circumference under-reads the bust and pushes results toward rectangle. That caveat cuts both ways: it also means many people who read rectangle are one careful bust measurement away from hourglass or pear.' },
+    { t: 'h2', s: 'Living near four boundaries' },
+    { t: 'p', s: 'Rectangle touches more shapes than any other: pear and inverted triangle at 3.6 inches of bust–hip difference, hourglass at the 9- and 10-inch waist cut-offs, and oval where the waist overtakes the hips. That makes it the label most likely to be within 2 cm of a different one. When the calculator reports rectangle with a stability note, the note is the more useful half of the result: it says which single measurement, changed by how much, would produce a different label, and that is usually the bust.' },
+    { t: 'h2', s: 'Names' },
+    { t: 'p', s: 'Banana, straight, athletic and H-shape all refer to this relationship. Athletic is the one to be careful with: it implies muscle, which the rules do not measure. A rectangle is a set of three circumferences within a narrow range of one another, whatever produces them.' },
+    { t: 'h2', s: 'What the label does not mean' },
+    { t: 'p', s: 'It does not mean flat, shapeless or “no waist”. It means the waist is smaller than bust and hips by less than the rule’s cut-off. Many rectangle results have a visibly smaller waist; the rule simply asks for a larger drop than most bodies have. The styling page describes what tends to add the appearance of a waist if that is wanted, and equally what suits leaving the line as it is.' },
+    { t: 'ul', items: [
+      'Styling direction: <a href="/shapes/rectangle/outfits/">rectangle outfits</a>',
+      'On the boundary: <a href="/pear-vs-rectangle/">pear vs rectangle</a> · <a href="/apple-vs-rectangle/">apple vs rectangle</a>',
+      'Why 2 cm matters: <a href="/how-to-measure/">how to measure</a>',
+    ] },
+  ],
+  faq: [
+    ['What measurements make a rectangle?', 'Bust and hips within 3.6 inches of each other, waist between 0 and 9 inches smaller than the bust, and between 0 and 10 inches smaller than the hips. All from the FFIT rules, in inches.'],
+    ['Does rectangle mean I have no waist?', 'No. It means the waist is smaller than bust and hips by less than 9 and 10 inches respectively. A waist 6 inches smaller than the bust is clearly a waist; it is just not enough for the hourglass rule.'],
+    ['Why is rectangle so common?', 'Because it is defined by moderate differences, and most bodies have moderate differences. Every other shape needs a gap of at least 3.6 inches between bust and hips or 9–10 inches to the waist.'],
+    ['Which measurement should I re-check if I am near a boundary?', 'The calculator names it. Most often it is the bust, since the pear and inverted-triangle boundaries both depend on bust minus hips at 3.6 inches.'],
+    ['Is rectangle the same as athletic?', 'The two words are used for the same measurement pattern, but athletic implies muscle, which the rules do not measure. Rectangle is the neutral term.'],
+  ],
+} };

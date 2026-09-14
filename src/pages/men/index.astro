@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RatioCalculator from '../../components/RatioCalculator.astro';
+import GuideTable from '../../components/GuideTable.astro';
+import { MALE } from '../../lib/shapes.js';
+const title = 'Men’s Body Type Calculator — Chest, Waist and Hips, Rules Shown';
+const description = 'Enter chest, waist and hips and get one of five men’s body types — trapezoid, inverted triangle, rectangle, triangle, oval — with the cut-offs printed, how close you sit to the next type, and your waist-to-hip percentile among 5,229 measured men.';
+const faq: [string, string][] = [
+  ['Which measurements do I need?', 'Chest at the fullest point with arms down, waist at the narrowest point (or at the navel if there is no narrowest point), and hips at the fullest point. Tape level, snug not tight, over thin clothing or none.'],
+  ['Where do the men’s rules come from?', 'There is no published men’s equivalent of the women’s FFIT system. This site uses the five shapes most styling guides use and borrows FFIT’s cut-offs — 3.6 inches for a clear difference between chest and hips, 9 inches for a defined waist — so that the rules are explicit and consistent. They are this site’s convention, not a standard.'],
+  ['What is a trapezoid body type?', 'Chest wider than the hips with a defined waist: chest minus waist of 9 inches or more, or chest at least 3.6 inches over hips together with a defined waist. It is the shape most men’s tailoring is cut for.'],
+  ['Is oval the same as overweight?', 'No. Oval means the waist measures at least as much as the chest or the hips. It is a relationship between three circumferences and says nothing about weight or health.'],
+  ['Why does the result mention a boundary?', 'Because every rule is a cut-off, and if one of your measurements sits within 2 cm of one, a tape pulled slightly differently would give another label. The note tells you which measurement to re-take.'],
+];
+const jsonLd = [{ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) }];
+const rows = Object.values(MALE).map((m) => [m.name, m.def, '']);
+---
+<BaseLayout title={title} description={description} jsonLd={jsonLd} lang="en" bleed>
+  <section class="band dark tight"><div class="wrap prose"><span class="eyebrow">Free · Nothing uploaded · Rules in the open</span><h1>Men’s body type calculator</h1><p class="lead" style="margin-top:14px">Chest, waist and hips, three explicit cut-offs, and the same two extras as the women’s calculator: how far you are from the next type, and where your waist-to-hip ratio sits among 5,229 men measured in a national health survey.</p></div></section>
+  <section class="band"><div class="wrap"><RatioCalculator mode="men" /></div></section>
+  <section class="band warm"><div class="wrap prose">
+    <h2>The five types and the rule for each</h2>
+    <GuideTable head="Men’s body types (this site’s rules, inches)" cols={['Type', 'Rule', '']} rows={rows} />
+    <p>Rules are checked in this order: oval first (waist at or above chest or hips), then chest-leads-hips by 3.6 inches (trapezoid if the waist is 9 inches under the chest, otherwise inverted triangle), then hips-lead-chest by 3.6 inches (triangle), then the rest (trapezoid with a defined waist, rectangle without). There is no published men’s standard behind these; the cut-offs are borrowed from the women’s FFIT rules so that they are explicit and consistent, and the <a href="/methodology/">methodology page</a> says so.</p>
+    <p><a href="/how-to-measure/">Where each measurement is taken</a> · <a href="/">Women’s body shape calculator</a></p>
+  </div></section>
+  <section class="band"><div class="wrap prose"><span class="eyebrow">FAQ</span><h2>Questions people ask</h2><div class="faq" style="margin-top:22px">{faq.map(([q, a]) => <details><summary>{q}</summary><p>{a}</p></details>)}</div></div></section>
+</BaseLayout>

@@ -1,0 +1,2 @@
+# www → apex，301
+https://www.bodyshapetest.org/* https://bodyshapetest.org/:splat 301

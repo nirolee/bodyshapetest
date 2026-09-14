@@ -1,0 +1,45 @@
+---
+/**
+ * 404。
+ *
+ * Cloudflare Pages 對站上任何一個不存在的路徑都送同一份 /404.html，沒辦法照路徑前綴
+ * 分語言。所以兩種語言都先渲染出來，再用一小段行內腳本按 location.pathname 決定顯示哪一邊
+ * ——繁中使用者點到壞連結時，不該掉進一個全英文的頁面。
+ *
+ * 腳本放在 body 裡且同步執行，切換發生在首次繪製之前，不會閃一下英文。
+ * 沒有 JS 的情況下英文那份仍然看得到（noscript 的降級就是現狀）。
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+const meta = { title: 'Page not found', description: 'This URL does not exist. Head back to the face rating test.' };
+---
+<BaseLayout title={meta.title} description={meta.description} lang="en" noindex={true}>
+  <div id="nf-en">
+    <h1>Page not found</h1>
+    <p class="lead">That URL does not exist on this site.</p>
+    <p>
+      <a class="btn primary" href="/">Back to the face rating test</a>
+      <a class="btn" href="/guides/">Guides</a>
+      <a class="btn" href="/zh/">繁體中文</a>
+    </p>
+  </div>
+
+  <div id="nf-zh" hidden>
+    <h1>找不到這個頁面</h1>
+    <p class="lead">這個網址在站上不存在，可能是連結過期或打錯了。</p>
+    <p>
+      <a class="btn primary" href="/zh/">回顏值測試</a>
+      <a class="btn" href="/zh/guides/">看指南</a>
+      <a class="btn" href="/">English</a>
+    </p>
+  </div>
+
+  <script is:inline>
+    // 路徑在 /zh/ 底下就換成繁中那一份，順便把 <html lang> 改掉（螢幕閱讀器與翻譯工具都看它）
+    if (location.pathname.indexOf('/zh/') === 0) {
+      document.documentElement.lang = 'zh-Hant';
+      document.getElementById('nf-en').hidden = true;
+      document.getElementById('nf-zh').hidden = false;
+      document.title = '找不到這個頁面 | AI 臉部分析';
+    }
+  </script>
+</BaseLayout>

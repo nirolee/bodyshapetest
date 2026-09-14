@@ -1,0 +1,74 @@
+---
+/**
+ * 指南頁骨架：深色抬頭 → 文章（slot）→ FAQ（含 FAQPage schema）→ 工具 CTA + 內嵌掃描器。
+ * 臉型×髮型 / 臉型×眼鏡 這類 spoke 頁共用。掃描器放文末不放文首——這是給人讀的文章，
+ * 不是工具頁；讀完想驗證自己是不是這個臉型，工具就在下面。
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BodyCalculator from './BodyCalculator.astro';
+import { UI, type Lang } from '../i18n';
+import References from './References.astro';
+import { refsFor } from '../lib/references.js';
+
+export interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  eyebrow: string;
+  h1: string;
+  lead: string;
+  faq: [string, string][];
+  /** 文末 CTA：按鈕文字與說明 */
+  ctaHead: string;
+  ctaNote: string;
+  updated: string;
+  /** 額外 JSON-LD（Article 之外） */
+  extraJsonLd?: Record<string, unknown>[];
+}
+const { lang, title, description, eyebrow, h1, lead, faq, ctaHead, ctaNote, updated, extraJsonLd = [] } = Astro.props;
+const t = UI[lang];
+// 參考文獻按路徑查表（去掉 /zh 前綴，兩個語言共用同一份書目），頁面不必逐個傳參
+const refs = refsFor(Astro.url.pathname);
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'Article', headline: title, description, inLanguage: 'en', datePublished: updated, dateModified: updated, author: { '@type': 'Organization', name: 'Body Shape Test' } },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: 'en', mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) },
+  ...extraJsonLd,
+];
+---
+<BaseLayout title={title} description={description} jsonLd={jsonLd} lang={lang} bleed>
+  <section class="band dark tight">
+    <div class="wrap prose">
+      <span class="eyebrow">{eyebrow}</span>
+      <h1>{h1}</h1>
+      <p class="lead" style="margin-top:14px">{lead}</p>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap prose">
+      <slot />
+    </div>
+  </section>
+
+  <References lang={lang} refs={refs} />
+
+  <section class="band warm">
+    <div class="wrap prose">
+      <span class="eyebrow">{t.faqHead.eyebrow}</span>
+      <h2>{t.faqHead.h2}</h2>
+      <div class="faq" style="margin-top:22px">
+        {faq.map(([q, a]) => <details><summary>{q}</summary><p>{a}</p></details>)}
+      </div>
+      <p class="article-meta" style="margin-top:22px">Updated {updated}</p>
+    </div>
+  </section>
+
+  <section class="band dark">
+    <div class="wrap">
+      <span class="eyebrow">Free · Nothing uploaded</span>
+      <h2>{ctaHead}</h2>
+      <p class="lead" style="margin-top:12px;max-width:62ch">{ctaNote}</p>
+      <div style="margin-top:26px"><BodyCalculator compact /></div>
+    </div>
+  </section>
+</BaseLayout>

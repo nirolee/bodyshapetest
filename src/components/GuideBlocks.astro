@@ -1,0 +1,32 @@
+---
+/**
+ * 把 src/content/guides/<slug>.js 里的 blocks 数据渲染成正文。
+ *
+ * 为什么不直接写在页面里：18 篇指南 × N 种语言，如果每种语言一个 .astro 文件，
+ * 加到 6 种语言就是 108 个文件，改一句 FAQ 要动 6 处。内容进数据层之后，
+ * 页面文件永远是 1 个，加语言＝在数据文件里加一个 key。
+ *
+ * 文本字段允许内嵌 <b>/<a>/<em>，所以用 set:html；数据全部来自本仓库自己的内容文件，
+ * 不接受外部输入。
+ */
+import GuideTable from './GuideTable.astro';
+import { tableFor } from '../lib/guide-tables.js';
+
+export interface Props { blocks: any[]; tableKey: string | null; tableData?: any; lang: string }
+const { blocks, tableKey, tableData = null, lang } = Astro.props;
+// 多数页面的表格来自 guide-tables.js 查表；少数页面自带页内表格字面量
+const table = tableData ?? (tableKey ? tableFor(tableKey, lang) : null);
+---
+{blocks.map((b) => {
+  if (b.t === 'h2') return <h2 set:html={b.s} />;
+  if (b.t === 'p') return <p set:html={b.s} />;
+  if (b.t === 'ul') return <ul>{b.items.map((it: string) => <li set:html={it} />)}</ul>;
+  if (b.t === 'card') return (
+    <div class="card">
+      {b.items.map((it: string[]) => <><h3 set:html={it[0]} />{it.slice(1).map((p) => <p set:html={p} />)}</>)}
+    </div>
+  );
+  if (b.t === 'html') return <div class="figure" set:html={b.s} />;
+  if (b.t === 'table') return table ? <GuideTable head={table.head} cols={table.cols} rows={table.rows} /> : null;
+  return null;
+})}

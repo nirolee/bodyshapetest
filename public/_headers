@@ -1,0 +1,8 @@
+# pages.dev 子域不要被收錄（正式域名是 bodyshapetest.org）；專案建好後把 PROJECT 換成真實子域
+https://bodyshapetest.pages.dev/*
+  X-Robots-Tag: noindex
+https://*.bodyshapetest.pages.dev/*
+  X-Robots-Tag: noindex
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin

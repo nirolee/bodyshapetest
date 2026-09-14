@@ -1,0 +1,36 @@
+export default { path: '/shapes/hourglass/', en: {
+  meta: { title: 'Hourglass Body Shape: The Rule, the Three Variants, and the Boundaries', description: 'What makes a body hourglass under the FFIT rules — bust and hips within an inch, waist 9 or 10 inches smaller — plus top and bottom hourglass, how close the pear and rectangle boundaries sit, and what the label does not mean.' },
+  layout: { eyebrow: 'Shapes · Hourglass', h1: 'Hourglass body shape', lead: 'An hourglass, under the rules this site runs, is a body whose bust and hips are within about an inch of each other and whose waist is at least 9 inches smaller than the bust or 10 inches smaller than the hips. Two related shapes, top hourglass and bottom hourglass, keep the defined waist but let one end be larger. Here is what each rule says in numbers, where the neighbouring shapes begin, and why the label is rarer than magazines suggest.', ctaHead: 'Check the numbers on your own measurements', ctaNote: 'The calculator shows the rule that fired and how far you sit from pear or rectangle. Nothing is uploaded.', updated: '2026-09-15' },
+  tableData: { head: 'The hourglass family', cols: ['Shape', 'Rule (inches)', 'Nearest neighbours'], rows: [
+    ['Hourglass', 'bust − hips ≤ 1; hips − bust < 3.6; and bust − waist ≥ 9 or hips − waist ≥ 10', 'Rectangle (waist less defined), Triangle (hips pull ahead), Top hourglass (bust pulls ahead)'],
+    ['Top hourglass', '1 < bust − hips < 10; bust − waist ≥ 9', 'Hourglass, Inverted triangle (waist less defined)'],
+    ['Bottom hourglass', '3.6 ≤ hips − bust < 10; hips − waist ≥ 9; high hip ÷ waist < 1.193', 'Spoon (high hip flares), Triangle (waist less defined)'],
+  ] },
+  blocks: [
+    { t: 'h2', s: 'What the rule actually says' },
+    { t: 'p', s: 'Three conditions, all in inches. Bust minus hips is 1 or less, so the bust is not clearly larger than the hips. Hips minus bust is under 3.6, so the hips are not clearly larger than the bust. And the waist is defined: at least 9 inches (22.9 cm) smaller than the bust, or at least 10 inches (25.4 cm) smaller than the hips. The first two conditions say the ends match; the third says the middle is much narrower than either.' },
+    { t: 'p', s: 'That third condition is the demanding one. A 9-inch difference between bust and waist is a large drop, and it is why hourglass is far less common as a measured category than as a description people give themselves. In the Army women’s sample used to test this site’s rules, well under 1% met the strict hourglass rule, though that sample is not representative and measures chest rather than bust.' },
+    { t: 'table' },
+    { t: 'h2', s: 'Top and bottom hourglass' },
+    { t: 'p', s: 'Both keep the defined waist and relax one end. Top hourglass allows the bust to exceed the hips by more than an inch and up to 10, provided bust minus waist is still 9 or more. Bottom hourglass allows the hips to exceed the bust by 3.6 inches or more, provided hips minus waist is 9 or more — and it needs one more measurement, the high hip, because the same three numbers with a high hip that flares out (high hip ÷ waist ≥ 1.193) are called Spoon instead. This is the reason the calculator sometimes asks for a fourth number.' },
+    { t: 'h2', s: 'Where the neighbours begin' },
+    { t: 'p', s: 'Rectangle is the closest neighbour for most hourglass results, and the boundary is the waist. If bust minus waist falls below 9 inches and hips minus waist below 10, the same bust and hips read as rectangle. That can be a change of a centimetre or two in the waist measurement, which is within the range a tape and a breath can produce, so the calculator flags it. Triangle begins when hips minus bust reaches 3.6 inches without the waist definition that would make it bottom hourglass. Top hourglass begins the moment the bust exceeds the hips by more than an inch.' },
+    { t: 'h2', s: 'Common names and the confusion around them' },
+    { t: 'p', s: 'Hourglass is the one shape whose common name and FFIT name agree. What varies is how loosely the word is used. In everyday use it means any body with a visibly smaller waist; under the rule it means a specific relationship in inches. If you have been called hourglass and the calculator says rectangle, the likeliest reason is that your waist is smaller than your bust and hips, but by less than the 9- or 10-inch cut-off the rule requires.' },
+    { t: 'h2', s: 'What the label does not mean' },
+    { t: 'p', s: 'It does not describe height, weight, bone structure or how weight is carried front to back; it describes three circumferences. It is not a ranking: FFIT was built for apparel sizing, and hourglass is one category among nine, not the target the others fall short of. The styling page for this family describes what tends to suit a defined waist, not what an hourglass is supposed to look like.' },
+    { t: 'ul', items: [
+      'Styling direction for a defined waist: <a href="/shapes/hourglass/outfits/">hourglass outfits</a>',
+      'On the boundary with pear: <a href="/hourglass-vs-pear/">hourglass vs pear</a>',
+      'Where each measurement is taken, and why 2 cm matters: <a href="/how-to-measure/">how to measure</a>',
+      'The full rule set and its source: <a href="/methodology/">methodology</a>',
+    ] },
+  ],
+  faq: [
+    ['What measurements make an hourglass?', 'Bust and hips within about an inch of each other in either direction (bust − hips ≤ 1 and hips − bust < 3.6), with a waist at least 9 inches smaller than the bust or 10 inches smaller than the hips. All figures are from the FFIT rules and are in inches; the calculator converts from centimetres.'],
+    ['What is the difference between hourglass and top hourglass?', 'In a top hourglass the bust is more than 1 inch larger than the hips (and less than 10), while the waist is still at least 9 inches smaller than the bust. In a plain hourglass the bust is within an inch of the hips.'],
+    ['Why did the calculator ask me for a high hip measurement?', 'Because your hips are clearly larger than your bust and your waist is well defined, which puts you in either Bottom Hourglass or Spoon. The only thing that separates those two under the rules is high hip divided by waist, with 1.193 as the line.'],
+    ['I have a small waist but the result says rectangle. Why?', 'The rule needs a large drop: 9 inches from bust to waist or 10 from hips to waist. A waist that is smaller than both, but by less than that, reads as rectangle. The calculator will show how far below the cut-off you are.'],
+    ['Is hourglass the ideal shape?', 'No. It is one of nine categories in a system built to size clothing. Nothing in the rules ranks the shapes, and this site does not either.'],
+  ],
+} };

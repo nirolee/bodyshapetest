@@ -1,0 +1,53 @@
+---
+/** mode="men"：男性五型（本站規則，見 body-shape.js classifyMale）。mode="whr"：腰臀比 + NHANES 百分位（男女）。 */
+export interface Props { mode: 'men' | 'whr' }
+const { mode } = Astro.props;
+---
+<div class="bsc rc" data-mode={mode}>
+  <form class="bsc-form" novalidate>
+    <div class="bsc-units" role="radiogroup" aria-label="Units"><label><input type="radio" name="unit" value="cm" checked /> cm</label><label><input type="radio" name="unit" value="in" /> inches</label></div>
+    {mode === 'whr' && <div class="bsc-units" role="radiogroup" aria-label="Sex"><label><input type="radio" name="sex" value="female" checked /> Compare with women</label><label><input type="radio" name="sex" value="male" /> Compare with men</label></div>}
+    <div class="bsc-grid">
+      {mode === 'men' && <label>Chest <span class="muted">fullest point, arms down</span><input name="chest" type="number" inputmode="decimal" step="0.1" min="0" required /></label>}
+      <label>Waist <span class="muted">narrowest point</span><input name="waist" type="number" inputmode="decimal" step="0.1" min="0" required /></label>
+      <label>Hips <span class="muted">fullest point</span><input name="hips" type="number" inputmode="decimal" step="0.1" min="0" required /></label>
+    </div>
+    <div class="btn-row"><button class="btn" type="submit">{mode === 'men' ? 'Find my body type' : 'Calculate my ratio'}</button><span class="muted">Nothing is uploaded.</span></div>
+    <p class="bsc-err" role="alert" hidden></p>
+  </form>
+  <div class="bsc-out" hidden></div>
+</div>
+<script>
+  import { classifyMale, flipDistance, percentileOf, IN } from '../lib/body-shape.js';
+  import { MALE } from '../lib/shapes.js';
+  import pct from '../data/whr_percentiles.json';
+  const fmt = (n: number) => (Math.round(n * 10) / 10).toString(), inch = (cm: number) => fmt(cm * IN);
+  for (const root of document.querySelectorAll<HTMLElement>('.rc')) {
+    const mode = root.dataset.mode, form = root.querySelector('form')!, out = root.querySelector<HTMLElement>('.bsc-out')!, err = root.querySelector<HTMLElement>('.bsc-err')!;
+    const unit = () => form.querySelector<HTMLInputElement>('input[name=unit]:checked')!.value;
+    const read = (n: string) => { const el = form.elements.namedItem(n) as HTMLInputElement | null; if (!el) return null; const v = parseFloat(el.value); return isFinite(v) && v > 0 ? (unit() === 'in' ? v / IN : v) : null; };
+    form.addEventListener('submit', (e) => {
+      e.preventDefault(); err.hidden = true; out.hidden = true;
+      const waist = read('waist'), hips = read('hips'), chest = read('chest');
+      if (waist === null || hips === null || (mode === 'men' && chest === null)) { err.textContent = 'Please fill in every field.'; err.hidden = false; return; }
+      for (const v of [waist, hips, chest ?? 100]) if (v < 45 || v > 220) { err.textContent = 'One measurement is outside the range of measured adults — check the number and the unit.'; err.hidden = false; return; }
+      const whr = waist / hips;
+      if (mode === 'men') {
+        const input = { chest: chest!, waist, hips }, shape = classifyMale(input), meta = MALE[shape], flip = flipDistance(input, classifyMale as any);
+        const p = percentileOf(whr, pct.whr.male);
+        const stable = flip ? (flip.cm <= 2 ? `<strong>Near a boundary.</strong> If your ${flip.measure} were ${flip.cm} cm ${flip.direction > 0 ? 'larger' : 'smaller'} the label would read <em>${MALE[flip.to]?.name ?? flip.to}</em> — within tape-measure error, so re-measure the ${flip.measure}.` : `<strong>Stable.</strong> The nearest other label is <em>${MALE[flip.to]?.name ?? flip.to}</em>, ${flip.cm} cm away on the ${flip.measure}.`) : '<strong>Stable.</strong>';
+        out.innerHTML = `<div class="card"><span class="eyebrow">Your body type under this site’s rules</span><h3 style="margin-top:6px">${meta.name}</h3><p>${meta.def}</p>
+          <div class="formula"><h4>The numbers</h4><code>chest − hips = ${inch(chest! - hips)} in (${fmt(chest! - hips)} cm)<br>chest − waist = ${inch(chest! - waist)} in (${fmt(chest! - waist)} cm)<br>waist ÷ hips = ${whr.toFixed(2)}</code><p class="muted">Cut-offs: 3.6 in for a clear chest–hip difference, 9 in for a defined waist, borrowed from FFIT. These are this site’s rules, not a published standard — see <a href="/methodology/">methodology</a>.</p></div>
+          <h4>How stable is this label?</h4><p>${stable}</p>
+          <h4>Waist-to-hip ratio</h4><p>${whr.toFixed(2)} — higher than about ${p}% of ${pct.n.male.toLocaleString()} adult men measured in NHANES. A proportion, not a health score.</p></div>`;
+      } else {
+        const sex = form.querySelector<HTMLInputElement>('input[name=sex]:checked')!.value as 'female' | 'male';
+        const p = percentileOf(whr, pct.whr[sex]), wp = percentileOf(waist, pct.waist_cm[sex]), hp = percentileOf(hips, pct.hip_cm[sex]);
+        out.innerHTML = `<div class="card"><span class="eyebrow">Waist-to-hip ratio</span><h3 style="margin-top:6px">${whr.toFixed(2)}</h3>
+          <p>Waist ${fmt(waist)} cm ÷ hips ${fmt(hips)} cm. Among ${pct.n[sex].toLocaleString()} adult ${sex === 'female' ? 'women' : 'men'} measured in NHANES 2017–2023, this ratio is higher than about <strong>${p}%</strong>. Your waist alone is higher than about ${wp}% and your hips than about ${hp}%.</p>
+          <p class="muted">The sample median is ${pct.whr[sex][49].toFixed(2)}. Percentiles are unweighted and describe the examined sample, not the population exactly. This is a proportion between two circumferences; it is not a diagnosis, and this site makes no health claim from it.</p></div>`;
+      }
+      out.hidden = false; out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  }
+</script>
