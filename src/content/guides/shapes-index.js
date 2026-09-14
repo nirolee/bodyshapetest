@@ -24,7 +24,7 @@ export default {
     [
      "Hourglass",
      "Hourglass, Top hourglass, Bottom hourglass",
-     "bust and hips close; waist 9 under bust or 10 under hips"
+     "bust at most 1 over hips, hips less than 3.6 over bust, waist 9 under bust or 10 under hips; Bottom hourglass has hips leading the bust and is listed beside pear as well"
     ],
     [
      "Pear",
@@ -90,7 +90,7 @@ export default {
    ],
    [
     "Which shape is most common?",
-    "Rectangle, in our ANSUR II analysis: 46.6% of records, with chest standing in for bust, which under-reads it. That sample is Army personnel."
+    "Rectangle, in our ANSUR II analysis: 46.6% of records, applying ANSUR’s chest and navel-level waist fields to the rules. That sample is Army personnel and the protocols differ from this site’s."
    ],
    [
     "What is the rarest?",
