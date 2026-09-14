@@ -14,7 +14,7 @@ export const NEEDS_HIGH_HIP = 'needs_high_hip';
 
 export const FEMALE_SHAPES = ['hourglass', 'bottom_hourglass', 'top_hourglass', 'spoon', 'triangle', 'inverted_triangle', 'rectangle', 'diamond', 'oval'];
 
-export function classifyFemale({ bust, waist, hips, highHip = null }) {
+export function classifyFemale({ bust, waist, hips, highHip = null }, opts = {}) {
   const b = bust * IN, w = waist * IN, h = hips * IN;
   const r = highHip ? (highHip * IN) / w : null;
   if (b - h <= 1 && h - b < 3.6 && (b - w >= 9 || h - w >= 10)) return 'hourglass';
@@ -27,16 +27,20 @@ export function classifyFemale({ bust, waist, hips, highHip = null }) {
     if (r === null) return NEEDS_HIGH_HIP;
     if (r >= 1.193) return 'spoon';
   }
-  if (h - b >= 3.6 && ((h - w >= 0 && h - w < 9) || (b - w < 0 && h - w >= 0))) return 'triangle';
+  // Triangle：2020 版第二分支是獨立的（論文 Table 10 #3：臀胸差 2.95 吋、胸<腰、腰≤臀 → Triangle），不是嵌在 3.6 吋條件下。
+  if ((h - b >= 3.6 && h - w >= 0 && h - w < 9) || (b - w < 0 && h - w >= 0)) return 'triangle';
   if (b - h >= 3.6 && b - w < 9 && h - w >= 0) return 'inverted_triangle';
   if (h - b < 3.6 && b - h < 3.6 && b - w >= 0 && b - w < 9 && h - w >= 0 && h - w < 10) return 'rectangle';
   if (h - w < 0 && b - w < 0) return 'diamond';
   if (h - w < 0 && b - w >= 0) return 'oval';
-  // 2020 規則沒覆蓋到的極端體型（例如胸比臀大 10 吋以上）：按最近的鄰型兜底，並標記 fallback。
+  if (opts.strict) return null;
+  // 沒有規則命中（例如胸比臀大 10 吋整、或差距超過 10 吋）：本站兜底——按最像的鄰型回傳，介面要標示這是兜底。
   if (b - h >= 10) return b - w >= 9 ? 'top_hourglass' : 'inverted_triangle';
   if (h - b >= 10) return h - w >= 9 ? 'bottom_hourglass' : 'triangle';
   return 'rectangle';
 }
+/** 是否走了兜底（九條規則都沒命中）。 */
+export function isFallback(input) { return classifyFemale(input, { strict: true }) === null; }
 
 /**
  * 男性五型：本站自己的規則，沒有 FFIT 那樣的期刊出處，頁面上必須寫明「這是本站的判法」。

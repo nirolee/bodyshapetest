@@ -2,97 +2,97 @@ export default {
  "path": "/shapes/pear/outfits/",
  "en": {
   "meta": {
-   "title": "Pear Body Shape Outfits: What Tends to Balance Wider Hips, and What to Do If You Would Rather Not",
-   "description": "Styling conventions for a pear (triangle or spoon) — hips at least 3.6 inches wider than the bust — organised by what draws the eye up, what adds width at the shoulder, and what suits leaving the proportion as it is."
+   "title": "Pear Body Shape Outfits: Options by the Effect You Want",
+   "description": "Outfit options for pear results (Triangle, Spoon, Bottom hourglass) — hips measuring larger than the bust — organised by the effect you may want to try: drawing attention upward, emphasising the waist, or keeping the proportion as it is. Options, not rules."
   },
   "layout": {
    "eyebrow": "Outfits · Pear",
-   "h1": "What tends to suit a pear shape",
-   "lead": "A pear, under the rules, has hips at least 3.6 inches wider than the bust. That single fact drives nearly all the conventional advice: either add visual weight above to match the width below, or let the proportion stand and choose pieces that sit well on wider hips. Both are covered here, with the reasoning tied back to the measurements.",
-   "ctaHead": "Not sure which family you are?",
-   "ctaNote": "The calculator gives the FFIT shape, the rule that fired and how close you are to the next one. Nothing is uploaded.",
+   "h1": "Outfit options for a pear shape",
+   "lead": "A pear result means the hips measure larger in circumference than the bust, by an amount that depends on which FFIT rule matched. That is all the measurement says: circumference, not front-view width, and nothing about shoulders, which the rules do not measure. The suggestions below are styling options organised by the effect you may want to try. None is required, none is derived from the measurements, and leaving the proportion exactly as it is is a complete answer.",
+   "ctaHead": "Run it on your own numbers",
+   "ctaNote": "The calculator shows the rule that fired and how far a single measurement is from changing the result. Measurements are processed in your browser and not sent to this site.",
    "updated": "2026-09-15"
   },
   "tableData": {
    "head": "At a glance",
    "cols": [
-    "If you want",
-    "Cuts that tend to do it",
-    "Why, in terms of the measurements"
+    "If you want to try",
+    "Options often suggested",
+    "What the option does"
    ],
    "rows": [
     [
-     "to bring the eye up",
-     "boat and wide necklines, structured or slightly extended shoulders, detail or colour at the top, cropped jackets that end at the waist",
-     "the bust and shoulders measure narrower than the hips; adding width or interest there evens the two ends"
+     "drawing attention upward",
+     "wide or boat necklines, detail or colour at the top, cropped jackets that end at the waist",
+     "puts the visual focus above the waist"
     ],
     [
-     "bottoms that sit easily over the hips",
-     "A-line and flared skirts, wide or straight-leg trousers cut for the hip, mid-rise waistbands",
-     "the hip is the widest circumference; a cut that widens from the waist follows it instead of pulling across it"
+     "room through the hips",
+     "A-line and flared skirts, wide or straight-leg trousers cut with room at the hip",
+     "gives ease at the largest circumference"
     ],
     [
-     "to keep the waist visible",
-     "fitted or tucked tops with a defined waistband — spoon and bottom-hourglass results have a waist 7–9 inches under the hips",
-     "the waist is already narrow; marking it makes the hip width read as curve rather than bulk"
+     "emphasising the waist-to-hip contrast",
+     "fitted or tucked tops with a defined waistband — Spoon and Bottom hourglass results have a waist at least 7 or 9 inches under the hips",
+     "makes the waistband a visual focal point"
     ],
     [
-     "to leave the proportion as it is",
-     "tops that end at the high hip, pencil skirts, straight dresses",
-     "nothing is being balanced; the aim is a clean line over the widest point"
+     "keeping the proportion as it is",
+     "tops of any length, pencil skirts, straight dresses, monochrome",
+     "nothing is being offset; choose what you like"
     ]
    ]
   },
   "blocks": [
    {
     "t": "p",
-    "s": "These are conventions from styling practice, not rules, and none of them is required. The measured relationship says where the eye tends to go; whether you want to change that is a preference. Everything below is framed as what tends to suit the relationship, not what needs correcting."
+    "s": "These are styling options, not rules, and none of them is required. The measurements tell you how three or four circumferences relate; they do not say what will look better, and this page does not claim that they do. It is organised by intention so you can pick the effect you want, or none."
    },
    {
     "t": "h2",
-    "s": "The one fact the outfit is working with"
+    "s": "Drawing attention upward"
    },
    {
     "t": "p",
-    "s": "Hips minus bust of 3.6 inches (9.1 cm) or more. Seen from the front, the body widens from the shoulders to the hips. Every conventional suggestion is one of two responses: add something above to balance the width below, or dress the width below well and leave the balance alone."
+    "s": "Wide or boat necklines, a little structure at the shoulder, a cropped jacket that ends at the waist, colour or pattern on top with plain colour below: each puts the visual focus above the waist. Whether that reads as “balance” is a matter of preference; the rules do not measure shoulders or front-view width, so this is an option to try, not a correction the numbers call for."
    },
    {
     "t": "h2",
-    "s": "Bringing the eye up"
+    "s": "Room through the hips"
    },
    {
     "t": "p",
-    "s": "Wide or boat necklines, a shoulder with a little structure, a cropped jacket that ends at the waist, colour or pattern on top and plain below. Each one adds width or interest at the bust and shoulders, which measure narrower than the hips. It is the mirror of the inverted-triangle page, where the same logic adds to the hem instead."
+    "s": "Cuts that widen from the waist — A-line and flared skirts, wide-leg or straight trousers with room at the hip — give ease at the largest circumference. Whether a given pair fits well depends on rise, waistband shape, ease and fabric as much as on the cut name, so the practical test is to sit and move in them and check the waistband and hip room. If you prefer a pencil skirt or a straight dress, they are equally valid; if the waist is loose when the hip fits, alterations are sometimes possible and sometimes not, depending on the garment."
    },
    {
     "t": "h2",
-    "s": "Bottoms that sit well on wider hips"
+    "s": "Emphasising the waist-to-hip contrast"
    },
    {
     "t": "p",
-    "s": "Cuts that widen from the waist — A-line skirts, flared or wide-leg trousers, straight legs cut with room at the hip — follow the body rather than crossing it. A mid-rise waistband tends to sit better than a low one, because a low rise cuts across the hip at close to its widest circumference. If a pencil skirt or straight dress is what you want, it works; the convention is simply to size it to the hip and take in the waist."
+    "s": "Spoon requires the waist to be at least 7 inches under the hips and Bottom hourglass at least 9, so results in those two categories have a measured waist drop. If you want to make the waistband a visual focal point, fitted or tucked tops and a defined waistband do that. If you do not, nothing about the result asks you to."
    },
    {
     "t": "h2",
-    "s": "Spoon and bottom hourglass: use the waist"
+    "s": "If you prefer room just below the waistband"
    },
    {
     "t": "p",
-    "s": "If the calculator returned Spoon or Bottom Hourglass, your waist measures 7–9 inches or more under your hips, which is a strongly defined waist. Fitted or tucked tops and a marked waistband turn the hip width into curve. This is the same advice as the hourglass page, and for good reason: these two shapes are the pear family’s overlap with it."
+    "s": "A Spoon result means high hip ÷ waist is 1.193 or more: the circumference a few inches below the waist is notably larger than the waist. If that is where you want ease, styles that widen just below the waistband can be worth trying. The ratio describes two circumferences; it does not by itself describe a front-view outline."
    },
    {
     "t": "h2",
-    "s": "If you would rather not balance it"
+    "s": "Keeping the proportion as it is"
    },
    {
     "t": "p",
-    "s": "The proportion does not need balancing. Tops that end at the high hip, pencil skirts, straight dresses and monochrome give a clean line over the widest point without adding anything above. The only convention worth keeping is that a hem which ends exactly at the widest part of the hip draws the eye there, so people who want a quieter line usually end tops a little above or below it."
+    "s": "Tops of any length, pencil skirts, straight dresses and monochrome are all complete options. You can compare different top lengths and hem positions and choose the proportion you like; there is no length a pear result is required to avoid."
    },
    {
     "t": "ul",
     "items": [
-     "Which pear shape you are, in numbers: <a href=\"/shapes/pear/\">pear body shape</a>",
-     "The most crowded boundary: <a href=\"/pear-vs-rectangle/\">pear vs rectangle</a>",
+     "Which result you have, in numbers: <a href=\"/shapes/pear/\">pear body shape</a>",
+     "Comparing pear and rectangle results: <a href=\"/pear-vs-rectangle/\">pear vs rectangle</a>",
      "Where the hip is measured: <a href=\"/how-to-measure/\">how to measure</a>"
     ]
    }
@@ -100,23 +100,23 @@ export default {
   "faq": [
    [
     "What should a pear shape wear?",
-    "Conventionally, either pieces that add width or interest above the waist — wide necklines, structured shoulders, cropped jackets — to balance hips that measure wider than the bust, or bottoms cut to widen from the waist so they follow the hip. Leaving the proportion as it is and dressing the hip well is equally valid."
+    "Whatever you like. If you want to try a particular effect: wide necklines, cropped jackets or colour on top draw attention upward; A-line skirts and trousers cut with hip room give ease at the largest circumference; a defined waistband emphasises the waist-to-hip contrast that Spoon and Bottom hourglass results have by definition. None of this is required by the measurements."
    ],
    [
     "Should a pear avoid skinny jeans?",
-    "Not as a rule. A skinny cut shows the proportion as it is. If the aim is a line that widens from the waist, a straight or wide leg does that; if not, skinny is fine, sized to the hip."
+    "No. A skinny cut shows the proportion as it is, which is a valid choice. Fit is about rise, ease and fabric more than the cut name; sit and move in them and see."
    ],
    [
     "What tops suit a pear?",
-    "Ones that end at the waist or the high hip rather than at the widest point, and that add width at the shoulder or neckline if you want balance. A tucked or fitted top uses the waist, which on spoon and bottom-hourglass results is strongly defined."
+    "Any. If you want attention upward, wider necklines and detail at the top do that; if you want to emphasise the waist, fitted or tucked tops do that. Top length is a preference, not a rule."
    ],
    [
-    "Does spoon change the advice?",
-    "It adds to it. Spoon means a defined waist and a high hip that flares, so waist-marking pieces do more, and cuts that widen just below the waistband follow the flare instead of pulling across it."
+    "Does spoon change the suggestions?",
+    "It adds one: Spoon results have a measured flare below the waist (high hip ÷ waist ≥ 1.193), so if you want ease there, styles that widen just below the waistband are worth trying."
    ],
    [
     "Are these rules?",
-    "No. They are conventions offered as what tends to suit a body that measures wider at the hips than the bust. The measurements say where the eye goes; what to do about it is a preference."
+    "No. They are options organised by the effect you may want, offered for a body whose hips measure larger than its bust. The measurements do not predict how any garment will look."
    ]
   ]
  }

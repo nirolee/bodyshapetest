@@ -2,13 +2,13 @@ export default {
  "path": "/pear-vs-rectangle/",
  "en": {
   "meta": {
-   "title": "Pear vs Rectangle Body Shape: The Most Crowded Boundary in the System",
-   "description": "Pear and rectangle are separated by hips minus bust at exactly 3.6 inches. Why more measured women sit near this line than any other, why the bust decides it, and what to do when your result says you are within 2 cm."
+   "title": "Pear vs Rectangle Body Shape: The Conditions and the Measurement That Decides",
+   "description": "Rectangle and Triangle differ mainly on hips minus bust at 3.6 inches, though Spoon and the high-hip zone sit beside them. What the conditions are, why the bust was the deciding measurement most often in our analysis, and what to do when the stability note names it."
   },
   "layout": {
    "eyebrow": "Shapes · Comparison",
    "h1": "Pear vs rectangle",
-   "lead": "Rectangle becomes pear (triangle) the moment the hips measure 3.6 inches — 9.1 cm — more than the bust. That is the whole rule, and it is the boundary more measured women sit close to than any other. This page is about the line, the measurement that decides it, and how to read a result that says you are 1 cm from the other side.",
+   "lead": "Rectangle requires bust and hips less than 3.6 inches (9.1 cm) apart; Triangle’s first clause requires the hips at least 3.6 inches over the bust. Between them, and checked before both, sit Spoon and the zone where the calculator asks for a high hip. In our ANSUR II stability analysis the transitions between Rectangle and Triangle, and between Rectangle and that undetermined zone, were the most frequent single-measurement flips. This page sets out the conditions, the measurement that most often decides them, and how to read a stability note.",
    "ctaHead": "Not sure which family you are?",
    "ctaNote": "The calculator gives the FFIT shape, the rule that fired and how close you are to the next one. Nothing is uploaded.",
    "updated": "2026-09-15"
@@ -50,7 +50,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "Hips minus bust: 3.6 inches. Under it, with the waist inside the rectangle’s limits, the rule returns rectangle. At or over it, triangle — or spoon or bottom hourglass if the waist is defined enough, which is where the calculator asks for the high hip. There is no gradient. A body at 3.5 inches is a rectangle and a body at 3.6 is a pear."
+    "s": "Hips minus bust at 3.6 inches separates Rectangle’s condition from Triangle’s first clause. But the rules are checked in order: Spoon (hips more than 2 over bust, waist 7 or more under hips, flaring high hip) and Bottom hourglass are tested first, and when their other conditions hold without a high hip the calculator asks for one rather than returning either. Triangle also has a second clause — waist larger than bust, no larger than hips — that does not depend on the 3.6-inch difference at all."
    },
    {
     "t": "table"
@@ -61,7 +61,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "Because a hip that measures a few inches more than the bust is common, and 3.6 inches sits in the middle of that range. When the FFIT rules were run over the 1,986 women in ANSUR II, the misclassifications between rectangle and pear were the largest group of any pair, and the bust was the measurement most often responsible. In practical terms: a great many people are one careful bust measurement away from the other label."
+    "s": "In our ANSUR II analysis, the single-measurement change that most often altered a Rectangle result led to the undetermined high-hip zone (406 cases) or to Triangle (371), and Triangle results most often flipped to Rectangle (195). The bust was the deciding measurement in 769 of 1,297 cases. These are figures from that sample, with chest standing in for bust; they say that in this analysis, many results were one bust measurement from a different outcome."
    },
    {
     "t": "h2",
@@ -69,7 +69,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "Re-measure the bust. Over a thin, unpadded bra or none; tape level across the back, which is where it most often drops; arms down; normal breath. Take it twice. If the two readings straddle the boundary, you are on it, and the honest answer is that both labels describe you. The rules cannot resolve a difference smaller than a tape measure’s repeatability."
+    "s": "Re-measure the named measurement — usually the bust here. Over a thin, unpadded bra or none; tape level across the back; arms down; normal breath. Take it twice. If the two readings give different results, the classification is sensitive to how you measured, and the measurable fact — hips a little larger than the bust — is more informative than either label."
    },
    {
     "t": "h2",
@@ -77,7 +77,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "At the boundary, hardly. The pear outfits page is about balancing hips that measure wider than the bust; at a 3.5-inch difference that is still true in fact, whatever the label says. The rectangle page is about choosing between building a waist and using the straight line, and both options are open to a body at 3.6 inches. If you are near the line, read both pages and take what applies; the label is not telling you something the tape did not."
+    "s": "Near the threshold, hardly. The pear outfits page lists options for hips that measure larger than the bust; at a 3.5-inch difference that is still true in fact. The rectangle page lists options for marking a waist or leaving the line straight, and both are open at 3.6 inches. Read both and take what you like; the label adds nothing the tape did not."
    },
    {
     "t": "ul",
@@ -94,11 +94,11 @@ export default {
    ],
    [
     "Why does my result keep switching between the two?",
-    "Because you are near the 3.6-inch line and the bust measurement moves by a centimetre or two between readings. That is normal; the calculator says how far you are from the line."
+    "Because a measurement is close to a threshold and moves between readings. The calculator says how far it is from the threshold and which measurement it is."
    ],
    [
     "Which measurement should I re-take?",
-    "The bust: over a thin bra, tape level at the back, arms down. It is the measurement that decides this boundary and the one most affected by clothing."
+    "The one the stability note names — in our sample, most often the bust. Over a thin bra, tape level at the back, arms down."
    ],
    [
     "If I am on the line, which advice applies?",

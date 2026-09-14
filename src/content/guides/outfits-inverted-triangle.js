@@ -24,29 +24,29 @@ export default {
     [
      "to bring the eye down",
      "full, A-line or pleated skirts, wide-leg trousers, colour or pattern below, pockets and detail at the hip",
-     "the hips measure narrower than the bust; adding width there evens the two ends"
+     "adds visual width below the waist"
     ],
     [
      "a quieter top",
      "V and scoop necklines, raglan or dropped shoulders, unstructured jackets, plain darker tops",
-     "removes added width from the end that already measures wider"
+     "keeps the top simple"
     ],
     [
      "a waist",
      "belts at the narrowest point, wrap tops, jackets with a nipped seam",
-     "bust minus waist is under 9 inches; a garment can make more of the drop than the tape found"
+     "marks a waist at the point you measured as narrowest"
     ],
     [
      "to use the upper body",
      "fitted tops, structured shoulders, statement necklines with a straight or slim bottom",
-     "the bust and shoulders are where the width is; dressing them well is a choice, not a problem"
+     "puts the focus on the upper body"
     ]
    ]
   },
   "blocks": [
    {
     "t": "p",
-    "s": "These are conventions from styling practice, not rules, and none of them is required. The measured relationship says where the eye tends to go; whether you want to change that is a preference. Everything below is framed as what tends to suit the relationship, not what needs correcting."
+    "s": "These are styling options, not rules, and none of them is required. The measurements say how three or four circumferences relate; they do not say what will look better, and this page does not claim that they do. It is organised by the effect you may want to try, or none."
    },
    {
     "t": "h2",
@@ -54,7 +54,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "Bust minus hips of 3.6 inches (9.1 cm) or more. From the front, the body narrows from the shoulders and bust to the hips. Every conventional suggestion is one of two responses: add to the hem to balance the top, or keep the top simple so the difference reads as line rather than weight. Broad shoulders often go with this result, but the rule does not measure them; if your shoulders are wide and your bust is not, you may have measured rectangle and this page still applies to the shoulder line."
+    "s": "Bust minus hips of 3.6 inches (9.1 cm) or more. That is a statement about two circumferences; the rule does not measure shoulders or front-view width. The options below are organised by intention: add visual weight below, keep the top simple, mark a waist, or put the focus on the upper body. None follows from the measurements."
    },
    {
     "t": "h2",
@@ -62,7 +62,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "Full, A-line or pleated skirts, wide-leg or flared trousers, lighter or patterned colour below plain above, and detail at the hip — pockets, a contrast waistband — all add visual width at the end that measures narrower. This is the mirror of the pear page."
+    "s": "Full, A-line or pleated skirts, wide-leg or flared trousers, lighter or patterned colour below plain above, and detail at the hip — pockets, a contrast waistband — all add visual width below the waist."
    },
    {
     "t": "h2",
@@ -70,7 +70,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "V and scoop necklines draw a line downward from the shoulders; raglan and dropped shoulders soften the shoulder point; unstructured jackets and plain darker tops avoid adding width where there already is width. Cap sleeves, boat necks and heavy shoulder detail do the opposite, which is not wrong, only the opposite intention."
+    "s": "V and scoop necklines, raglan or dropped shoulders, unstructured jackets and plain tops keep the top simple. Cap sleeves, boat necks and shoulder detail do the opposite, which is not wrong, only the opposite intention."
    },
    {
     "t": "h2",
@@ -78,7 +78,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "Bust minus waist is under 9 inches on this shape, so the waist is not strongly defined against the bust. A belt at the narrowest point, a wrap top or a nipped jacket seam creates more of a drop than the tape found; combined with a fuller hem it produces the balanced silhouette most guides describe. Neither half is required."
+    "s": "An inverted triangle result has bust minus waist under 9 inches. A belt at the point you measured as narrowest, a wrap top or a nipped jacket seam marks the waist; combined with a fuller hem it produces the silhouette many guides describe. Neither half is required."
    },
    {
     "t": "h2",
@@ -86,7 +86,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "Fitted tops, structured shoulders and statement necklines over a straight or slim bottom put the width to work rather than offsetting it. Many people with this result prefer exactly that. The only convention worth keeping is that a very slim bottom under a very built-up top exaggerates the difference, which is fine if it is the aim."
+    "s": "Fitted tops, structured shoulders and statement necklines over a straight or slim bottom put the focus on the upper body. A very slim bottom under a very built-up top makes the difference more visible, which is fine if that is the aim."
    },
    {
     "t": "ul",
@@ -100,23 +100,23 @@ export default {
   "faq": [
    [
     "What should an inverted triangle wear?",
-    "Conventionally, pieces that add width below — full or A-line skirts, wide-leg trousers, detail at the hip — and quieter tops with V or scoop necklines and soft shoulders. Using the upper body instead, with fitted tops and structured shoulders over a slim bottom, is equally valid."
+    "Whatever you like. If you want visual weight below: full or A-line skirts, wide-leg trousers, detail at the hip. If you want a quieter top: V or scoop necklines and soft shoulders. If you want the focus on the upper body: fitted tops and structured shoulders over a slim bottom. None is required."
    ],
    [
     "Should an inverted triangle avoid shoulder pads?",
-    "Only if the aim is to balance the top with the bottom. Shoulder structure adds width at the end that already measures wider, which some people want."
+    "Only if the aim is a quieter top. Shoulder structure adds visual width above, which some people want."
    ],
    [
     "Which necklines suit an inverted triangle?",
-    "V and scoop necklines tend to draw the eye down and narrow the top visually; boat necks and wide horizontal lines do the reverse."
+    "V and scoop necklines keep the top simple; boat necks and wide horizontal lines add visual width above. Which you prefer is a preference."
    ],
    [
     "Does this advice apply if I have broad shoulders but a small bust?",
-    "Yes to the shoulder line, but the calculator may have called you rectangle, because the rule measures bust, not shoulders."
+    "The rule measures bust, waist and hips, not shoulders, so the result may be rectangle. The options on this page are about intention and can be tried whatever the result."
    ],
    [
     "Are these rules?",
-    "No. They are conventions offered as what tends to suit a bust that measures wider than the hips. Whether to balance it or use it is a preference."
+    "No. They are options for a bust that measures larger than the hips. What to do with that is a preference."
    ]
   ]
  }

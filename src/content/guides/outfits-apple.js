@@ -24,29 +24,29 @@ export default {
     [
      "a longer line through the middle",
      "empire and waistless silhouettes, shift and A-line dresses, open front layers, tunics over slim trousers",
-     "the waist is the widest circumference; a garment that does not stop there does not mark it"
+     "the garment does not stop at the waist"
     ],
     [
      "attention at the shoulders and neckline",
      "V-necks, defined or slightly structured shoulders, necklaces and collars, colour on top",
-     "the bust (oval) and shoulders measure at or above the waist; giving them the eye is using the width that is there"
+     "puts the focus at the neckline"
     ],
     [
      "attention at the legs",
      "straight or slim trousers, a hem at the knee or just below, a heel or a pointed shoe",
-     "the hips and legs measure narrower than the waist; a clean line there draws the eye down past the middle"
+     "puts the focus below the waist"
     ],
     [
      "to mark the waist anyway",
      "a belt or seam placed at the narrowest point you can find, often just under the bust, rather than at the widest",
-     "the narrowest circumference on this shape is usually above the tape-measure waist, not at it"
+     "places the marked line above the measured waist"
     ]
    ]
   },
   "blocks": [
    {
     "t": "p",
-    "s": "These are conventions from styling practice, not rules, and none of them is required. The measured relationship says where the eye tends to go; whether you want to change that is a preference. Everything below is framed as what tends to suit the relationship, not what needs correcting."
+    "s": "These are styling options, not rules, and none of them is required. The measurements say how three or four circumferences relate; they do not say what will look better, and this page does not claim that they do. It is organised by the effect you may want to try, or none."
    },
    {
     "t": "h2",
@@ -54,7 +54,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "Waist minus hips greater than zero: the midsection is the widest circumference. The usual styling instinct — mark the waist — is the one instinct that does not fit, because the waist is not the narrowest point. The conventions below all follow from that: either move the marked point up to where the body does narrow, or run a line past the middle without marking it."
+    "s": "An Oval or Diamond result means the waist circumference exceeds the hips (and, for Diamond, the bust). Marking the measured waist therefore marks the largest circumference, which some people want and some do not. The options below are organised by intention: a line that passes the waist without marking it, a marked line placed higher, or leaving the proportion as it is."
    },
    {
     "t": "h2",
@@ -70,7 +70,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "On an oval the bust measures at least as wide as the waist, and on both shapes the shoulders are usually well defined; V-necks, a little shoulder structure and detail at the collar use that. Below, the hips and legs measure narrower than the waist, so straight or slim trousers, a hem at or just below the knee, and a shoe with some lift draw the eye down. The two together produce the “long line” most guides describe."
+    "s": "V-necks, a little shoulder structure and detail at the collar put the focus at the neckline; straight or slim trousers, a hem at or just below the knee, and a shoe with some lift put it below the waist. The rules measure neither shoulders nor legs; these are options, not consequences of the result. Together they produce the “long line” many guides describe."
    },
    {
     "t": "h2",
@@ -78,7 +78,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "Find the narrowest circumference rather than the tape-measure waist. On this shape it is often just under the bust, and an empire seam or a belt worn high sits there. A belt at the widest point does the opposite of what a belt usually does; that is the one convention worth keeping."
+    "s": "If you prefer a higher visual waistline, empire seams and belts worn under the bust place the marked line above the measured waist. A belt at the measured waist marks the largest circumference, which is a different effect rather than a mistake."
    },
    {
     "t": "h2",
@@ -86,7 +86,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "A fitted dress or a tucked top shows the proportion as it is, and plenty of people prefer that to a line designed around it. The measurements do not require anything. The stability note on the calculator is worth reading first, though: the apple–rectangle boundary is exactly waist equals hips, and a centimetre of breath can move you across it."
+    "s": "A fitted dress or a tucked top shows the proportion as it is, and plenty of people prefer that. The measurements do not require anything. The calculator’s stability note is worth reading: near the Rectangle threshold a small change in the waist measurement changes the result."
    },
    {
     "t": "ul",
@@ -100,15 +100,15 @@ export default {
   "faq": [
    [
     "What should an apple shape wear?",
-    "Conventionally, silhouettes that run a line past the middle rather than stopping at it — empire, shift and A-line dresses, open layers, tunics over slim trousers — with attention at the neckline and legs. Marking a waist works when the mark sits at the narrowest point, often just under the bust."
+    "Whatever you like. Options many guides suggest: silhouettes that pass the waist without marking it — empire, shift and A-line dresses, open layers, tunics over slim trousers — and focus at the neckline or below the waist. A marked line placed higher, under the bust, is another option."
    ],
    [
     "Should an apple wear a belt?",
-    "At the narrowest circumference, which on this shape is usually above the tape-measure waist, a belt works. At the widest point it does the opposite of what a belt usually does."
+    "A belt under the bust places the marked line above the measured waist; a belt at the measured waist marks the largest circumference. Both are options with different effects."
    ],
    [
     "Are empire dresses only for apples?",
-    "No, but they suit this shape particularly because the seam sits where the body narrows and the skirt runs past the waist without marking it."
+    "No. They are one way to place a marked line above the measured waist and let the skirt pass it."
    ],
    [
     "Which is right: apple means big bust or big waist?",
@@ -116,7 +116,7 @@ export default {
    ],
    [
     "Are these rules?",
-    "No. They are conventions offered as what tends to suit a waist that measures wider than the hips. Whether you want a longer line or a fitted one is a preference."
+    "No. They are options for a waist that measures larger than the hips. Whether you want a longer line or a fitted one is a preference."
    ]
   ]
  }

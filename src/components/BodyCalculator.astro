@@ -30,7 +30,7 @@ const { compact = false } = Astro.props;
 </div>
 
 <script>
-  import { classifyFemale, flipDistance, percentileOf, NEEDS_HIGH_HIP, IN } from '../lib/body-shape.js';
+  import { classifyFemale, flipDistance, percentileOf, isFallback, NEEDS_HIGH_HIP, IN } from '../lib/body-shape.js';
   import { SHAPES, GROUPS } from '../lib/shapes.js';
   import pct from '../data/whr_percentiles.json';
 
@@ -41,7 +41,7 @@ const { compact = false } = Astro.props;
     bottom_hourglass: 'hips − bust between 3.6 and 10 in, hips − waist ≥ 9 in, high hip ÷ waist < 1.193',
     top_hourglass: 'bust − hips between 1 and 10 in, bust − waist ≥ 9 in',
     spoon: 'hips − bust > 2 in, hips − waist ≥ 7 in, high hip ÷ waist ≥ 1.193',
-    triangle: 'hips − bust ≥ 3.6 in, and 0 ≤ hips − waist < 9 in (or waist above bust with hips ≥ waist)',
+    triangle: '(hips − bust ≥ 3.6 in and 0 ≤ hips − waist < 9 in) or (waist larger than bust and hips ≥ waist)',
     inverted_triangle: 'bust − hips ≥ 3.6 in, bust − waist < 9 in, hips ≥ waist',
     rectangle: 'bust and hips within 3.6 in, 0 ≤ bust − waist < 9 in, 0 ≤ hips − waist < 10 in',
     diamond: 'waist larger than both bust and hips',
@@ -63,16 +63,16 @@ const { compact = false } = Astro.props;
       const shape = classifyFemale(input);
       if (shape === NEEDS_HIGH_HIP) {
         hh.hidden = false; hhNote.hidden = false;
-        hhNote.textContent = 'Your hips are clearly wider than your bust and your waist is well defined. Under the FFIT rules that is either Spoon or Bottom Hourglass, and the one measurement that separates them is the high hip — the circumference about 7 cm (3 in) below your waist. Add it and press the button again.';
+        hhNote.textContent = 'With these three numbers the result cannot be resolved: they satisfy the other conditions of Spoon or Bottom Hourglass, and those rules use high hip ÷ waist. Add the high hip — around the upper hip, about 3 in (7–8 cm) below your waist by this site’s convention — and press the button again.';
         hh.querySelector('input')!.focus(); return;
       }
-      const meta = SHAPES[shape], group = GROUPS[meta.group];
+      const meta = SHAPES[shape], group = GROUPS[meta.group], fallback = isFallback(input);
       const flip = flipDistance(input);
       const whr = waist / hips, p = percentileOf(whr, pct.whr.female);
-      const dIn = (a: number, b: number) => `${inch(a - b)} in (${fmt(a - b)} cm)`;
+      const dIn = (a: number, b: number) => `${inch(a - b)} in (${fmt(a - b)} cm)`; void dIn;
       const aka = meta.aka.length ? ` Also called: ${meta.aka.join(', ')}.` : '';
       const stable = flip ? (flip.cm <= 2
-        ? `<strong>Near a boundary.</strong> If your ${flip.measure} were ${flip.cm} cm ${flip.direction > 0 ? 'larger' : 'smaller'}, the label would read <em>${SHAPES[flip.to]?.name ?? flip.to}</em>. That is within the error of a tape measure, so measure your ${flip.measure} once more before relying on the label.`
+        ? `<strong>Near a boundary.</strong> If your ${flip.measure} were ${flip.cm} cm ${flip.direction > 0 ? 'larger' : 'smaller'}, the label would read <em>${SHAPES[flip.to]?.name ?? flip.to}</em>. That is within this site’s 2 cm display threshold, so measure your ${flip.measure} once more before relying on the label.`
         : `<strong>Stable.</strong> The nearest other label is <em>${SHAPES[flip.to]?.name ?? flip.to}</em>, and your ${flip.measure} would have to be ${flip.cm} cm ${flip.direction > 0 ? 'larger' : 'smaller'} to get there.`)
         : '<strong>Stable.</strong> No single measurement change of up to 15 cm moves you to another label.';
       out.innerHTML = `
@@ -83,12 +83,12 @@ const { compact = false } = Astro.props;
           <div class="formula">
             <h4>The numbers the rule used</h4>
             <code>bust − hips = ${dIn(bust, hips)}<br>bust − waist = ${dIn(bust, waist)}<br>hips − waist = ${dIn(hips, waist)}${highHip ? `<br>high hip ÷ waist = ${fmt(highHip / waist * 1000) / 1000}` : ''}</code>
-            <p class="muted">Rule that fired: ${RULE_TEXT[shape]}. Rules are the FFIT set as revised in 2020; see <a href="/methodology/">how the classification works</a>.</p>
+            <p class="muted">${fallback ? 'No FFIT rule matched these measurements; this is the most similar neighbouring shape, assigned by this site’s fallback.' : `Rule that fired: ${RULE_TEXT[shape]}.`} Rules are the FFIT set as revised in 2020, checked in order; see <a href="/methodology/">how the classification works</a>.</p>
           </div>
           <h4>How stable is this label?</h4>
           <p>${stable}</p>
           <h4>Waist-to-hip ratio</h4>
-          <p>${whr.toFixed(2)} — higher than about ${p}% of ${pct.n.female.toLocaleString()} adult women measured in NHANES (2017–2023). This is a proportion, not a health score. <a href="/waist-to-hip-ratio/">More on this ratio</a>.</p>
+          <p>${whr.toFixed(2)} — higher than about ${p}% of ${pct.n.female.toLocaleString()} adult women measured in NHANES (2017–2023). NHANES measures the waist just above the hip bone rather than at the narrowest point, so this is a rough placement, not an exact comparison, and not a health score. <a href="/waist-to-hip-ratio/">More on this ratio</a>.</p>
           <p class="btn-row"><a class="btn" href="/shapes/${meta.slug}/">What ${group.name.toLowerCase()} means</a><a class="btn plain" href="/shapes/${meta.slug}/outfits/">What tends to suit it</a></p>
         </div>`;
       out.hidden = false; out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });

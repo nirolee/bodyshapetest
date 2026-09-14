@@ -5,29 +5,29 @@ import GuideTable from '../components/GuideTable.astro';
 import References from '../components/References.astro';
 import { refsFor } from '../lib/references.js';
 const title = 'Body Shape Calculator — Rules Shown, Boundaries Measured';
-const description = 'Enter bust, waist and hips and get your body shape under the published FFIT rules, with the formula that fired, how many centimetres you sit from the next shape, and your waist-to-hip percentile among 11,119 measured adults. Free, nothing uploaded.';
+const description = 'Enter bust, waist and hips and get your body shape under the revised FFIT rules, with the rule that fired, how many centimetres one measurement is from changing the result, and your waist-to-hip percentile among 11,119 measured adults. Free, nothing uploaded.';
 const faq: [string, string][] = [
-  ['Which measurements do I need?', 'Bust at the fullest point, waist at the narrowest point, and hips at the fullest point, all with the tape level and snug but not tight. About one woman in three also needs the high hip — the circumference roughly 7 cm below the waist — because under the FFIT rules that single number separates Spoon from Bottom Hourglass. The calculator asks for it only when it matters.'],
-  ['Where do the rules come from?', 'From the Female Figure Identification Technique (FFIT) developed at North Carolina State University from 3D body scans, published in 2004, and revised in 2020 to cover bodies whose waist is larger than their bust. Every threshold is printed on this page and on the methodology page; nothing is hidden or tuned.'],
-  ['Why does my result differ from another calculator?', 'Most calculators use a version of the same FFIT thresholds, but some use the 2007 formulas that had no rule for a waist larger than the bust, and some use their own undisclosed cut-offs. A different label from a different site does not mean either is broken; it usually means a different rule set, or a measurement that sits close to a boundary.'],
-  ['What does "near a boundary" mean?', 'Every FFIT rule is a cut-off in inches. If changing one of your measurements by two centimetres or less would move you to a different label, this page says so, because two centimetres is within what a tape measure and a breath can do. In a sample of 1,986 measured women, 43.6% sat that close to a boundary.'],
-  ['Is one shape better than another?', 'No. The labels describe how three circumferences relate to each other. They carry no health meaning and no ranking, and the classifier does not use height, weight or BMI at all.'],
-  ['Is "apple" a shape here?', 'Not by that name, because the word is used in opposite ways. Some calculators call an inverted triangle "apple"; others use it for a body whose waist is the widest part, which in FFIT is Oval or Diamond. This site reports the FFIT name and tells you which common name it maps to.'],
+  ['Which measurements do I need?', 'Bust at the fullest point, waist at the narrowest point, and hips at the fullest point, tape level and snug but not tight. Some results also need the high hip — around the upper hip, about 3 in (7–8 cm) below the waist by this site’s convention — because two rules use high hip ÷ waist. In our ANSUR II analysis, 34.7% of records required it; the calculator asks only when it does. Details on the measuring page.'],
+  ['Where do the rules come from?', 'From the Female Figure Identification Technique (FFIT), developed at North Carolina State University from 3D body scans and published in 2004, as revised in 2020 to correct conditions that misclassified or failed to classify larger bodies. Every threshold is printed on this page and on the methodology page.'],
+  ['Why does my result differ from another calculator?', 'Results can differ because of formulas (many calculators run the 2007 FFIT set; this site runs the 2020 revision), rule order, a missing high-hip measurement, or inputs close to a threshold. A different result elsewhere does not mean either site is broken.'],
+  ['What does the boundary note mean?', 'The rules use circumference differences in inches and one ratio (high hip ÷ waist). If changing one of your measurements by 2 cm or less, with the others fixed, would give a different result, the note says so and names the measurement. 2 cm is this site’s display threshold. In our ANSUR II analysis, 42.8% of results were that close to a different one.'],
+  ['Is one shape better than another?', 'No. The labels describe relationships among three or four circumferences. They are not diagnoses, health scores or rankings, and the classifier does not use height, weight or BMI.'],
+  ['Is "apple" a shape here?', '“Apple” is used differently across styling guides and calculators. This site uses it as a common-name grouping for Oval and Diamond; some other calculators use it for Inverted Triangle. Oval requires the waist to exceed the hips while remaining no larger than the bust; Diamond requires the waist to exceed both. Results always use the FFIT names and say which grouping applies.'],
 ];
 const jsonLd = [
   { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Body Shape Calculator', applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }, url: 'https://bodyshapetest.org/' },
   { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) },
 ];
-const rules = { head: 'The nine FFIT shapes and the rule for each (inches)', cols: ['Shape', 'Rule', 'Common name'], rows: [
-  ['Hourglass', 'bust − hips ≤ 1; hips − bust < 3.6; and bust − waist ≥ 9 or hips − waist ≥ 10', 'hourglass'],
+const rules = { head: 'The revised FFIT-based rules used on this site, checked in this order (inches)', cols: ['Shape', 'Rule', 'Common-name grouping used on this site'], rows: [
+  ['Hourglass', 'bust − hips ≤ 1; hips − bust < 3.6; and (bust − waist ≥ 9 or hips − waist ≥ 10)', 'hourglass'],
   ['Bottom hourglass', 'hips − bust from 3.6 to under 10; hips − waist ≥ 9; high hip ÷ waist < 1.193', 'hourglass, pear'],
   ['Top hourglass', 'bust − hips over 1 and under 10; bust − waist ≥ 9', 'hourglass'],
   ['Spoon', 'hips − bust > 2; hips − waist ≥ 7; high hip ÷ waist ≥ 1.193', 'pear'],
-  ['Triangle', 'hips − bust ≥ 3.6; hips − waist from 0 to under 9 (or waist above bust with hips ≥ waist)', 'pear'],
-  ['Inverted triangle', 'bust − hips ≥ 3.6; bust − waist < 9; hips ≥ waist', 'apple (in some systems)'],
-  ['Rectangle', 'bust and hips within 3.6; bust − waist from 0 to under 9; hips − waist from 0 to under 10', 'banana, straight'],
+  ['Triangle', '(hips − bust ≥ 3.6 and 0 ≤ hips − waist < 9) or (bust − waist < 0 and hips − waist ≥ 0)', 'pear'],
+  ['Inverted triangle', 'bust − hips ≥ 3.6; bust − waist < 9; hips − waist ≥ 0', 'inverted triangle (some calculators call this apple)'],
+  ['Rectangle', '|bust − hips| < 3.6; 0 ≤ bust − waist < 9; 0 ≤ hips − waist < 10', 'rectangle, banana, straight'],
   ['Diamond', 'waist larger than both bust and hips', 'apple'],
-  ['Oval', 'waist larger than hips, not larger than bust', 'apple, round'],
+  ['Oval', 'waist > hips and waist ≤ bust', 'apple'],
 ] };
 ---
 <BaseLayout title={title} description={description} jsonLd={jsonLd} lang="en" bleed>
@@ -35,7 +35,7 @@ const rules = { head: 'The nine FFIT shapes and the rule for each (inches)', col
     <div class="wrap prose">
       <span class="eyebrow">Free · Nothing uploaded · Rules in the open</span>
       <h1>Body shape calculator</h1>
-      <p class="lead" style="margin-top:14px">Three measurements, the published FFIT rules, and two things other calculators leave out: how far you sit from the next shape, and where your waist-to-hip ratio falls among 11,119 adults measured in a national health survey.</p>
+      <p class="lead" style="margin-top:14px">Three measurements (four when needed), the FFIT rules as revised in 2020, and two things most calculators leave out: how far one measurement is from changing your result, and where your waist-to-hip ratio falls among 11,119 adults measured in a national health survey.</p>
     </div>
   </section>
   <section class="band">
@@ -44,28 +44,28 @@ const rules = { head: 'The nine FFIT shapes and the rule for each (inches)', col
   <section class="band warm">
     <div class="wrap prose">
       <h2>What the result tells you, and what it does not</h2>
-      <p>You get the FFIT shape name, the three differences the rule looked at, in inches and centimetres, and the exact rule that fired. You also get a stability note: the smallest change to any one measurement that would give you a different label. When that is two centimetres or less, the honest reading is that you sit between two shapes, and a second measurement is worth more than the label.</p>
-      <p>The result does not rank you, does not use height or weight, and says nothing about health. A body shape is a description of how three circumferences relate; the styling pages on this site describe what tends to suit each relationship, not what needs fixing.</p>
+      <p>You get the FFIT shape name, the differences the rule looked at in inches and centimetres, and the exact rule that fired. You also get a stability note: the smallest change to any one measurement, with the others fixed, that would give a different result. When that is 2 cm or less — this site’s display threshold — a second measurement is worth more than the label.</p>
+      <p>The result does not rank you, does not use height or weight, and is not a health assessment. A body shape result is a description of how three or four circumferences relate; the outfit pages list options organised by the effect you may want, not corrections.</p>
       <p><a href="/how-to-measure/">How to take the four measurements</a> · <a href="/methodology/">How the classification works, in full</a> · <a href="/men/">Men's body type calculator</a></p>
     </div>
   </section>
   <section class="band">
     <div class="wrap prose">
       <GuideTable head={rules.head} cols={rules.cols} rows={rules.rows} />
-      <p class="muted" style="max-width:70ch">Rules are checked in the order listed and the first match is returned. The 2020 revision added Diamond and Oval and the "from 0" lower bounds; without them, a waist larger than the bust matched no rule at all. Source: Simmons, Istook &amp; Devarajan (2004), revised by Sokolowski (2020). Details on the <a href="/methodology/">methodology page</a>.</p>
+      <p class="muted" style="max-width:70ch">Rules are checked in the order listed and the first match is returned; some conditions overlap, so order matters. The 2020 revision reintroduced Diamond and Oval into the formula set and added the lower bounds of zero; without them, a waist larger than the hips could be returned as Rectangle, Triangle or Inverted Triangle, or match nothing. Source: Simmons, Istook &amp; Devarajan (2004); Sokolowski &amp; Bettencourt (2020). Details on the <a href="/methodology/">methodology page</a>.</p>
     </div>
   </section>
   <section class="band warm">
     <div class="wrap prose">
       <h2>The five shape families</h2>
       <ul>
-        <li><a href="/shapes/hourglass/">Hourglass</a> — bust and hips close, waist clearly smaller. Includes top and bottom hourglass.</li>
-        <li><a href="/shapes/pear/">Pear</a> — hips wider than bust. FFIT calls this Triangle, or Spoon when the high hip flares.</li>
+        <li><a href="/shapes/hourglass/">Hourglass</a> — bust at most 1 inch over the hips, hips less than 3.6 over the bust, waist 9 under the bust or 10 under the hips. Includes top and bottom hourglass.</li>
+        <li><a href="/shapes/pear/">Pear</a> — hips measuring larger than the bust. This site’s grouping for the FFIT results Triangle and Spoon.</li>
         <li><a href="/shapes/rectangle/">Rectangle</a> — bust, waist and hips within a narrow range of each other.</li>
-        <li><a href="/shapes/inverted-triangle/">Inverted triangle</a> — bust wider than hips without a strongly defined waist.</li>
-        <li><a href="/shapes/apple/">Apple</a> — the waist is the widest part. FFIT calls this Oval or Diamond.</li>
+        <li><a href="/shapes/inverted-triangle/">Inverted triangle</a> — bust measuring at least 3.6 inches larger than the hips, waist less than 9 under the bust.</li>
+        <li><a href="/shapes/apple/">Apple</a> — this site’s grouping for the FFIT results Oval and Diamond, where the waist measures larger than the hips.</li>
       </ul>
-      <p>Sitting between two? <a href="/hourglass-vs-pear/">Hourglass vs pear</a>, <a href="/pear-vs-rectangle/">pear vs rectangle</a> and <a href="/apple-vs-rectangle/">apple vs rectangle</a> go through the exact boundaries.</p>
+      <p>Close to a threshold? <a href="/hourglass-vs-pear/">Hourglass vs pear</a>, <a href="/pear-vs-rectangle/">pear vs rectangle</a> and <a href="/apple-vs-rectangle/">apple vs rectangle</a> go through the conditions.</p>
     </div>
   </section>
   <References lang="en" refs={refsFor('/')} />

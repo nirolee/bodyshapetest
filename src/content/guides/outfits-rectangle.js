@@ -24,29 +24,29 @@ export default {
     [
      "the appearance of a waist",
      "belts at the narrowest point, peplums, wrap tops, jackets with a nipped seam, tucked tops with a high rise",
-     "the waist is smaller than bust and hips, just by less than the rule needs; a garment can make the drop it did not measure"
+     "marks a waist at the point you measured as narrowest"
     ],
     [
      "curve at the hip or bust",
      "A-line skirts, full or flared trousers, gathered or ruffled tops",
-     "adds circumference at one end so the waist reads smaller by comparison"
+     "adds visual width at one end"
     ],
     [
      "to use the straight line",
      "column dresses, straight trousers with a straight top, shirt dresses worn loose, boxy jackets",
-     "bust, waist and hips are close, so unshaped garments hang cleanly without pulling"
+     "bust, waist and hips measure close, so unshaped garments hang without pulling at any one point"
     ],
     [
      "length rather than curve",
      "monochrome, vertical seams, long open layers",
-     "the line is already vertical; these extend it"
+     "adds vertical lines"
     ]
    ]
   },
   "blocks": [
    {
     "t": "p",
-    "s": "These are conventions from styling practice, not rules, and none of them is required. The measured relationship says where the eye tends to go; whether you want to change that is a preference. Everything below is framed as what tends to suit the relationship, not what needs correcting."
+    "s": "These are styling options, not rules, and none of them is required. The measurements say how three or four circumferences relate; they do not say what will look better, and this page does not claim that they do. It is organised by the effect you may want to try, or none."
    },
    {
     "t": "h2",
@@ -54,7 +54,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "Nothing differs by much. Bust and hips are within 3.6 inches; the waist is narrower than both but by less than 9 and 10 inches. A rectangle is not a body without a waist — most rectangle results have one — it is a body whose waist is smaller by a moderate amount. That gives the outfit an unusual amount of freedom: it can add a waist the tape did not find, or leave the line alone."
+    "s": "Nothing differs by much. Bust and hips are within 3.6 inches; the waist is narrower than both but by less than 9 and 10 inches. A rectangle result is not a body without a waist; the rule requires the waist to be smaller than bust and hips, just by less than 9 and 10 inches. The outfit can mark that waist, or leave the line alone."
    },
    {
     "t": "h2",
@@ -62,7 +62,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "A belt at the narrowest circumference, a wrap top, a jacket seamed in at the waist, a peplum, or a tucked top over a high rise. Each one makes a narrowing where the body narrows only slightly. The measured waist is the place to put it — the narrowest point you found with the tape — not the hip line where trousers sit. A second route is to add width at one end rather than take it from the middle: an A-line skirt or gathered top increases the bust or hip circumference visually, and the waist reads smaller by contrast."
+    "s": "A belt at the narrowest circumference, a wrap top, a jacket seamed in at the waist, a peplum, or a tucked top over a high rise. Each marks the point you measured as narrowest. A second option is to add visual width at one end instead — an A-line skirt or a gathered top — which is a different silhouette rather than a correction."
    },
    {
     "t": "h2",
@@ -70,7 +70,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "Column dresses, straight trousers under a straight top, shirt dresses worn open, boxy or cropped jackets, and long open layers all hang well on this shape precisely because nothing pulls them off line. This is where the rectangle has the easiest time of any shape: unshaped garments that gap or drag on a pear or hourglass sit cleanly here. If a longer line is what you want, vertical seams, monochrome and open layers extend it."
+    "s": "Column dresses, straight trousers under a straight top, shirt dresses worn open, boxy or cropped jackets, and long open layers hang without pulling at any one circumference, because the three measure close. If a longer line is what you want, vertical seams, monochrome and open layers add vertical lines."
    },
    {
     "t": "h2",
@@ -78,7 +78,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "Pieces that are fitted through the waist but not at the ends — a stretch top tucked into stretch trousers — tend to show the moderate difference honestly, which is fine if that is the aim and unremarkable if not. Loading both ends at once, a full skirt with a ruffled top, adds circumference everywhere and the waist stays where it was."
+    "s": "Pieces fitted through the waist show the measured difference as it is, which is fine if that is the aim. Adding visual width at both ends at once — a full skirt with a ruffled top — is also a choice; it does not mark the waist, which may or may not be what you want."
    },
    {
     "t": "ul",
@@ -96,7 +96,7 @@ export default {
    ],
    [
     "Do belts suit a rectangle?",
-    "Yes, at the narrowest point measured, which is usually a little above the navel. A belt at the hip line adds width at the hip rather than narrowing the waist."
+    "At the narrowest point you measured, a belt marks the waist. Lower down it adds a horizontal line at the hip instead — a different effect, not a wrong one."
    ],
    [
     "Can a rectangle wear a column dress?",
@@ -104,11 +104,11 @@ export default {
    ],
    [
     "How do I make a waist without a belt?",
-    "Add width at one end instead: an A-line skirt, wide trousers, or a top with gathering at the bust makes the waist read smaller by comparison."
+    "Add visual width at one end instead: an A-line skirt, wide trousers, or a top with gathering at the bust."
    ],
    [
     "Are these rules?",
-    "No. They are conventions offered as what tends to suit three circumferences that are close together. What to do with them is a preference."
+    "No. They are options for three circumferences that measure close together. What to do with them is a preference."
    ]
   ]
  }

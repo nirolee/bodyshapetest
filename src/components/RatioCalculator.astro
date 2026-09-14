@@ -35,17 +35,17 @@ const { mode } = Astro.props;
       if (mode === 'men') {
         const input = { chest: chest!, waist, hips }, shape = classifyMale(input), meta = MALE[shape], flip = flipDistance(input, classifyMale as any);
         const p = percentileOf(whr, pct.whr.male);
-        const stable = flip ? (flip.cm <= 2 ? `<strong>Near a boundary.</strong> If your ${flip.measure} were ${flip.cm} cm ${flip.direction > 0 ? 'larger' : 'smaller'} the label would read <em>${MALE[flip.to]?.name ?? flip.to}</em> — within tape-measure error, so re-measure the ${flip.measure}.` : `<strong>Stable.</strong> The nearest other label is <em>${MALE[flip.to]?.name ?? flip.to}</em>, ${flip.cm} cm away on the ${flip.measure}.`) : '<strong>Stable.</strong>';
+        const stable = flip ? (flip.cm <= 2 ? `<strong>Near a boundary.</strong> If your ${flip.measure} were ${flip.cm} cm ${flip.direction > 0 ? 'larger' : 'smaller'} the label would read <em>${MALE[flip.to]?.name ?? flip.to}</em> — within this site’s 2 cm display threshold, so re-measure the ${flip.measure}.` : `<strong>Stable.</strong> The nearest other label is <em>${MALE[flip.to]?.name ?? flip.to}</em>, ${flip.cm} cm away on the ${flip.measure}.`) : '<strong>Stable.</strong>';
         out.innerHTML = `<div class="card"><span class="eyebrow">Your body type under this site’s rules</span><h3 style="margin-top:6px">${meta.name}</h3><p>${meta.def}</p>
           <div class="formula"><h4>The numbers</h4><code>chest − hips = ${inch(chest! - hips)} in (${fmt(chest! - hips)} cm)<br>chest − waist = ${inch(chest! - waist)} in (${fmt(chest! - waist)} cm)<br>waist ÷ hips = ${whr.toFixed(2)}</code><p class="muted">Cut-offs: 3.6 in for a clear chest–hip difference, 9 in for a defined waist, borrowed from FFIT. These are this site’s rules, not a published standard — see <a href="/methodology/">methodology</a>.</p></div>
           <h4>How stable is this label?</h4><p>${stable}</p>
-          <h4>Waist-to-hip ratio</h4><p>${whr.toFixed(2)} — higher than about ${p}% of ${pct.n.male.toLocaleString()} adult men measured in NHANES. A proportion, not a health score.</p></div>`;
+          <h4>Waist-to-hip ratio</h4><p>${whr.toFixed(2)} — higher than about ${p}% of ${pct.n.male.toLocaleString()} adult men measured in NHANES. NHANES measures the waist just above the hip bone, so this is a rough placement. A proportion, not a health score.</p></div>`;
       } else {
         const sex = form.querySelector<HTMLInputElement>('input[name=sex]:checked')!.value as 'female' | 'male';
         const p = percentileOf(whr, pct.whr[sex]), wp = percentileOf(waist, pct.waist_cm[sex]), hp = percentileOf(hips, pct.hip_cm[sex]);
         out.innerHTML = `<div class="card"><span class="eyebrow">Waist-to-hip ratio</span><h3 style="margin-top:6px">${whr.toFixed(2)}</h3>
           <p>Waist ${fmt(waist)} cm ÷ hips ${fmt(hips)} cm. Among ${pct.n[sex].toLocaleString()} adult ${sex === 'female' ? 'women' : 'men'} measured in NHANES 2017–2023, this ratio is higher than about <strong>${p}%</strong>. Your waist alone is higher than about ${wp}% and your hips than about ${hp}%.</p>
-          <p class="muted">The sample median is ${pct.whr[sex][49].toFixed(2)}. Percentiles are unweighted and describe the examined sample, not the population exactly. This is a proportion between two circumferences; it is not a diagnosis, and this site makes no health claim from it.</p></div>`;
+          <p class="muted">The sample median is ${pct.whr[sex][49].toFixed(2)}. Percentiles are within the pooled, unweighted examined sample, not US population estimates, and NHANES measures the waist just above the hip bone rather than at the narrowest point, so treat this as a rough placement. It is a proportion between two circumferences, not a diagnosis.</p></div>`;
       }
       out.hidden = false; out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });

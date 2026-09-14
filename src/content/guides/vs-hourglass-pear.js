@@ -8,7 +8,7 @@ export default {
   "layout": {
    "eyebrow": "Shapes · Comparison",
    "h1": "Hourglass vs pear",
-   "lead": "Both have a waist that is clearly smaller than the hips. What separates them is how much wider the hips are than the bust: under 3.6 inches and it is hourglass, 3.6 or more and it is the pear family. The line is exact, it depends almost entirely on the bust measurement, and two of the nine shapes sit right on it. This page is about finding which side you are on and how confident to be.",
+   "lead": "Both results need a defined waist. What separates them is how the hips compare with the bust — and the rules are checked in order, so the answer also depends on the high hip. Hourglass allows the hips to lead the bust by less than 3.6 inches; Triangle and Bottom hourglass need 3.6 or more; Spoon needs only more than 2, plus a flaring high hip, and is checked before Triangle. This page sets out the conditions and which measurement to take again.",
    "ctaHead": "Not sure which family you are?",
    "ctaNote": "The calculator gives the FFIT shape, the rule that fired and how close you are to the next one. Nothing is uploaded.",
    "updated": "2026-09-15"
@@ -50,7 +50,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "Hips minus bust. Below 3.6 inches (9.1 cm), with the waist defined, the rule returns hourglass. At 3.6 or above, with the waist defined by 9 inches, it returns bottom hourglass — which FFIT files under hourglass but which reads as a pear to most eyes — or spoon if the high hip flares. At 3.6 or above with a less defined waist, triangle. The waist condition is shared; the bust-to-hip difference is the whole distinction."
+    "s": "Hips minus bust, mostly. With the waist defined (9 under the bust or 10 under the hips) and hips less than 3.6 inches over the bust, the result is Hourglass. At 3.6 or more with a 9-inch drop under the hips, Bottom hourglass — filed under hourglass by FFIT — or Spoon if high hip ÷ waist is 1.193 or more. Spoon can also match with the hips only more than 2 inches over the bust, because it is checked before Triangle and Rectangle. So the distinction is the bust-to-hip difference plus, in part of the range, the high hip."
    },
    {
     "t": "table"
@@ -61,7 +61,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "Because it is one side of the difference and the harder of the two to measure consistently: a padded bra, the tape dropping at the back, or measuring over a sweater can each move it by two or three centimetres, and 3.6 inches is only 9.1 cm. In the ANSUR II test of 1,986 women, the bust was the measurement that most often decided a label, and this boundary was among the most crowded. If your stability note names the bust and gives a distance under 2 cm, measure it again over a thin bra with the tape level before choosing a side."
+    "s": "Because it is one side of the difference, and because in our ANSUR II stability analysis it was the measurement that most often decided the result (769 of 1,297 cases). A padded bra, the tape dropping at the back, or measuring over a sweater can each change it. If your stability note names the bust, measure it again over a thin bra with the tape level."
    },
    {
     "t": "h2",
@@ -69,7 +69,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "These two are what an hourglass becomes when the hips move ahead of the bust while the waist stays defined. FFIT calls one of them hourglass and the other pear, and separates them by a fourth measurement, the high hip. If you land here the calculator asks for it. In styling terms both behave like a pear with a strongly defined waist: the hourglass page’s advice about using the waist applies, and the pear page’s advice about the hip applies."
+    "s": "Both require the hips to lead the bust with a defined waist drop (9 inches for Bottom hourglass, 7 for Spoon) and are separated by high hip ÷ waist at 1.193. If your first three numbers land here, the calculator asks for the high hip. In terms of the outfit pages, both have a measured waist drop and hips larger than the bust, so the options on both the hourglass and pear pages apply."
    },
    {
     "t": "h2",
@@ -77,7 +77,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "Less than the two names suggest. Both shapes have the defined waist, so everything on the hourglass outfits page about following the waist applies to both. The pear page adds one thing: with hips measuring wider than the bust, adding width or interest at the shoulder or neckline balances the two ends, and cuts that widen from the waist follow the hip. If you are on the line, the practical reading is: use the waist, and decide for yourself whether the hip is something you want to balance."
+    "s": "Less than the two names suggest. Both results have a defined waist, so the waist options on the hourglass outfits page apply to both. The pear page adds options for hips that measure larger than the bust — attention upward, room through the hips — if you want them. Near the threshold, read both and take what you like."
    },
    {
     "t": "ul",

@@ -24,29 +24,29 @@ export default {
     [
      "to follow the waist",
      "wrap dresses, belted coats, high-rise trousers with a tucked top, fitted knits",
-     "the garment narrows where the body narrows, so the 9–10 inch drop reads as line rather than fabric"
+     "the garment narrows at the measured waist"
     ],
     [
      "to keep the ends balanced",
      "matching weight above and below: a fitted top with straight or slightly flared trousers",
-     "bust and hips are within an inch; adding volume to one end moves the eye off centre"
+     "bust and hips measure close in circumference; this keeps the two ends similar"
     ],
     [
      "a looser line",
      "pieces that skim rather than cling, with the waist marked once — a belt or a seam — rather than fitted all the way",
-     "a defined waist under a soft shape still reads; it does not need to be held tight"
+     "marks the waist once instead of fitting it all the way"
     ],
     [
      "not to emphasise the waist",
      "column dresses, straight coats, drop-waist styles",
-     "the waist is still there; the garment just does not stop at it"
+     "the garment does not stop at the waist"
     ]
    ]
   },
   "blocks": [
    {
     "t": "p",
-    "s": "These are conventions from styling practice, not rules, and none of them is required. The measured relationship says where the eye tends to go; whether you want to change that is a preference. Everything below is framed as what tends to suit the relationship, not what needs correcting."
+    "s": "These are styling options, not rules, and none of them is required. The measurements say how three or four circumferences relate; they do not say what will look better, and this page does not claim that they do. It is organised by the effect you may want to try, or none."
    },
    {
     "t": "h2",
@@ -54,7 +54,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "Bust minus waist of 9 inches or more, or hips minus waist of 10 or more. That is a large change in circumference over a short vertical distance, and it means most garments with any shaping will find the waist on their own. It also means garments with no shaping — a straight column, a boxy jacket — will hang from the bust and hips and leave a gap at the waist, which is not a fault, only a different silhouette."
+    "s": "Bust minus waist of 9 inches or more, or hips minus waist of 10 or more. That is the measured relationship. Garments that narrow at the waist follow it; garments with no shaping hang from the bust and hips and pass the waist without marking it. Neither is a fault; they are different silhouettes."
    },
    {
     "t": "h2",
@@ -70,7 +70,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "Because bust and hips measure within an inch of each other, the shape is symmetrical top to bottom. Conventions suggest matching the visual weight above and below — a fitted top with straight or gently flared trousers, a structured shoulder with an A-line skirt — rather than loading one end. This is the same logic in reverse as the pear and inverted-triangle pages, where the advice is to add to the smaller end."
+    "s": "Bust and hips measure close in circumference (the rule allows the bust up to an inch over the hips and the hips less than 3.6 inches over the bust). If you want the two ends to read similarly, matching the visual weight above and below — a fitted top with straight or gently flared trousers, some shoulder structure with an A-line skirt — is the usual suggestion. It is an option, not something the measurements require."
    },
    {
     "t": "h2",
@@ -78,7 +78,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "Nothing about the shape requires a fitted waist. Column dresses, straight coats, drop-waist and shift styles all work; they simply hang from the shoulders or bust and let the waist sit inside. The result is a longer, calmer line. The only thing worth knowing is that on this shape a completely unshaped garment will show a gap at the waist from the side, so people who choose it usually pick fabrics with some drape."
+    "s": "Nothing about the shape requires a fitted waist. Column dresses, straight coats, drop-waist and shift styles all work; they simply hang from the shoulders or bust and let the waist sit inside. The result is a longer, calmer line. An unshaped garment passes the waist without marking it; fabrics with some drape and stiffer fabrics give different lines, and which you prefer is a preference."
    },
    {
     "t": "h2",
@@ -86,7 +86,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "A top hourglass has the bust leading the hips by more than an inch; the conventions there borrow a little from the inverted-triangle page — a slightly fuller skirt or wider trouser to bring the hem up to the bust. A bottom hourglass, hips leading by 3.6 inches or more, borrows from the pear page in the same way. In both cases the waist is still the defining feature and the advice above still applies."
+    "s": "A top hourglass result has the bust more than 1 inch (and less than 10) over the hips; a bottom hourglass has the hips 3.6 to 10 inches over the bust. If you want the ends to read similarly, the inverted-triangle and pear outfit pages list options for adding visual weight at the smaller end. The waist condition is the same in all three, so the options above apply to all of them."
    },
    {
     "t": "ul",
@@ -104,19 +104,19 @@ export default {
    ],
    [
     "Should an hourglass avoid oversized clothes?",
-    "Only if the goal is to show the waist. An oversized piece hangs from bust and hips and leaves the waist inside; from the side it shows a gap. Many people like that line. If you want both, mark the waist once with a belt over the loose piece."
+    "Only if the goal is to show the waist. An oversized piece hangs from bust and hips and passes the waist without marking it. If you want both, a belt over the loose piece marks it once."
    ],
    [
     "Where should the waist of a dress sit?",
-    "At the narrowest point you measured, usually a little above the navel. On a defined waist a seam placed lower than that will read as a drop waist rather than a fitted one."
+    "At the narrowest point you measured. A seam placed lower than that reads as a drop waist rather than a fitted one."
    ],
    [
     "Does top hourglass change the advice?",
-    "A little. With the bust leading by more than an inch, a slightly fuller skirt or wider trouser brings the hem line up to the bust; otherwise the waist-focused advice is the same."
+    "Only if you want the ends to read similarly: a fuller skirt or wider trouser adds visual weight below. The waist options are the same."
    ],
    [
     "Are these rules?",
-    "No. They are conventions from styling practice, offered as what tends to suit the measured relationship. The measurements say where the eye tends to go; what to do about it is a preference."
+    "No. They are options organised by the effect you may want. The measurements do not predict how any garment will look."
    ]
   ]
  }

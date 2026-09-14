@@ -74,8 +74,8 @@ export default {
     "t": "ul",
     "items": [
      "<a href=\"/hourglass-vs-pear/\">Hourglass vs pear</a> — hips minus bust at 3.6 inches, with the waist defined.",
-     "<a href=\"/pear-vs-rectangle/\">Pear vs rectangle</a> — the same 3.6 inches, without the defined waist; the most crowded line in the system.",
-     "<a href=\"/apple-vs-rectangle/\">Apple vs rectangle</a> — waist equals hips; the sharpest line, and the one a breath can cross."
+     "<a href=\"/pear-vs-rectangle/\">Pear vs rectangle</a> — the same 3.6 inches without the waist drop, with Spoon and the high-hip zone beside it.",
+     "<a href=\"/apple-vs-rectangle/\">Apple vs rectangle</a> — whether the waist exceeds the hips, and the earlier rules that can match first."
     ]
    },
    {
@@ -90,11 +90,11 @@ export default {
    ],
    [
     "Which shape is most common?",
-    "Rectangle, because it is defined by moderate differences and most bodies have them. In the sample used to test this site, 46.6% of women read rectangle, though that sample under-reads the bust."
+    "Rectangle, in our ANSUR II analysis: 46.6% of records, with chest standing in for bust, which under-reads it. That sample is Army personnel."
    ],
    [
     "What is the rarest?",
-    "Strict hourglass and inverted triangle, each needing a large difference between two circumferences. Under 1% of the test sample met either."
+    "Hourglass and inverted triangle in our ANSUR II analysis, at 0.6% and 0.3% of records."
    ],
    [
     "Where do the rules come from?",

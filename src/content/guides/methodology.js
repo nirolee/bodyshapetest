@@ -1,43 +1,175 @@
-// 方法頁。所有數字都來自本次實測：規則出處、ANSUR 敏感度、NHANES 樣本量。改分類器要同步這頁。
-export default { path: '/methodology/', en: {
-  meta: { title: 'How the Body Shape Classification Works', description: 'The FFIT rules this site runs, the 2020 revision that added Diamond and Oval, why one woman in three is asked for a high-hip measurement, how label stability is computed, and where the waist-to-hip percentiles come from.' },
-  layout: { eyebrow: 'Methodology', h1: 'How the classification works', lead: 'Every number the calculator shows can be traced to a rule printed on this page or to a public dataset named on it. This page sets out the rules, the order they are checked in, what was changed in 2020 and why, how the stability note is computed, and what the percentiles do and do not describe.', ctaHead: 'Run it on your own numbers', ctaNote: 'Nothing is uploaded; every step described here runs in your browser.', updated: '2026-09-15' },
-  tableData: { head: 'The nine rules, in the order they are checked (inches)', cols: ['Shape', 'Condition', 'Added or changed in 2020'], rows: [
-    ['Hourglass', 'bust − hips ≤ 1 and hips − bust < 3.6, and (bust − waist ≥ 9 or hips − waist ≥ 10)', '—'],
-    ['Bottom hourglass', '3.6 ≤ hips − bust < 10, hips − waist ≥ 9, high hip ÷ waist < 1.193', '—'],
-    ['Top hourglass', '1 < bust − hips < 10, bust − waist ≥ 9', '—'],
-    ['Spoon', 'hips − bust > 2, hips − waist ≥ 7, high hip ÷ waist ≥ 1.193', '—'],
-    ['Triangle', 'hips − bust ≥ 3.6 and 0 ≤ hips − waist < 9; or bust − waist < 0 and hips − waist ≥ 0', 'lower bound of 0; second clause added'],
-    ['Inverted triangle', 'bust − hips ≥ 3.6, bust − waist < 9, hips − waist ≥ 0', 'hips − waist ≥ 0 added'],
-    ['Rectangle', '|bust − hips| < 3.6, 0 ≤ bust − waist < 9, 0 ≤ hips − waist < 10', 'lower bounds of 0 added'],
-    ['Diamond', 'waist > bust and waist > hips', 'new'],
-    ['Oval', 'waist > hips and waist ≤ bust', 'new'],
-  ] },
-  blocks: [
-    { t: 'h2', s: 'Where the rules come from' },
-    { t: 'p', s: 'The shapes are the Female Figure Identification Technique (FFIT), developed at North Carolina State University from 3D body scans and published by Simmons, Istook and Devarajan in 2004. FFIT sorts a body into one of nine shapes from four circumferences: bust, waist, high hip and hip. It was built for apparel sizing, not for styling advice, which is worth remembering: the categories exist because garment patterns grade differently for them.' },
-    { t: 'p', s: 'The original formulas assumed the waist is smaller than the bust. Sokolowski showed in 2020 that this left many larger bodies matching no rule at all, and published revised formulas: two new shapes, Diamond and Oval, for bodies whose waist is the widest circumference, and a lower bound of zero on the Triangle, Inverted Triangle and Rectangle rules. This site runs the revised set. Most other calculators run the 2007 set, and that is the usual reason two sites disagree about a body whose waist is close to or larger than its bust.' },
-    { t: 'table' },
-    { t: 'p', s: 'Rules are checked top to bottom and the first match is returned. The order matters: Hourglass is tested before the Triangle family, so a body that satisfies both is called Hourglass. A body that matches none of the nine — in practice one with a bust more than 10 inches larger than its hips, or the reverse — is assigned to the nearest neighbouring shape and the result says so.' },
-    { t: 'h2', s: 'Why you are sometimes asked for a fourth measurement' },
-    { t: 'p', s: 'Two of the nine rules, Spoon and Bottom Hourglass, are separated only by the high-hip ratio: high hip divided by waist, with 1.193 as the cut-off. Their preconditions are wide — hips more than 2 inches larger than the bust and a waist at least 7 inches smaller than the hips — so a large share of women land there. In the ANSUR II sample of 1,986 women, 34.7% did. Rather than ask everyone for four numbers, the calculator asks for three and requests the high hip only when the first three land in that zone. If you would rather not measure it, the honest answer is that your shape is one of Spoon, Bottom Hourglass, Triangle or Rectangle, and the rules cannot say which.' },
-    { t: 'h2', s: 'How the stability note is computed' },
-    { t: 'p', s: 'Every rule is a threshold, so every label has a boundary somewhere near it. After classifying your measurements, the calculator changes each of bust, waist and hips in turn, up and down, in steps of one millimetre, until the label changes, and reports the smallest change that did it and which measurement it was. If that distance is two centimetres or less, the note says you are near a boundary. Two centimetres is a deliberate threshold: it is about what a tape pulled slightly tighter, or a breath in rather than out, does to a waist measurement.' },
-    { t: 'p', s: 'This is not a small effect. Run over the 1,986 women in ANSUR II, the median distance to a different label was 2.4 cm, and 43.6% of them were within 2 cm of one. The measurement that most often decides the label is the bust, because three of the rules turn on bust minus hips at cut-offs of 1 and 3.6 inches.' },
-    { t: 'h2', s: 'Where the waist-to-hip percentiles come from' },
-    { t: 'p', s: 'The percentile is your waist circumference divided by your hip circumference, placed against the same ratio for adults examined in the US National Health and Nutrition Examination Survey, cycles 2017–2018 and August 2021–August 2023, aged 18 and over: 5,890 women and 5,229 men, measured by trained staff with a standard protocol. The comparison is against the women’s distribution on this site’s women’s calculator and the men’s on the men’s. The percentile tells you where your ratio sits among those people; it is not a health score, and a high or low percentile is not a problem to solve.' },
-    { t: 'p', s: 'Two limits. The figures are unweighted, so they describe the examined sample rather than the US population exactly. And NHANES records no bust measurement, so the site cannot say how common each FFIT shape is in the general population; the only public dataset with bust, waist and hip is ANSUR II, which is Army personnel and measures chest rather than bust, so it is used here only for the boundary-sensitivity figures above.' },
-    { t: 'h2', s: 'The men’s calculator' },
-    { t: 'p', s: 'There is no published men’s equivalent of FFIT. The men’s calculator on this site uses five conventional shapes — trapezoid, inverted triangle, rectangle, triangle and oval — from chest, waist and hips, with the FFIT cut-offs of 3.6 inches for a clear difference and 9 inches for a defined waist borrowed as thresholds. These are this site’s rules, not a standard, and the men’s page says so.' },
-    { t: 'h2', s: 'What this site deliberately does not do' },
-    { t: 'p', s: 'It does not classify from a photograph. That was tested before building it: in ANSUR II, the depth-to-width ratio of the torso differs by region (about 0.92 at the chest, 0.71 at the waist, 0.66 at the hips) and varies between people by 7–8%, which is the same size as the 5% differences the rules turn on. Classifying the same 1,986 women from front-view widths alone agreed with their tape measurements 70% of the time — no better than calling everyone the most common shape. A tape measure is slower, and it is the only input that gives an answer worth reporting.' },
-    { t: 'p', s: 'It does not use height, weight or BMI, does not store measurements, and does not send anything to a server. The classification, the stability search and the percentile lookup run in the page.' },
+export default {
+ "path": "/methodology/",
+ "en": {
+  "meta": {
+   "title": "How the Body Shape Classification Works",
+   "description": "The revised FFIT rules this site runs, in full and in order; what the 2020 revision changed; why some results need a high-hip measurement; how the stability note is computed; and what the NHANES waist-to-hip percentiles do and do not describe."
+  },
+  "layout": {
+   "eyebrow": "Methodology",
+   "h1": "How the classification works",
+   "lead": "Every result the calculator shows can be traced to a rule printed on this page or to a public dataset named on it. This page sets out the rules and the order they are checked in, what the 2020 revision changed, how the stability note is computed and what its numbers mean, and what the percentiles compare against — including the places where this site’s method and the source data do not line up perfectly.",
+   "ctaHead": "Run it on your own numbers",
+   "ctaNote": "The calculator shows the rule that fired and how far a single measurement is from changing the result. Measurements are processed in your browser and not sent to this site.",
+   "updated": "2026-09-15"
+  },
+  "tableData": {
+   "head": "The revised FFIT-based rules used on this site, in the order they are checked (inches)",
+   "cols": [
+    "Shape",
+    "Condition",
+    "Note"
+   ],
+   "rows": [
+    [
+     "Hourglass",
+     "bust − hips ≤ 1; hips − bust < 3.6; and (bust − waist ≥ 9 or hips − waist ≥ 10)",
+     "bust may exceed hips by up to 1; hips may exceed bust by less than 3.6"
+    ],
+    [
+     "Bottom hourglass",
+     "3.6 ≤ hips − bust < 10; hips − waist ≥ 9; high hip ÷ waist < 1.193",
+     "needs high hip"
+    ],
+    [
+     "Top hourglass",
+     "1 < bust − hips < 10; bust − waist ≥ 9",
+     ""
+    ],
+    [
+     "Spoon",
+     "hips − bust > 2; hips − waist ≥ 7; high hip ÷ waist ≥ 1.193",
+     "needs high hip; overlaps with several rules above and below, so order matters"
+    ],
+    [
+     "Triangle",
+     "(hips − bust ≥ 3.6 and 0 ≤ hips − waist < 9) or (bust − waist < 0 and hips − waist ≥ 0)",
+     "second clause and lower bound from the 2020 revision"
+    ],
+    [
+     "Inverted triangle",
+     "bust − hips ≥ 3.6; bust − waist < 9; hips − waist ≥ 0",
+     "hips − waist ≥ 0 from the 2020 revision"
+    ],
+    [
+     "Rectangle",
+     "|bust − hips| < 3.6; 0 ≤ bust − waist < 9; 0 ≤ hips − waist < 10",
+     "lower bounds from the 2020 revision"
+    ],
+    [
+     "Diamond",
+     "waist > bust and waist > hips",
+     "in the 2004 shape set; reintroduced into the formula set in 2020"
+    ],
+    [
+     "Oval",
+     "waist > hips and waist ≤ bust",
+     "same"
+    ]
+   ]
+  },
+  "blocks": [
+   {
+    "t": "h2",
+    "s": "Where the rules come from"
+   },
+   {
+    "t": "p",
+    "s": "The nine shapes are the Female Figure Identification Technique (FFIT), developed at North Carolina State University from 3D body scans and described by Simmons, Istook and Devarajan in 2004. The 2004 work defined nine shapes — including Diamond and Oval — from a larger set of scan measurements. A later formula set (2007) expressed seven of them as rules on bust, waist, high-hip and hip circumferences; that set assumed the waist is smaller than the bust and is the version most calculators reproduce. Sokolowski and Bettencourt (2020) showed it misclassified or failed to classify many larger bodies, reintroduced Diamond and Oval into the formulas, and added lower bounds of zero to the Triangle, Inverted Triangle and Rectangle rules. This implementation runs the 2020 revision using bust, waist, hip and, when needed, high-hip circumference."
+   },
+   {
+    "t": "table"
+   },
+   {
+    "t": "p",
+    "s": "This site checks the rules in the order shown and returns the first match. Some conditions overlap — Hourglass and Spoon, for example — so the order determines the result. Where no rule matches (in practice only extreme combinations, such as a bust exactly 10 inches larger than the hips, which falls between the Top Hourglass upper bound and the Inverted Triangle waist condition), the calculator assigns the most similar neighbouring shape and labels the result as a fallback. In the ANSUR II sample described below, no measured woman needed the fallback."
+   },
+   {
+    "t": "h2",
+    "s": "Why some results ask for a fourth measurement"
+   },
+   {
+    "t": "p",
+    "s": "Two rules, Spoon and Bottom Hourglass, include the ratio of high hip to waist, with 1.193 as the dividing value. When the first three measurements satisfy the other conditions of either rule and no high hip has been entered, the calculator cannot resolve the result and asks for it. In our analysis of ANSUR II — 1,986 women, using chest circumference in place of bust, with no high-hip measurement available — 34.7% of records fell into that zone. That figure describes that sample under that substitution; it is not an estimate for women in general. Without a high hip the result for those measurements is undetermined, and the calculator says so rather than guessing."
+   },
+   {
+    "t": "p",
+    "s": "FFIT’s 2020 paper does not specify where the high hip is taken. This site’s measuring convention is around the upper hip, about 3 inches (7–8 cm) below the natural waist and above the fullest part of the hips. That is a protocol choice made here, and a different landmark would shift the ratio."
+   },
+   {
+    "t": "h2",
+    "s": "How the stability note is computed"
+   },
+   {
+    "t": "p",
+    "s": "After classifying the measurements, the calculator changes each of bust, waist and hips in turn, up and down, on a 1 mm grid up to 15 cm, holding the other inputs (including high hip, if entered) fixed, and reports the smallest single-measurement change that produces a different result. A change to “needs high hip” counts as a different result. It does not search combinations of two measurements changing together, so it is an upper bound on the true distance to a boundary, not the shortest path. When the reported distance is 2 cm or less, the calculator shows a boundary note; 2 cm is this site’s display threshold, chosen as a round figure for the kind of variation tape placement and breathing can introduce, not a measured error rate."
+   },
+   {
+    "t": "p",
+    "s": "Run over the 1,297 ANSUR II women whose result did not require a high hip, the median distance to a different result was 2.5 cm; 42.8% were within 2 cm and 23.8% within 1 cm. The bust was the deciding measurement in 769 of those 1,297 cases, the waist in 298 and the hips in 230. These are results of this sensitivity procedure on that sample."
+   },
+   {
+    "t": "h2",
+    "s": "Where the waist-to-hip percentiles come from"
+   },
+   {
+    "t": "p",
+    "s": "The percentile places your waist circumference divided by your hip circumference against the same ratio for adults examined in the US National Health and Nutrition Examination Survey, cycles 2017–2018 and August 2021–August 2023, aged 18 and over with both measurements recorded: 5,890 women and 5,229 men. The women’s calculator compares against women, the men’s against men. The comparison is a rank among the sample’s 1st–99th percentile values; it is not a health score, and a high or low percentile is not a problem to solve."
+   },
+   {
+    "t": "p",
+    "s": "Three limits. First, NHANES measures the waist just above the top of the hip bone (the iliac crest) under a fixed protocol, whereas the shape calculator asks for the narrowest point of the torso; for many people the two differ, so the percentile is a rough placement against a differently defined measurement, not an exact comparison. Second, the figures are percentiles within the pooled, unweighted analytic sample, not estimates of US population percentiles. Third, NHANES records no bust measurement, so this site cannot say how common each FFIT shape is in the general population."
+   },
+   {
+    "t": "h2",
+    "s": "What ANSUR II is used for"
+   },
+   {
+    "t": "p",
+    "s": "ANSUR II is the 2012 anthropometric survey of US Army personnel, public in a working database of 1,986 women and 4,082 men. It records chest, waist and hip circumference but not bust and not high hip. This site uses it for its classification experiments: the share of records needing a high hip, the distribution of results, the stability figures above, and the photograph test below. Chest circumference stands in for bust throughout, which under-reads the bust and pushes results toward Rectangle, and the sample is not representative of the general population. It is not used for the percentiles."
+   },
+   {
+    "t": "h2",
+    "s": "The men’s calculator"
+   },
+   {
+    "t": "p",
+    "s": "This site’s five-category men’s classifier uses custom rules on chest, waist and hips: Oval if the waist is at least as large as the chest or the hips; otherwise Trapezoid or Inverted Triangle when the chest is at least 3.6 inches larger than the hips (Trapezoid if the waist is 9 or more inches under the chest); Triangle when the hips are at least 3.6 inches larger than the chest; otherwise Trapezoid with a 9-inch waist drop or Rectangle without. The 3.6 and 9 inch figures are borrowed from the FFIT rules for consistency. It is not a published or validated men’s FFIT standard."
+   },
+   {
+    "t": "h2",
+    "s": "What this site deliberately does not do"
+   },
+   {
+    "t": "p",
+    "s": "It does not classify from a photograph. Before building the site we tested that on ANSUR II, which records both circumferences and front-view breadths: in our analysis the depth-to-breadth ratio of the torso differed by region (about 0.92 at the chest, 0.71 at the waist, 0.66 at the hips) and varied between individuals by 7–8% (coefficient of variation), which is of the same order as the differences the rules turn on. Classifying the same 1,986 women from front-view breadths alone agreed with their circumference-based result 70.1% of the time, against a 70.4% baseline from calling everyone the most common category. The front-width method we tested did not outperform that baseline, so the site takes tape measurements."
+   },
+   {
+    "t": "p",
+    "s": "It does not use height, weight or BMI. Measurements are processed in the page and are not sent to this site; the site does not store them."
+   }
   ],
-  faq: [
-    ['Are these the same rules as calculator.net?', 'They share the same origin. calculator.net publishes the 2007 FFIT formulas for seven shapes; this site runs the 2020 revision with nine, which adds Diamond and Oval and closes the gap for bodies whose waist is larger than the bust. For a body with a defined waist the two agree; for a body whose waist is the widest part, calculator.net’s rules match nothing and this site returns Diamond or Oval.'],
-    ['Why inches?', 'Because the published cut-offs are in inches — 1, 2, 3.6, 7, 9 and 10 — and converting them would either round them or make them look more precise than they are. You can enter centimetres; the conversion happens before the rules run and the result shows both units.'],
-    ['Can two people with the same shape look different?', 'Yes. The rules use three or four circumferences and nothing else. Height, weight, bone structure, where weight is carried front to back, and posture are not measured, so the label describes a relationship between girths, not an appearance.'],
-    ['How accurate is a tape measurement?', 'Between users, a tape measurement of the waist commonly varies by a centimetre or two depending on tension, breath and exact placement. That is why the stability note exists: if your label would change within that range, the label is less informative than the fact that you sit between two shapes.'],
-    ['Do you keep my measurements?', 'No. Nothing is sent anywhere. The numbers you type stay in your browser and are gone when you close the page.'],
-  ],
-} };
+  "faq": [
+   [
+    "Are these the same rules as calculator.net?",
+    "They share an origin. calculator.net publishes the 2007 FFIT formulas for seven shapes; this site runs the 2020 revision with nine, which adds lower bounds and reintroduces Diamond and Oval. For many inputs the two agree. For a waist larger than the hips, the 2007 formulas can return Rectangle, Triangle or Inverted Triangle depending on the other numbers, or nothing; the revised set returns Oval or Diamond, or another shape if an earlier rule matches first."
+   ],
+   [
+    "Why inches?",
+    "The published thresholds are expressed in inches — 1, 2, 3.6, 7, 9 and 10 — plus one unit-free ratio, 1.193. Centimetre inputs are converted before comparison; the rounding used for display does not change the thresholds."
+   ],
+   [
+    "Can two people with the same shape look different?",
+    "Yes. The rules use three or four circumferences and nothing else. Height, weight, bone structure, front-to-back depth and posture are not measured, so the label describes a relationship between girths, not an appearance."
+   ],
+   [
+    "What does the boundary note mean?",
+    "That changing one measurement by 2 cm or less, with the others fixed, would give a different result. 2 cm is this site’s display threshold. The note names the measurement so you can take it again."
+   ],
+   [
+    "Do you keep my measurements?",
+    "No. They are processed in your browser and are not sent to this site or stored by it."
+   ]
+  ]
+ }
+};
