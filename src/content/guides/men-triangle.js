@@ -2,20 +2,20 @@ export default {
  "path": "/men/triangle/",
  "en": {
   "meta": {
-   "title": "Triangle Body Type for Men: Hips Lead the Chest",
-   "description": "Under this site’s men’s rules a triangle means the hips measure at least 3.6 inches more than the chest, with the waist smaller than both. The rule in numbers, how rectangle differs, and styling options."
+   "title": "Triangle Body Type for Men: Hips at Least 3.6 Inches Over the Chest",
+   "description": "On this site, triangle requires the waist smaller than both chest and hips and hips − chest ≥ 3.6 inches; there is no condition on the chest-to-waist difference. The rule in numbers, how rectangle and trapezoid differ, and styling options."
   },
   "layout": {
    "eyebrow": "Men · Body types",
    "h1": "Triangle body type (men)",
-   "lead": "A triangle result means the hips circumference leads the chest by 3.6 inches (9.1 cm) or more, and the waist is smaller than both. It is checked after oval and after the chest-leads rules, and before the second trapezoid route, so a hip lead of 3.6 inches returns triangle even when the waist drop is large.",
+   "lead": "On this site, triangle requires the waist to be smaller than both chest and hips and a hip circumference at least 3.6 inches (9.1 cm) larger than the chest. It is checked after oval and after the chest-leads rules, and before the second trapezoid route, so a hip lead of 3.6 inches returns triangle whatever the chest-to-waist difference.",
    "ctaHead": "Check your own three measurements",
    "ctaNote": "Chest, waist and hips; the result shows the rule that fired and how far one measurement is from changing it. Nothing is uploaded.",
    "updated": "2026-09-15",
    "tool": "men"
   },
   "tableData": {
-   "head": "The five men’s types and the rule for each (inches), checked in this order",
+   "head": "This site’s five men’s types and the rule for each (inches), checked in this order",
    "cols": [
     "Type",
     "Rule",
@@ -25,39 +25,39 @@ export default {
     [
      "Oval",
      "waist ≥ chest or waist ≥ hips",
-     "checked first"
+     "checked first; either condition alone is enough"
     ],
     [
      "Trapezoid (chest leads)",
      "chest − hips ≥ 3.6 and chest − waist ≥ 9",
-     "chest clearly over hips with a defined waist"
+     "after oval is excluded"
     ],
     [
      "Inverted triangle",
      "chest − hips ≥ 3.6 and chest − waist < 9",
-     "chest clearly over hips, waist not defined"
+     "after oval is excluded"
     ],
     [
      "Triangle",
      "hips − chest ≥ 3.6",
-     "hips clearly over chest"
+     "after oval is excluded; no condition on the waist drop"
     ],
     [
-     "Trapezoid (defined waist)",
-     "chest and hips within 3.6 and chest − waist ≥ 9",
-     "no clear chest–hip lead, but a 9-inch waist drop"
+     "Trapezoid (close chest and hips)",
+     "|chest − hips| < 3.6 and chest − waist ≥ 9",
+     "after the rows above"
     ],
     [
      "Rectangle",
-     "chest and hips within 3.6 and chest − waist < 9",
-     "everything else"
+     "|chest − hips| < 3.6 and chest − waist < 9",
+     "everything that remains; the waist is smaller than both by the oval exclusion"
     ]
    ]
   },
   "blocks": [
    {
     "t": "p",
-    "s": "These are this site’s rules for men, not a published standard: there is no men’s equivalent of the women’s FFIT system in the literature this site cites, so the five conventional types are defined here with explicit cut-offs — 3.6 inches for a clear chest–hip difference and 9 inches for a defined waist, both borrowed from FFIT so that the numbers are consistent. The full rule set and its order are on the <a href=\"/methodology/\">methodology page</a>."
+    "s": "These five categories and their decision order are defined by this site. The 3.6-inch and 9-inch cut-offs are borrowed from the women’s FFIT rules so that the numbers are consistent. This men’s classification rule set has no journal source and is not a published standard. The full rule set is on the <a href=\"/methodology/\">methodology page</a>."
    },
    {
     "t": "table"
@@ -68,7 +68,7 @@ export default {
    },
    {
     "t": "p",
-    "s": "Hips minus chest is 3.6 inches or more, and the waist is smaller than both chest and hips (otherwise oval, which is checked first). The rule has no condition on the waist drop: a 9-inch chest-to-waist difference does not move a triangle result to trapezoid, because triangle is checked first."
+    "s": "Hips minus chest is 3.6 inches or more, and the waist is smaller than both chest and hips (otherwise oval, which is checked first). The rule has no condition on the chest-to-waist difference: a 9-inch difference does not move a triangle result to trapezoid, because triangle is checked first."
    },
    {
     "t": "h2",
@@ -77,14 +77,14 @@ export default {
    {
     "t": "ul",
     "items": [
-     "<b>Rectangle</b>: hips − chest under 3.6 inches, with chest − waist under 9.",
-     "<b>Trapezoid</b> (second route): hips − chest under 3.6 inches, with chest − waist of 9 or more.",
+     "<b>Rectangle</b>: the waist smaller than both, |chest − hips| < 3.6, and chest − waist under 9.",
+     "<b>Trapezoid</b> (close chest and hips): the waist smaller than both, |chest − hips| < 3.6, and chest − waist of 9 or more.",
      "<b>Oval</b>: the waist reaching the chest or the hips."
     ]
    },
    {
     "t": "p",
-    "s": "The deciding measurement near the 3.6-inch cut-off is the chest or the hips; the calculator names which one and by how much."
+    "s": "The calculator searches changes to one measurement at a time in 1 mm increments, up to 15 cm, and reports the smallest change that produces a different result. Ties are resolved in this order: chest, waist, hips. Re-check the measurement named in the note; the note does not mean that measurement was taken wrongly, only that the result is sensitive to it."
    },
    {
     "t": "h2",
@@ -97,7 +97,7 @@ export default {
    {
     "t": "ul",
     "items": [
-     "If you want the chest and hips to read closer: a little more visual width above — a structured shoulder, a layered or patterned top, a jacket with some shoulder shape — is the usual suggestion.",
+     "If you want more visual width above, you could try a structured shoulder, a layered or patterned top, or a jacket with some shoulder shape.",
      "If you want ease through the hips: straight or relaxed-leg trousers cut with room at the seat and thigh; check the fit sitting and moving rather than trusting the cut name.",
      "If you prefer the proportion as it is: regular fits above and below, plain colours."
     ]
@@ -106,23 +106,23 @@ export default {
   "faq": [
    [
     "What measurements make a triangle body type for men?",
-    "On this site: hips at least 3.6 inches larger than the chest, with the waist smaller than both."
+    "On this site: the waist smaller than both chest and hips, and hips at least 3.6 inches larger than the chest."
    ],
    [
     "Is triangle the same as pear for men?",
-    "Pear is the everyday name some guides use for the same relationship — hips larger than the chest. This site uses triangle."
+    "This site uses “triangle” for the specific rule above. It does not define “pear” as an equivalent category."
    ],
    [
     "What is the difference between triangle and rectangle?",
-    "The hip lead: 3.6 inches or more over the chest is triangle; less is rectangle (if the waist drop is under 9 inches)."
+    "Rectangle requires a chest–hip difference of less than 3.6 inches in either direction, chest − waist under 9 inches, and the waist smaller than both. Triangle requires the hips at least 3.6 inches over the chest."
    ],
    [
-    "Does a defined waist change a triangle result?",
-    "No. Triangle is checked before the second trapezoid route, so a 9-inch waist drop with hips 3.6 inches over the chest still returns triangle."
+    "Does a 9-inch chest-to-waist difference change a triangle result?",
+    "No. Triangle is checked before the second trapezoid route, so hips 3.6 inches or more over the chest return triangle whatever the chest-to-waist difference."
    ],
    [
-    "Which measurement should I re-check near a boundary?",
-    "The chest or the hips; the stability note says which."
+    "Which measurement should I re-check if the result says I am near a boundary?",
+    "Re-check the measurement named in the stability note. The calculator compares single-measurement changes on a 1 mm grid across every rule and reports the smallest one; ties go to chest, then waist, then hips."
    ]
   ]
  }
