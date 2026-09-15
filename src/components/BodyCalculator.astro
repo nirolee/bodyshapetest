@@ -1,11 +1,8 @@
 ---
 /**
- * 女性體型計算器。規則在 src/lib/body-shape.js（FFIT 2020），這裡只管輸入、顯示與三個差異點：
- *   1. 把觸發的規則和三個差值攤開給用戶看（公開算式，calculator.net 有、第二名沒有）
- *   2. 標籤穩定性：最少改多少 cm 會翻成別的型——ANSUR 女性有 43.6% 在 2cm 以內
- *   3. 腰臀比在 NHANES 成人裡的百分位（腰臀有、胸圍沒有，所以只做這一個）
- * 高臀圍只在需要時才問：FFIT 的 Spoon / Bottom Hourglass 靠它區分，34.7% 的人會落到這一步。
- * 全部在瀏覽器裡算，不上傳。
+ * 女性體型計算器。規則在 src/lib/body-shape.js（FFIT 2020），視覺/分享在 src/lib/result-card.js。
+ * 結果卡三個差異點：公開觸發的規則與差值、標籤穩定性（最小翻型改動）、NHANES 腰臀比百分位。
+ * 高臀圍只在需要時才問。全部在瀏覽器裡算；「複製結果連結」會把量測值編進 URL，介面上講明。
  */
 export interface Props { compact?: boolean }
 const { compact = false } = Astro.props;
@@ -20,7 +17,7 @@ const { compact = false } = Astro.props;
       <label>Bust <span class="muted">fullest point</span><input name="bust" type="number" inputmode="decimal" step="0.1" min="0" required /></label>
       <label>Waist <span class="muted">narrowest point</span><input name="waist" type="number" inputmode="decimal" step="0.1" min="0" required /></label>
       <label>Hips <span class="muted">fullest point</span><input name="hips" type="number" inputmode="decimal" step="0.1" min="0" required /></label>
-      <label class="bsc-hh" hidden>High hip <span class="muted">about 3 in / 7 cm below the waist</span><input name="highHip" type="number" inputmode="decimal" step="0.1" min="0" /></label>
+      <label class="bsc-hh" hidden>High hip <span class="muted">about 3 in / 7–8 cm below the waist</span><input name="highHip" type="number" inputmode="decimal" step="0.1" min="0" /></label>
     </div>
     <p class="bsc-hh-note muted" hidden></p>
     <div class="btn-row"><button class="btn" type="submit">Find my shape</button><span class="muted">Nothing is uploaded. Where to measure: <a href="/how-to-measure/">how to measure</a>.</span></div>
@@ -32,6 +29,7 @@ const { compact = false } = Astro.props;
 <script>
   import { classifyFemale, flipDistance, percentileOf, isFallback, NEEDS_HIGH_HIP, IN } from '../lib/body-shape.js';
   import { SHAPES, GROUPS } from '../lib/shapes.js';
+  import { barsSvg, outlineSvg, gaugeSvg, encodeShare, decodeShare, copyText, downloadCard } from '../lib/result-card.js';
   import pct from '../data/whr_percentiles.json';
 
   const fmt = (n: number) => (Math.round(n * 10) / 10).toString();
@@ -52,10 +50,13 @@ const { compact = false } = Astro.props;
     const form = root.querySelector('form')!, out = root.querySelector<HTMLElement>('.bsc-out')!;
     const err = root.querySelector<HTMLElement>('.bsc-err')!, hh = root.querySelector<HTMLElement>('.bsc-hh')!, hhNote = root.querySelector<HTMLElement>('.bsc-hh-note')!;
     const unit = () => (form.querySelector<HTMLInputElement>('input[name=unit]:checked')!.value);
-    const read = (name: string) => { const v = parseFloat((form.elements.namedItem(name) as HTMLInputElement).value); return isFinite(v) && v > 0 ? (unit() === 'in' ? v / IN : v) : null; };
+    const setUnit = (u: string) => { const r = form.querySelector<HTMLInputElement>(`input[name=unit][value=${u}]`); if (r) r.checked = true; };
+    const field = (name: string) => form.elements.namedItem(name) as HTMLInputElement;
+    const read = (name: string) => { const v = parseFloat(field(name).value); return isFinite(v) && v > 0 ? (unit() === 'in' ? v / IN : v) : null; };
+    const write = (name: string, cm: number | null) => { if (cm != null) field(name).value = fmt(unit() === 'in' ? cm * IN : cm); };
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault(); err.hidden = true; out.hidden = true;
+    function run() {
+      err.hidden = true; out.hidden = true;
       const bust = read('bust'), waist = read('waist'), hips = read('hips'), highHip = hh.hidden ? null : read('highHip');
       if (bust === null || waist === null || hips === null) { err.textContent = 'Please fill in bust, waist and hips.'; err.hidden = false; return; }
       for (const [k, v] of Object.entries({ bust, waist, hips })) if (v < 45 || v > 220) { err.textContent = `${k} of ${fmt(unit() === 'in' ? v * IN : v)} ${unit()} is outside the range of measured adults — check the number and the unit.`; err.hidden = false; return; }
@@ -69,30 +70,52 @@ const { compact = false } = Astro.props;
       const meta = SHAPES[shape], group = GROUPS[meta.group], fallback = isFallback(input);
       const flip = flipDistance(input);
       const whr = waist / hips, p = percentileOf(whr, pct.whr.female);
-      const dIn = (a: number, b: number) => `${inch(a - b)} in (${fmt(a - b)} cm)`; void dIn;
+      const dIn = (a: number, b: number) => `${inch(a - b)} in (${fmt(a - b)} cm)`;
       const aka = meta.aka.length ? ` Also called: ${meta.aka.join(', ')}.` : '';
-      const stable = flip ? (flip.cm <= 2
-        ? `<strong>Near a boundary.</strong> If your ${flip.measure} were ${flip.cm} cm ${flip.direction > 0 ? 'larger' : 'smaller'}, the label would read <em>${SHAPES[flip.to]?.name ?? flip.to}</em>. That is within this site’s 2 cm display threshold, so measure your ${flip.measure} once more before relying on the label.`
-        : `<strong>Stable.</strong> The nearest other label is <em>${SHAPES[flip.to]?.name ?? flip.to}</em>, and your ${flip.measure} would have to be ${flip.cm} cm ${flip.direction > 0 ? 'larger' : 'smaller'} to get there.`)
-        : '<strong>Stable.</strong> No single measurement change of up to 15 cm moves you to another label.';
+      const flipName = flip ? (SHAPES[flip.to]?.name ?? (flip.to === NEEDS_HIGH_HIP ? 'a result that needs the high hip' : flip.to)) : '';
+      const stableText = flip ? (flip.cm <= 2
+        ? `<strong>Near a boundary.</strong> If your ${flip.measure} were ${flip.cm} cm ${flip.direction > 0 ? 'larger' : 'smaller'}, the result would read <em>${flipName}</em>. That is within this site’s 2 cm display threshold, so measure your ${flip.measure} once more before relying on the label.`
+        : `<strong>Stable.</strong> The nearest other result is <em>${flipName}</em>, and your ${flip.measure} would have to be ${flip.cm} cm ${flip.direction > 0 ? 'larger' : 'smaller'} to get there.`)
+        : '<strong>Stable.</strong> No single measurement change of up to 15 cm moves you to another result.';
+      const bars: [string, number][] = [['Bust', bust], ['Waist', waist], ...(highHip ? [['High hip', highHip] as [string, number]] : []), ['Hips', hips]];
       out.innerHTML = `
         <div class="card">
           <span class="eyebrow">Your shape under the FFIT rules</span>
           <h3 style="margin-top:6px">${meta.name}${group.name !== meta.name ? ` <span class="muted">— ${group.name} family</span>` : ''}</h3>
           <p>${meta.def}${aka}</p>
+          <div class="rc-visual">
+            <div>${barsSvg(bars, unit())}<p class="rc-schematic">Bars are proportional to the circumferences you entered.</p></div>
+            <div>${outlineSvg(bust, waist, hips, highHip)}<p class="rc-schematic" style="max-width:220px">Schematic: widths drawn proportional to circumference. Not a body outline — circumference is not front-view width.</p></div>
+          </div>
           <div class="formula">
             <h4>The numbers the rule used</h4>
             <code>bust − hips = ${dIn(bust, hips)}<br>bust − waist = ${dIn(bust, waist)}<br>hips − waist = ${dIn(hips, waist)}${highHip ? `<br>high hip ÷ waist = ${fmt(highHip / waist * 1000) / 1000}` : ''}</code>
             <p class="muted">${fallback ? 'No FFIT rule matched these measurements; this is the most similar neighbouring shape, assigned by this site’s fallback.' : `Rule that fired: ${RULE_TEXT[shape]}.`} Rules are the FFIT set as revised in 2020, checked in order; see <a href="/methodology/">how the classification works</a>.</p>
           </div>
           <h4>How stable is this label?</h4>
-          <p>${stable}</p>
+          ${gaugeSvg(flip)}
+          <p>${stableText}</p>
           <h4>Waist-to-hip ratio</h4>
           <p>${whr.toFixed(2)} — higher than about ${p}% of ${pct.n.female.toLocaleString()} adult women measured in NHANES (2017–2023). NHANES measures the waist just above the hip bone rather than at the narrowest point, so this is a rough placement, not an exact comparison, and not a health score. <a href="/waist-to-hip-ratio/">More on this ratio</a>.</p>
-          <p class="btn-row"><a class="btn" href="/shapes/${meta.slug}/">What ${group.name.toLowerCase()} means</a><a class="btn plain" href="/shapes/${meta.slug}/outfits/">What tends to suit it</a></p>
+          <p class="btn-row"><a class="btn" href="/shapes/${meta.slug}/">What ${group.name.toLowerCase()} means</a><a class="btn plain" href="/shapes/${meta.slug}/outfits/">Outfit options</a></p>
+          <div class="rc-share"><button type="button" class="btn plain rc-copy">Copy result link</button><button type="button" class="btn plain rc-dl">Download result image</button><span class="muted">The link contains the measurements you entered; nothing is stored on this site.</span></div>
         </div>`;
       out.hidden = false; out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    });
+      out.querySelector<HTMLButtonElement>('.rc-copy')!.onclick = async (e) => { const b = e.currentTarget as HTMLButtonElement; const ok = await copyText(encodeShare(input, unit())); b.textContent = ok ? 'Link copied' : 'Copy failed'; setTimeout(() => (b.textContent = 'Copy result link'), 2000); };
+      out.querySelector<HTMLButtonElement>('.rc-dl')!.onclick = () => downloadCard({
+        title: 'Body shape result', shape: meta.name, sub: `${group.name !== meta.name ? group.name + ' family · ' : ''}${meta.def}`,
+        bars, lines: [['Rule that fired', fallback ? 'Fallback (no FFIT rule matched)' : RULE_TEXT[shape]], ['Stability', flip ? `${flip.cm} cm on the ${flip.measure} to ${flipName}` : 'Stable within 15 cm'], ['Waist-to-hip ratio', `${whr.toFixed(2)} — above about ${p}% of NHANES women`]],
+        note: 'FFIT nine-shape rules, 2020 revision. Measurements processed in the browser. Not a health assessment.', file: `body-shape-${meta.slug}.png`,
+      });
+    }
+    form.addEventListener('submit', (e) => { e.preventDefault(); run(); });
+    // 分享連結還原：?bust=..&waist=..&hips=..&highHip=..&u=cm
+    const shared = decodeShare(location.search);
+    if (shared && shared.bust && !root.dataset.compact?.startsWith('1')) {
+      setUnit(shared.unit); write('bust', shared.bust); write('waist', shared.waist); write('hips', shared.hips);
+      if (shared.highHip) { hh.hidden = false; write('highHip', shared.highHip); }
+      run();
+    }
   }
 </script>
 

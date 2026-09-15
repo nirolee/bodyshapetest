@@ -22,6 +22,14 @@ const rows = Object.values(MALE).map((m) => [m.name, m.def, '']);
     <h2>The five types and the rule for each</h2>
     <GuideTable head="Men’s body types (this site’s rules, inches)" cols={['Type', 'Rule', '']} rows={rows} />
     <p>Rules are checked in this order: oval first (waist at or above chest or hips), then chest-leads-hips by 3.6 inches (trapezoid if the waist is 9 inches under the chest, otherwise inverted triangle), then hips-lead-chest by 3.6 inches (triangle), then the rest (trapezoid with a defined waist, rectangle without). There is no published men’s standard behind these; the cut-offs are borrowed from the women’s FFIT rules so that they are explicit and consistent, and the <a href="/methodology/">methodology page</a> says so.</p>
+    <h2>The five types</h2>
+    <ul>
+      <li><a href="/men/trapezoid/">Trapezoid</a> — a 9-inch chest-to-waist drop, with the chest leading the hips or level with them.</li>
+      <li><a href="/men/inverted-triangle/">Inverted triangle</a> — chest at least 3.6 inches over the hips, waist not defined.</li>
+      <li><a href="/men/rectangle/">Rectangle</a> — chest, waist and hips close together; the most common result.</li>
+      <li><a href="/men/triangle/">Triangle</a> — hips at least 3.6 inches over the chest.</li>
+      <li><a href="/men/oval/">Oval</a> — the waist reaching the chest or the hips; checked first.</li>
+    </ul>
     <p><a href="/how-to-measure/">Where each measurement is taken</a> · <a href="/">Women’s body shape calculator</a></p>
   </div></section>
   <section class="band"><div class="wrap prose"><span class="eyebrow">FAQ</span><h2>Questions people ask</h2><div class="faq" style="margin-top:22px">{faq.map(([q, a]) => <details><summary>{q}</summary><p>{a}</p></details>)}</div></div></section>

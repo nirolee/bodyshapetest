@@ -6,6 +6,7 @@
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BodyCalculator from './BodyCalculator.astro';
+import RatioCalculator from './RatioCalculator.astro';
 import { UI, type Lang } from '../i18n';
 import References from './References.astro';
 import { refsFor } from '../lib/references.js';
@@ -24,8 +25,10 @@ export interface Props {
   updated: string;
   /** 額外 JSON-LD（Article 之外） */
   extraJsonLd?: Record<string, unknown>[];
+  /** 文末嵌哪個工具：預設女版；男性頁傳 'men' */
+  tool?: 'women' | 'men';
 }
-const { lang, title, description, eyebrow, h1, lead, faq, ctaHead, ctaNote, updated, extraJsonLd = [] } = Astro.props;
+const { lang, title, description, eyebrow, h1, lead, faq, ctaHead, ctaNote, updated, extraJsonLd = [], tool = 'women' } = Astro.props;
 const t = UI[lang];
 // 參考文獻按路徑查表（去掉 /zh 前綴，兩個語言共用同一份書目），頁面不必逐個傳參
 const refs = refsFor(Astro.url.pathname);
@@ -68,7 +71,7 @@ const jsonLd = [
       <span class="eyebrow">Free · Nothing uploaded</span>
       <h2>{ctaHead}</h2>
       <p class="lead" style="margin-top:12px;max-width:62ch">{ctaNote}</p>
-      <div style="margin-top:26px"><BodyCalculator compact /></div>
+      <div style="margin-top:26px">{tool === 'men' ? <RatioCalculator mode="men" /> : <BodyCalculator compact />}</div>
     </div>
   </section>
 </BaseLayout>

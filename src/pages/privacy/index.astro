@@ -4,7 +4,7 @@ import { SUPPORT_EMAIL, GA_MEASUREMENT_ID } from '../../lib/site-config';
 ---
 <BaseLayout title="Privacy" description="What this site does and does not collect." lang="en" noindex>
   <h1>Privacy</h1>
-  <p><strong>Measurements.</strong> The numbers you type into any calculator on this site are processed in your browser and are not sent to a server, stored, or logged. Reloading the page clears them.</p>
+  <p><strong>Measurements.</strong> The numbers you type into any calculator on this site are processed in your browser and are not sent to a server, stored, or logged. Reloading the page clears them. If you use “Copy result link”, the measurements are encoded in the link you copy — share it only with people you want to see them; the link is generated on your device and this site does not receive it.</p>
   <p><strong>Analytics.</strong> {GA_MEASUREMENT_ID ? 'This site uses Google Analytics 4 to count page views and understand which pages are read. It records the page, approximate location and device type; it does not receive the measurements you enter. You can block it with any content blocker without affecting the calculators.' : 'This site does not currently run analytics.'}</p>
   <p><strong>Cookies.</strong> The site sets no cookies of its own. {GA_MEASUREMENT_ID ? 'Google Analytics may set its own; see Google’s policy.' : ''}</p>
   <p><strong>Hosting.</strong> Pages are served by Cloudflare, which keeps standard server logs (IP address, request, user agent) for security and performance under its own policy.</p>

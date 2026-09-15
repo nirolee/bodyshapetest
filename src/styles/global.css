@@ -545,3 +545,17 @@ html[lang='en'] .xbar { grid-template-columns: 138px 1fr 40px; }
   header.site, footer.site, .drop, .cta, .btn-row, .band.dark { display: none !important; }
   .band { padding: 0; border: 0; }
 }
+
+/* ── 結果卡視覺（result-card.js）── */
+.rc-visual { display: grid; grid-template-columns: 1fr auto; gap: 18px 26px; align-items: start; margin: 14px 0 6px; }
+@media (max-width: 640px) { .rc-visual { grid-template-columns: 1fr; } .rc-outline { margin: 0 auto; } }
+.rc-bars .rc-lab { font: 600 13px system-ui, sans-serif; fill: var(--ink-2); }
+.rc-bars .rc-val, .rc-gauge .rc-val { font: 600 12.5px var(--mono, monospace); fill: var(--ink); }
+.rc-bars .rc-track { fill: var(--line); } .rc-bars .rc-fill { fill: var(--accent); }
+.rc-outline .rc-shape { fill: color-mix(in srgb, var(--accent) 22%, transparent); stroke: var(--accent); stroke-width: 2; }
+.rc-outline .rc-guide { stroke: var(--line); stroke-dasharray: 4 4; } .rc-glab { font: 500 11px system-ui, sans-serif; fill: var(--ink-3); }
+.rc-gauge .rc-track-line { stroke: var(--line); stroke-width: 3; } .rc-gauge .rc-near { fill: color-mix(in srgb, #b3261e 18%, transparent); }
+.rc-gauge .rc-dot { fill: var(--accent); stroke: var(--paper); stroke-width: 2; }
+.rc-schematic { font-size: 12.5px; color: var(--ink-3); margin-top: 4px; }
+.rc-share { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; align-items: center; }
+.rc-share .muted { font-size: 12.5px; }

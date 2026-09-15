@@ -14,6 +14,6 @@ const d = all.find((x: any) => x.path.replace(/^\/|\/$/g, '') === path)!.en;
 ---
 <GuideLayout lang="en" title={d.meta.title} description={d.meta.description}
   eyebrow={d.layout.eyebrow} h1={d.layout.h1} lead={d.layout.lead}
-  faq={d.faq} ctaHead={d.layout.ctaHead} ctaNote={d.layout.ctaNote} updated={d.layout.updated}>
+  faq={d.faq} ctaHead={d.layout.ctaHead} ctaNote={d.layout.ctaNote} updated={d.layout.updated} tool={d.layout.tool ?? 'women'}>
   <GuideBlocks blocks={d.blocks} tableKey={null} tableData={d.tableData ?? null} lang="en" />
 </GuideLayout>

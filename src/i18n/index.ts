@@ -31,7 +31,7 @@ const en: Dict = {
     blurb: 'Type your bust, waist and hip measurements and get your shape under the published FFIT rules, with the formulas shown, how far you are from the nearest boundary, and where your waist-to-hip ratio sits among measured adults. Nothing is uploaded or stored.',
     toolsHead: 'Tools', aboutHead: 'Read',
     tools: [['/', 'Body Shape Calculator'], ['/men/', 'Men\'s Body Type Calculator'], ['/waist-to-hip-ratio/', 'Waist-to-Hip Ratio Calculator']],
-    about: [['/how-to-measure/', 'How to measure bust, waist and hips'], ['/shapes/', 'The body shapes'], ['/methodology/', 'How the classification works'], ['/privacy/', 'Privacy'], ['/terms/', 'Terms']],
+    about: [['/how-to-measure/', 'How to measure bust, waist and hips'], ['/shapes/', 'The body shapes'], ['/men/', 'Men’s body types'], ['/methodology/', 'How the classification works'], ['/privacy/', 'Privacy'], ['/terms/', 'Terms']],
     disclaimer: 'Styling reference only. A shape label describes proportions; it is not a health assessment and not a ranking.',
     support: 'Support',
   },

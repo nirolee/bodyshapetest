@@ -20,12 +20,14 @@ const { mode } = Astro.props;
 <script>
   import { classifyMale, flipDistance, percentileOf, IN } from '../lib/body-shape.js';
   import { MALE } from '../lib/shapes.js';
+  import { barsSvg, outlineSvg, gaugeSvg, encodeShare, decodeShare, copyText, downloadCard } from '../lib/result-card.js';
   import pct from '../data/whr_percentiles.json';
   const fmt = (n: number) => (Math.round(n * 10) / 10).toString(), inch = (cm: number) => fmt(cm * IN);
   for (const root of document.querySelectorAll<HTMLElement>('.rc')) {
     const mode = root.dataset.mode, form = root.querySelector('form')!, out = root.querySelector<HTMLElement>('.bsc-out')!, err = root.querySelector<HTMLElement>('.bsc-err')!;
     const unit = () => form.querySelector<HTMLInputElement>('input[name=unit]:checked')!.value;
     const read = (n: string) => { const el = form.elements.namedItem(n) as HTMLInputElement | null; if (!el) return null; const v = parseFloat(el.value); return isFinite(v) && v > 0 ? (unit() === 'in' ? v / IN : v) : null; };
+    const shared = decodeShare(location.search);
     form.addEventListener('submit', (e) => {
       e.preventDefault(); err.hidden = true; out.hidden = true;
       const waist = read('waist'), hips = read('hips'), chest = read('chest');
@@ -35,11 +37,18 @@ const { mode } = Astro.props;
       if (mode === 'men') {
         const input = { chest: chest!, waist, hips }, shape = classifyMale(input), meta = MALE[shape], flip = flipDistance(input, classifyMale as any);
         const p = percentileOf(whr, pct.whr.male);
-        const stable = flip ? (flip.cm <= 2 ? `<strong>Near a boundary.</strong> If your ${flip.measure} were ${flip.cm} cm ${flip.direction > 0 ? 'larger' : 'smaller'} the label would read <em>${MALE[flip.to]?.name ?? flip.to}</em> — within this site’s 2 cm display threshold, so re-measure the ${flip.measure}.` : `<strong>Stable.</strong> The nearest other label is <em>${MALE[flip.to]?.name ?? flip.to}</em>, ${flip.cm} cm away on the ${flip.measure}.`) : '<strong>Stable.</strong>';
+        const flipName = flip ? (MALE[flip.to]?.name ?? flip.to) : '';
+        const stable = flip ? (flip.cm <= 2 ? `<strong>Near a boundary.</strong> If your ${flip.measure} were ${flip.cm} cm ${flip.direction > 0 ? 'larger' : 'smaller'} the result would read <em>${flipName}</em> — within this site’s 2 cm display threshold, so re-measure the ${flip.measure}.` : `<strong>Stable.</strong> The nearest other result is <em>${flipName}</em>, ${flip.cm} cm away on the ${flip.measure}.`) : '<strong>Stable.</strong>';
+        const bars: [string, number][] = [['Chest', chest!], ['Waist', waist], ['Hips', hips]];
         out.innerHTML = `<div class="card"><span class="eyebrow">Your body type under this site’s rules</span><h3 style="margin-top:6px">${meta.name}</h3><p>${meta.def}</p>
+          <div class="rc-visual"><div>${barsSvg(bars, unit())}<p class="rc-schematic">Bars are proportional to the circumferences you entered.</p></div><div>${outlineSvg(chest!, waist, hips)}<p class="rc-schematic" style="max-width:220px">Schematic: widths drawn proportional to circumference. Not a body outline.</p></div></div>
           <div class="formula"><h4>The numbers</h4><code>chest − hips = ${inch(chest! - hips)} in (${fmt(chest! - hips)} cm)<br>chest − waist = ${inch(chest! - waist)} in (${fmt(chest! - waist)} cm)<br>waist ÷ hips = ${whr.toFixed(2)}</code><p class="muted">Cut-offs: 3.6 in for a clear chest–hip difference, 9 in for a defined waist, borrowed from FFIT. These are this site’s rules, not a published standard — see <a href="/methodology/">methodology</a>.</p></div>
-          <h4>How stable is this label?</h4><p>${stable}</p>
-          <h4>Waist-to-hip ratio</h4><p>${whr.toFixed(2)} — higher than about ${p}% of ${pct.n.male.toLocaleString()} adult men measured in NHANES. NHANES measures the waist just above the hip bone, so this is a rough placement. A proportion, not a health score.</p></div>`;
+          <h4>How stable is this label?</h4>${gaugeSvg(flip)}<p>${stable}</p>
+          <h4>Waist-to-hip ratio</h4><p>${whr.toFixed(2)} — higher than about ${p}% of ${pct.n.male.toLocaleString()} adult men measured in NHANES. NHANES measures the waist just above the hip bone, so this is a rough placement. A proportion, not a health score.</p>
+          <p class="btn-row"><a class="btn" href="/men/${shape.replace('_', '-')}/">What ${meta.name.toLowerCase()} means</a></p>
+          <div class="rc-share"><button type="button" class="btn plain rc-copy">Copy result link</button><button type="button" class="btn plain rc-dl">Download result image</button><span class="muted">The link contains the measurements you entered; nothing is stored on this site.</span></div></div>`;
+        out.querySelector<HTMLButtonElement>('.rc-copy')!.onclick = async (e) => { const b = e.currentTarget as HTMLButtonElement; const ok = await copyText(encodeShare(input, unit())); b.textContent = ok ? 'Link copied' : 'Copy failed'; setTimeout(() => (b.textContent = 'Copy result link'), 2000); };
+        out.querySelector<HTMLButtonElement>('.rc-dl')!.onclick = () => downloadCard({ title: 'Men’s body type result', shape: meta.name, sub: meta.def, bars, lines: [['Rule', meta.def], ['Stability', flip ? `${flip.cm} cm on the ${flip.measure} to ${flipName}` : 'Stable within 15 cm'], ['Waist-to-hip ratio', `${whr.toFixed(2)} — above about ${p}% of NHANES men`]], note: 'This site’s five-type men’s rules (FFIT cut-offs borrowed). Measurements processed in the browser. Not a health assessment.', file: `body-type-${shape}.png` });
       } else {
         const sex = form.querySelector<HTMLInputElement>('input[name=sex]:checked')!.value as 'female' | 'male';
         const p = percentileOf(whr, pct.whr[sex]), wp = percentileOf(waist, pct.waist_cm[sex]), hp = percentileOf(hips, pct.hip_cm[sex]);
@@ -49,5 +58,12 @@ const { mode } = Astro.props;
       }
       out.hidden = false; out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
+    if (shared && ((mode === 'men' && shared.chest) || mode === 'whr')) {
+      const w = (n: string, cm: number | null) => { const el = form.elements.namedItem(n) as HTMLInputElement | null; if (el && cm != null) el.value = fmt(shared.unit === 'in' ? cm * IN : cm); };
+      const r = form.querySelector<HTMLInputElement>(`input[name=unit][value=${shared.unit}]`); if (r) r.checked = true;
+      w('chest', shared.chest); w('waist', shared.waist); w('hips', shared.hips);
+      if (mode === 'whr' && shared.sex) { const sr = form.querySelector<HTMLInputElement>(`input[name=sex][value=${shared.sex}]`); if (sr) sr.checked = true; }
+      form.requestSubmit();
+    }
   }
 </script>
