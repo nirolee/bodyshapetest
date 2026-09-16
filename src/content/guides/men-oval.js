@@ -106,6 +106,24 @@ export default {
      "If you want the focus at the shoulders and neckline: a structured shoulder, a V or open collar, colour or pattern on top.",
      "If you want a fitted look, try a fitted shirt and check that it allows comfortable sitting and movement."
     ]
+   },
+   {
+    "t": "h2",
+    "s": "Other men's body types"
+   },
+   {
+    "t": "p",
+    "s": "The five types are decided by the same three measurements; if your numbers sit near a boundary, the neighbouring page is worth reading too."
+   },
+   {
+    "t": "ul",
+    "items": [
+     "<a href=\"/men/trapezoid/\">Trapezoid</a>",
+     "<a href=\"/men/inverted-triangle/\">Inverted triangle</a>",
+     "<a href=\"/men/rectangle/\">Rectangle</a>",
+     "<a href=\"/men/triangle/\">Triangle</a>",
+     "<a href=\"/men/\">All five men's types and the rules</a>"
+    ]
    }
   ],
   "faq": [

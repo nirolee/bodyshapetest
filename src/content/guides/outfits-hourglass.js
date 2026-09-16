@@ -95,6 +95,24 @@ export default {
      "If you sit on the pear boundary: <a href=\"/hourglass-vs-pear/\">hourglass vs pear</a>",
      "Where the natural waist is: <a href=\"/how-to-measure/\">how to measure</a>"
     ]
+   },
+   {
+    "t": "h2",
+    "s": "Outfits for the other shapes"
+   },
+   {
+    "t": "p",
+    "s": "Not sure you are hourglass? The <a href=\"/\">calculator</a> reports how close your measurements sit to the next shape, and each shape has its own outfit page."
+   },
+   {
+    "t": "ul",
+    "items": [
+     "<a href=\"/shapes/pear/outfits/\">Pear outfits</a>",
+     "<a href=\"/shapes/rectangle/outfits/\">Rectangle outfits</a>",
+     "<a href=\"/shapes/inverted-triangle/outfits/\">Inverted triangle outfits</a>",
+     "<a href=\"/shapes/apple/outfits/\">Apple outfits</a>",
+     "<a href=\"/shapes/\">All nine shapes and how they are decided</a>"
+    ]
    }
   ],
   "faq": [

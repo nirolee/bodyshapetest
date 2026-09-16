@@ -106,6 +106,24 @@ export default {
      "If you want a straighter line: regular-fit shirts worn untucked, unstructured jackets.",
      "If you want more volume or detail below the waist, try straight or relaxed trousers or patch pockets."
     ]
+   },
+   {
+    "t": "h2",
+    "s": "Other men's body types"
+   },
+   {
+    "t": "p",
+    "s": "The five types are decided by the same three measurements; if your numbers sit near a boundary, the neighbouring page is worth reading too."
+   },
+   {
+    "t": "ul",
+    "items": [
+     "<a href=\"/men/inverted-triangle/\">Inverted triangle</a>",
+     "<a href=\"/men/rectangle/\">Rectangle</a>",
+     "<a href=\"/men/triangle/\">Triangle</a>",
+     "<a href=\"/men/oval/\">Oval</a>",
+     "<a href=\"/men/\">All five men's types and the rules</a>"
+    ]
    }
   ],
   "faq": [

@@ -101,6 +101,24 @@ export default {
      "If you want a quieter top: regular rather than slim fits through the chest, unstructured shoulders, plain darker tops.",
      "If you want to put the focus on the upper body: fitted shirts and structured jackets over straight trousers."
     ]
+   },
+   {
+    "t": "h2",
+    "s": "Other men's body types"
+   },
+   {
+    "t": "p",
+    "s": "The five types are decided by the same three measurements; if your numbers sit near a boundary, the neighbouring page is worth reading too."
+   },
+   {
+    "t": "ul",
+    "items": [
+     "<a href=\"/men/trapezoid/\">Trapezoid</a>",
+     "<a href=\"/men/rectangle/\">Rectangle</a>",
+     "<a href=\"/men/triangle/\">Triangle</a>",
+     "<a href=\"/men/oval/\">Oval</a>",
+     "<a href=\"/men/\">All five men's types and the rules</a>"
+    ]
    }
   ],
   "faq": [

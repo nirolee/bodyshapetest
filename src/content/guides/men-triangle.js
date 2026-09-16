@@ -101,6 +101,24 @@ export default {
      "If you want ease through the hips: straight or relaxed-leg trousers cut with room at the seat and thigh; check the fit sitting and moving rather than trusting the cut name.",
      "If you prefer the proportion as it is: regular fits above and below, plain colours."
     ]
+   },
+   {
+    "t": "h2",
+    "s": "Other men's body types"
+   },
+   {
+    "t": "p",
+    "s": "The five types are decided by the same three measurements; if your numbers sit near a boundary, the neighbouring page is worth reading too."
+   },
+   {
+    "t": "ul",
+    "items": [
+     "<a href=\"/men/trapezoid/\">Trapezoid</a>",
+     "<a href=\"/men/inverted-triangle/\">Inverted triangle</a>",
+     "<a href=\"/men/rectangle/\">Rectangle</a>",
+     "<a href=\"/men/oval/\">Oval</a>",
+     "<a href=\"/men/\">All five men's types and the rules</a>"
+    ]
    }
   ],
   "faq": [

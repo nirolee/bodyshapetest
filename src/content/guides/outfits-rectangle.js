@@ -87,6 +87,24 @@ export default {
      "If the bust measurement is close to a boundary: <a href=\"/pear-vs-rectangle/\">pear vs rectangle</a>",
      "Finding the narrowest point: <a href=\"/how-to-measure/\">how to measure</a>"
     ]
+   },
+   {
+    "t": "h2",
+    "s": "Outfits for the other shapes"
+   },
+   {
+    "t": "p",
+    "s": "Not sure you are rectangle? The <a href=\"/\">calculator</a> reports how close your measurements sit to the next shape, and each shape has its own outfit page."
+   },
+   {
+    "t": "ul",
+    "items": [
+     "<a href=\"/shapes/hourglass/outfits/\">Hourglass outfits</a>",
+     "<a href=\"/shapes/pear/outfits/\">Pear outfits</a>",
+     "<a href=\"/shapes/inverted-triangle/outfits/\">Inverted triangle outfits</a>",
+     "<a href=\"/shapes/apple/outfits/\">Apple outfits</a>",
+     "<a href=\"/shapes/\">All nine shapes and how they are decided</a>"
+    ]
    }
   ],
   "faq": [
