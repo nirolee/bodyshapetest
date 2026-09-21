@@ -1,0 +1,25 @@
+---
+/**
+ * 繁中指南頁。與英文版共用 src/content/guides/<key>.js，差別只在取 d.zh 而不是 d.en。
+ * **只為已經有 zh 鍵的模組生成頁面**——翻譯是增量進行的，沒翻到的模組不出 /zh/ 頁，
+ * 也就不會產生內容是英文的假繁中頁（gemini 站就是栽在那個上，見 2026-09-20 的合併）。
+ */
+import GuideLayout from '../../../components/GuideLayout.astro';
+import GuideBlocks from '../../../components/GuideBlocks.astro';
+const mods = import.meta.glob('../../../content/guides/*.js', { eager: true });
+const all = Object.values(mods).map((m: any) => m.default).filter((d: any) => d && d.path && d.zh);
+export function getStaticPaths() {
+  const mods = import.meta.glob('../../../content/guides/*.js', { eager: true });
+  return Object.values(mods).map((m: any) => m.default).filter((d: any) => d && d.path && d.zh)
+    .map((d: any) => ({ params: { path: d.path.replace(/^\/|\/$/g, '') } }));
+}
+const { path } = Astro.params;
+const mod = all.find((x: any) => x.path.replace(/^\/|\/$/g, '') === path)!;
+const d = mod.zh;
+const langs = (['en', 'zh'] as const).filter((l) => mod[l]);
+---
+<GuideLayout lang="zh" langs={langs} title={d.meta.title} description={d.meta.description}
+  eyebrow={d.layout.eyebrow} h1={d.layout.h1} lead={d.layout.lead}
+  faq={d.faq} ctaHead={d.layout.ctaHead} ctaNote={d.layout.ctaNote} updated={d.layout.updated} tool={d.layout.tool ?? 'women'}>
+  <GuideBlocks blocks={d.blocks} tableKey={null} tableData={d.tableData ?? null} lang="zh" />
+</GuideLayout>

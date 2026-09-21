@@ -13,6 +13,7 @@ import { refsFor } from '../lib/references.js';
 
 export interface Props {
   lang: Lang;
+  langs?: Lang[];
   title: string;
   description: string;
   eyebrow: string;
@@ -28,7 +29,7 @@ export interface Props {
   /** 文末嵌哪個工具：預設女版；男性頁傳 'men' */
   tool?: 'women' | 'men';
 }
-const { lang, title, description, eyebrow, h1, lead, faq, ctaHead, ctaNote, updated, extraJsonLd = [], tool = 'women' } = Astro.props;
+const { lang, langs, title, description, eyebrow, h1, lead, faq, ctaHead, ctaNote, updated, extraJsonLd = [], tool = 'women' } = Astro.props;
 const t = UI[lang];
 // 參考文獻按路徑查表（去掉 /zh 前綴，兩個語言共用同一份書目），頁面不必逐個傳參
 const refs = refsFor(Astro.url.pathname);
@@ -38,7 +39,7 @@ const jsonLd = [
   ...extraJsonLd,
 ];
 ---
-<BaseLayout title={title} description={description} jsonLd={jsonLd} lang={lang} bleed>
+<BaseLayout title={title} description={description} jsonLd={jsonLd} lang={lang} langs={langs} bleed>
   <section class="band dark tight">
     <div class="wrap prose">
       <span class="eyebrow">{eyebrow}</span>

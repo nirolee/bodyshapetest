@@ -14,11 +14,14 @@ export interface Props {
   /** 頁面自己排分區（band）時設 true；預設把 slot 包進一個 prose 版心 */
   bleed?: boolean;
   lang?: Lang;
+  /** 這一頁「真的存在」的語言。預設全部；沒有某語言版本的頁面要顯式傳，
+   *  否則 hreflang 會指向 404（faceanalyzer 2026-09-16 就是每頁掛 5 條死連結）。 */
+  langs?: Lang[];
 }
 const here = Astro.url.pathname;
 const {
   title, description, canonical, ogImage = '/og-default.png', jsonLd,
-  noindex = false, bleed = false, lang = langFromPath(here),
+  noindex = false, bleed = false, lang = langFromPath(here), langs = LANGS as unknown as Lang[],
 } = Astro.props;
 const t = UI[lang];
 const canonicalUrl = canonical ?? new URL(here, SITE_URL).toString();
@@ -27,13 +30,13 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 // 每個語言互指；x-default 給英文，因為它服務的語言範圍最廣。
 // 依 LANGS 產生，加語言不用再改這裡。
 const alt = altPath(here);
-const alternates = LANGS.map((l) => [LOCALE[l], new URL(alt[l], SITE_URL).toString()] as const);
+const alternates = langs.map((l) => [LOCALE[l], new URL(alt[l], SITE_URL).toString()] as const);
 const hrefEn = new URL(alt.en, SITE_URL).toString();
 // 語言選單：列出「除了當前語言以外」的全部語言。兩種語言時看起來就是一顆切換鈕，
 // 三種以上自動變成一排——加語言不用再改版面。
 // （原本是單顆按鈕 + 「其餘語言切回根語言」的保守規則，加日文後那個規則會讓
 //   繁中頁的按鈕指向日文，語意不對，所以在這裡一併換掉。）
-const otherLangs = LANGS.filter((l) => l !== lang);
+const otherLangs = langs.filter((l) => l !== lang);
 ---
 <!DOCTYPE html>
 <html lang={LOCALE[lang]}>

@@ -10,9 +10,12 @@ export function getStaticPaths() {
     .map((d: any) => ({ params: { path: d.path.replace(/^\/|\/$/g, '') } }));
 }
 const { path } = Astro.params;
-const d = all.find((x: any) => x.path.replace(/^\/|\/$/g, '') === path)!.en;
+const mod = all.find((x: any) => x.path.replace(/^\/|\/$/g, '') === path)!;
+const d = mod.en;
+// 這一篇真的有哪幾語，就只發哪幾條 hreflang
+const langs = (['en', 'zh'] as const).filter((l) => mod[l]);
 ---
-<GuideLayout lang="en" title={d.meta.title} description={d.meta.description}
+<GuideLayout lang="en" langs={langs} title={d.meta.title} description={d.meta.description}
   eyebrow={d.layout.eyebrow} h1={d.layout.h1} lead={d.layout.lead}
   faq={d.faq} ctaHead={d.layout.ctaHead} ctaNote={d.layout.ctaNote} updated={d.layout.updated} tool={d.layout.tool ?? 'women'}>
   <GuideBlocks blocks={d.blocks} tableKey={null} tableData={d.tableData ?? null} lang="en" />

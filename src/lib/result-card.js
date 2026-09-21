@@ -26,7 +26,8 @@ export function barsSvg(rows, unit = 'cm') {
 }
 
 /** 輪廓示意：上／中／下三段寬度按圍度比例。keys 依序 top(胸/肩)、waist、hips。 */
-export function outlineSvg(top, waist, hips, highHip = null) {
+export function outlineSvg(top, waist, hips, highHip = null, labels = null) {
+  const LB = labels || { top: 'top', waist: 'waist', highHip: 'high hip', hips: 'hips' };
   const max = Math.max(top, waist, hips, highHip || 0);
   const W = 220, Hh = 260, cx = W / 2, k = 80 / max; // 半寬最大 80
   const t = top * k, w = waist * k, h = hips * k, hh = highHip ? highHip * k : (w + h) / 2;
@@ -36,7 +37,7 @@ export function outlineSvg(top, waist, hips, highHip = null) {
     : `M${cx - t} ${y0} L${cx + t} ${y0} C${cx + t} ${y0 + 50} ${cx + w} ${y1 - 30} ${cx + w} ${y1} C${cx + w} ${y1 + 40} ${cx + h} ${y3 - 40} ${cx + h} ${y3} L${cx - h} ${y3} C${cx - h} ${y3 - 40} ${cx - w} ${y1 + 40} ${cx - w} ${y1} C${cx - w} ${y1 - 30} ${cx - t} ${y0 + 50} ${cx - t} ${y0} Z`;
   const guide = (y, label) => `<line x1="18" x2="${W - 18}" y1="${y}" y2="${y}" class="rc-guide"/><text x="${W - 16}" y="${y - 4}" text-anchor="end" class="rc-glab">${label}</text>`;
   return `<svg class="rc-outline" viewBox="0 0 ${W} ${Hh}" width="${W}" height="${Hh}" role="img" aria-label="Schematic outline with widths proportional to the measured circumferences">
-    ${guide(y0, 'top')}${guide(y1, 'waist')}${highHip ? guide(y2, 'high hip') : ''}${guide(y3, 'hips')}
+    ${guide(y0, LB.top)}${guide(y1, LB.waist)}${highHip ? guide(y2, LB.highHip) : ''}${guide(y3, LB.hips)}
     <path d="${path}" class="rc-shape"/></svg>`;
 }
 

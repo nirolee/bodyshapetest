@@ -35,3 +35,41 @@ export const MALE = {
   triangle:          { name: 'Triangle',          def: 'Hips at least 3.6 inches larger than the chest.' },
   oval:              { name: 'Oval',              def: 'Waist larger than the hips and no larger than the bust.' },
 };
+
+/* ── 繁中層（2026-09-21 加）─────────────────────────────────────────
+ * 只補「怎麼解釋」，不補「叫什麼」：SHAPES[].name 是 FFIT 已發表的結果名，
+ * 頁面把規則印在旁邊，換成中文譯名反而對不上文獻，所以九個結果名一律保留英文。
+ * 需要中文的是**常用名分組**——梨形／沙漏型／蘋果型／矩形／倒三角正是台港讀者在搜的詞。
+ * 每一個閾值都照抄英文版，沒有換算也沒有四捨五入。
+ */
+export const SHAPES_ZH = {
+  hourglass:         { def: '胸圍比臀圍大不超過 1 吋、臀圍比胸圍大不到 3.6 吋，且腰圍比胸圍小至少 9 吋或比臀圍小至少 10 吋。' },
+  top_hourglass:     { def: '胸圍比臀圍大超過 1 吋但不到 10 吋，腰圍比胸圍小至少 9 吋。' },
+  bottom_hourglass:  { def: '臀圍比胸圍大 3.6 吋以上但不到 10 吋、腰圍比臀圍小至少 9 吋，且高臀圍 ÷ 腰圍低於 1.193。' },
+  spoon:             { def: '臀圍比胸圍大超過 2 吋、腰圍比臀圍小至少 7 吋，且高臀圍在腰部上方明顯外擴（高臀圍 ÷ 腰圍 ≥ 1.193）。' },
+  triangle:          { def: '臀圍比胸圍大至少 3.6 吋且臀腰差在 0 到 9 吋之間；或腰圍大於胸圍而不大於臀圍。' },
+  inverted_triangle: { def: '胸圍比臀圍大 3.6 吋以上，腰圍比胸圍小不到 9 吋。' },
+  rectangle:         { def: '胸圍與臀圍相差在 3.6 吋以內，腰圍比胸圍小不到 9 吋、比臀圍小不到 10 吋。' },
+  diamond:           { def: '腰圍同時大於胸圍與臀圍。' },
+  oval:              { def: '腰圍大於臀圍，但不大於胸圍。' },
+};
+/** 別名：英文版收的是英語圈說法，繁中收的是台港說法，不是逐字翻譯 */
+export const AKA_ZH = {
+  spoon: ['下半身沙漏'],
+  triangle: ['梨形'],
+  inverted_triangle: ['V 字型', '有些計算器把它叫 apple'],
+  rectangle: ['香蕉型', '直筒', '運動型'],
+  diamond: ['蘋果型'],
+  oval: ['蘋果型', '圓潤型'],
+  hourglass: [], top_hourglass: [], bottom_hourglass: [],
+};
+export const GROUPS_ZH = {
+  hourglass: '沙漏型', pear: '梨形', 'inverted-triangle': '倒三角', rectangle: '矩形', apple: '蘋果型',
+};
+export const MALE_ZH = {
+  trapezoid:         { def: '胸圍比臀圍寬至少 3.6 吋，或腰線明顯：肩與胸撐起寬度，腰圍比胸圍小至少 9 吋。' },
+  inverted_triangle: { def: '胸圍比臀圍大至少 3.6 吋，胸腰差不到 9 吋。' },
+  rectangle:         { def: '胸圍與臀圍相差在 3.6 吋以內，腰圍比胸圍小不到 9 吋。' },
+  triangle:          { def: '臀圍比胸圍大至少 3.6 吋。' },
+  oval:              { def: '腰圍大於臀圍，且不大於胸圍。' },
+};

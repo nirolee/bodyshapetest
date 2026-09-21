@@ -1,0 +1,63 @@
+---
+/**
+ * 繁中首頁。文案在 src/content/home-zh.json（由 scripts/translate-blob.mjs 產出後人工校過標題用詞）。
+ * 標題與 h1 對準真實搜尋詞而不是直譯：Google TW 補全裡「身形計算」0 條、
+ * 「身材比例計算」4 條（含計算機女/男）、「身材類型計算」2 條，所以全站一律用「身材」。
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BodyCalculator from '../../components/BodyCalculator.astro';
+import GuideTable from '../../components/GuideTable.astro';
+import References from '../../components/References.astro';
+import { refsFor } from '../../lib/references.js';
+import c from '../../content/home-zh.json';
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'WebApplication', name: c.h1, applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', inLanguage: 'zh-Hant', offers: { '@type': 'Offer', price: '0', priceCurrency: 'TWD' }, url: 'https://bodyshapetest.org/zh/' },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: 'zh-Hant', mainEntity: c.faq.map(([q, a]: [string, string]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) },
+];
+---
+<BaseLayout langs={['en', 'zh']} title={c.title} description={c.description} jsonLd={jsonLd} lang="zh" bleed>
+  <section class="band dark tight">
+    <div class="wrap prose">
+      <span class="eyebrow">{c.eyebrow}</span>
+      <h1>{c.h1}</h1>
+      <p class="lead" style="margin-top:14px">{c.lead}</p>
+    </div>
+  </section>
+  <section class="band">
+    <div class="wrap"><BodyCalculator lang="zh" /></div>
+  </section>
+  <section class="band warm">
+    <div class="wrap prose">
+      <h2>{c.s2_h2}</h2>
+      <p>{c.s2_p1}</p>
+      <p>{c.s2_p2}</p>
+      <p><a href="/zh/how-to-measure/">{c.s2_links[0]}</a> · <a href="/zh/methodology/">{c.s2_links[1]}</a> · <a href="/zh/men/">{c.s2_links[2]}</a></p>
+    </div>
+  </section>
+  <section class="band">
+    <div class="wrap prose">
+      <GuideTable head={c.rules_head} cols={c.rules_cols} rows={c.rules_rows} />
+      <p class="muted" style="max-width:70ch" set:html={c.rules_note} />
+    </div>
+  </section>
+  <section class="band warm">
+    <div class="wrap prose">
+      <h2>{c.families_h2}</h2>
+      <ul>
+        <li><a href="/zh/shapes/hourglass/">{c.families[0][0]}</a> — {c.families[0][1]}</li>
+        <li><a href="/zh/shapes/pear/">{c.families[1][0]}</a> — {c.families[1][1]}</li>
+        <li><a href="/zh/shapes/rectangle/">{c.families[2][0]}</a> — {c.families[2][1]}</li>
+        <li><a href="/zh/shapes/inverted-triangle/">{c.families[3][0]}</a> — {c.families[3][1]}</li>
+        <li><a href="/zh/shapes/apple/">{c.families[4][0]}</a> — {c.families[4][1]}</li>
+      </ul>
+      <p>{c.families_tail}</p>
+    </div>
+  </section>
+  <References lang="zh" refs={refsFor('/')} />
+  <section class="band">
+    <div class="wrap prose">
+      <span class="eyebrow">常見問題</span><h2>大家會問的</h2>
+      <div class="faq" style="margin-top:22px">{c.faq.map(([q, a]: [string, string]) => <details><summary>{q}</summary><p>{a}</p></details>)}</div>
+    </div>
+  </section>
+</BaseLayout>

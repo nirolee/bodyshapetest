@@ -4,23 +4,33 @@
  * 結果卡三個差異點：公開觸發的規則與差值、標籤穩定性（最小翻型改動）、NHANES 腰臀比百分位。
  * 高臀圍只在需要時才問。全部在瀏覽器裡算；「複製結果連結」會把量測值編進 URL，介面上講明。
  */
-export interface Props { compact?: boolean }
-const { compact = false } = Astro.props;
+export interface Props { compact?: boolean; lang?: 'en' | 'zh' }
+const { compact = false, lang = 'en' } = Astro.props;
+// 伺服端文案（表單本身）。客戶端那一半在下面 <script> 的 STR 裡，兩邊都要改才完整。
+const T = {
+  en: { bust: 'Bust', bustHint: 'fullest point', waist: 'Waist', waistHint: 'narrowest point',
+        hips: 'Hips', hipsHint: 'fullest point', hh: 'High hip', hhHint: 'about 3 in / 7–8 cm below the waist',
+        submit: 'Find my shape', privacy: 'Nothing is uploaded. Where to measure:', howTo: 'how to measure', units: 'Units' },
+  zh: { bust: '胸圍', bustHint: '最豐滿處', waist: '腰圍', waistHint: '最細處',
+        hips: '臀圍', hipsHint: '最豐滿處', hh: '高臀圍', hhHint: '腰下約 3 吋 / 7–8 公分',
+        submit: '算出我的體型', privacy: '不會上傳任何資料。量哪裡：', howTo: '測量教學', units: '單位' },
+}[lang];
+const howToHref = lang === 'zh' ? '/zh/how-to-measure/' : '/how-to-measure/';
 ---
-<div class="bsc" data-compact={compact ? '1' : '0'}>
+<div class="bsc" data-compact={compact ? '1' : '0'} data-lang={lang}>
   <form class="bsc-form" novalidate>
-    <div class="bsc-units" role="radiogroup" aria-label="Units">
+    <div class="bsc-units" role="radiogroup" aria-label={T.units}>
       <label><input type="radio" name="unit" value="cm" checked /> cm</label>
       <label><input type="radio" name="unit" value="in" /> inches</label>
     </div>
     <div class="bsc-grid">
-      <label>Bust <span class="muted">fullest point</span><input name="bust" type="number" inputmode="decimal" step="0.1" min="0" required /></label>
-      <label>Waist <span class="muted">narrowest point</span><input name="waist" type="number" inputmode="decimal" step="0.1" min="0" required /></label>
-      <label>Hips <span class="muted">fullest point</span><input name="hips" type="number" inputmode="decimal" step="0.1" min="0" required /></label>
-      <label class="bsc-hh" hidden>High hip <span class="muted">about 3 in / 7–8 cm below the waist</span><input name="highHip" type="number" inputmode="decimal" step="0.1" min="0" /></label>
+      <label>{T.bust} <span class="muted">{T.bustHint}</span><input name="bust" type="number" inputmode="decimal" step="0.1" min="0" required /></label>
+      <label>{T.waist} <span class="muted">{T.waistHint}</span><input name="waist" type="number" inputmode="decimal" step="0.1" min="0" required /></label>
+      <label>{T.hips} <span class="muted">{T.hipsHint}</span><input name="hips" type="number" inputmode="decimal" step="0.1" min="0" required /></label>
+      <label class="bsc-hh" hidden>{T.hh} <span class="muted">{T.hhHint}</span><input name="highHip" type="number" inputmode="decimal" step="0.1" min="0" /></label>
     </div>
     <p class="bsc-hh-note muted" hidden></p>
-    <div class="btn-row"><button class="btn" type="submit">Find my shape</button><span class="muted">Nothing is uploaded. Where to measure: <a href="/how-to-measure/">how to measure</a>.</span></div>
+    <div class="btn-row"><button class="btn" type="submit">{T.submit}</button><span class="muted">{T.privacy} <a href={howToHref}>{T.howTo}</a>.</span></div>
     <p class="bsc-err" role="alert" hidden></p>
   </form>
   <div class="bsc-out" hidden></div>
@@ -28,12 +38,90 @@ const { compact = false } = Astro.props;
 
 <script>
   import { classifyFemale, flipDistance, percentileOf, isFallback, NEEDS_HIGH_HIP, IN } from '../lib/body-shape.js';
-  import { SHAPES, GROUPS } from '../lib/shapes.js';
+  import { SHAPES, GROUPS, SHAPES_ZH, AKA_ZH, GROUPS_ZH } from '../lib/shapes.js';
   import { barsSvg, outlineSvg, gaugeSvg, encodeShare, decodeShare, copyText, downloadCard } from '../lib/result-card.js';
   import pct from '../data/whr_percentiles.json';
 
   const fmt = (n: number) => (Math.round(n * 10) / 10).toString();
   const inch = (cm: number) => fmt(cm * IN);
+  // 客戶端文案。閾值一律照抄，中文版只換連接詞不換數字。
+  const RULE_ZH: Record<string, string> = {
+    hourglass: '胸 − 臀 ≤ 1 吋、臀 − 胸 < 3.6 吋，且（胸 − 腰 ≥ 9 吋 或 臀 − 腰 ≥ 10 吋）',
+    bottom_hourglass: '臀 − 胸 在 3.6 到 10 吋之間、臀 − 腰 ≥ 9 吋、高臀 ÷ 腰 < 1.193',
+    top_hourglass: '胸 − 臀 在 1 到 10 吋之間、胸 − 腰 ≥ 9 吋',
+    spoon: '臀 − 胸 > 2 吋、臀 − 腰 ≥ 7 吋、高臀 ÷ 腰 ≥ 1.193',
+    triangle: '（臀 − 胸 ≥ 3.6 吋 且 0 ≤ 臀 − 腰 < 9 吋）或（腰大於胸 且 臀 ≥ 腰）',
+    inverted_triangle: '胸 − 臀 ≥ 3.6 吋、胸 − 腰 < 9 吋、臀 ≥ 腰',
+    rectangle: '胸與臀相差在 3.6 吋內、0 ≤ 胸 − 腰 < 9 吋、0 ≤ 臀 − 腰 < 10 吋',
+    diamond: '腰同時大於胸與臀',
+    oval: '腰大於臀但不大於胸',
+  };
+  const STR = {
+    en: {
+      fillIn: 'Please fill in bust, waist and hips.',
+      outOfRange: (k: string, v: string, u: string) => `${k} of ${v} ${u} is outside the range of measured adults — check the number and the unit.`,
+      needHH: 'With these three numbers the result cannot be resolved: they satisfy the other conditions of Spoon or Bottom Hourglass, and those rules use high hip ÷ waist. Add the high hip — around the upper hip, about 3 in (7–8 cm) below your waist by this site’s convention — and press the button again.',
+      eyebrow: 'Your shape under the FFIT rules', family: (g: string) => `— ${g} family`,
+      alsoCalled: (a: string) => ` Also called: ${a}.`,
+      barsNote: 'Bars are proportional to the circumferences you entered.',
+      outlineNote: 'Schematic: widths drawn proportional to circumference. Not a body outline — circumference is not front-view width.',
+      numbersHead: 'The numbers the rule used', bust: 'bust', waist: 'waist', hips: 'hips', highHip: 'high hip',
+      fellBack: 'No FFIT rule matched these measurements; this is the most similar neighbouring shape, assigned by this site’s fallback.',
+      ruleFired: (r: string) => `Rule that fired: ${r}.`,
+      rulesTail: 'Rules are the FFIT set as revised in 2020, checked in order; see',
+      methodLink: 'how the classification works',
+      stableHead: 'How stable is this label?',
+      nearBoundary: (m: string, cm: string, dir: string, to: string) => `<strong>Near a boundary.</strong> If your ${m} were ${cm} cm ${dir}, the result would read <em>${to}</em>. That is within this site’s 2 cm display threshold, so measure your ${m} once more before relying on the label.`,
+      stable: (to: string, m: string, cm: string, dir: string) => `<strong>Stable.</strong> The nearest other result is <em>${to}</em>, and your ${m} would have to be ${cm} cm ${dir} to get there.`,
+      rockSolid: '<strong>Stable.</strong> No single measurement change of up to 15 cm moves you to another result.',
+      larger: 'larger', smaller: 'smaller',
+      whrHead: 'Waist-to-hip ratio',
+      whrBody: (v: string, p: number, n: string) => `${v} — higher than about ${p}% of ${n} adult women measured in NHANES (2017–2023). NHANES measures the waist just above the hip bone rather than at the narrowest point, so this is a rough placement, not an exact comparison, and not a health score.`,
+      whrLink: 'More on this ratio',
+      whatMeans: (g: string) => `What ${g.toLowerCase()} means`, outfits: 'Outfit options',
+      copy: 'Copy result link', copied: 'Link copied', copyFail: 'Copy failed',
+      download: 'Download result image', shareNote: 'The link contains the measurements you entered; nothing is stored on this site.',
+      cardTitle: 'Body shape result', cardRule: 'Rule that fired', cardFallback: 'Fallback (no FFIT rule matched)',
+      cardStability: 'Stability', cardStable: 'Stable within 15 cm',
+      cardFlip: (cm: string, m: string, to: string) => `${cm} cm on the ${m} to ${to}`,
+      cardWhr: (v: string, p: number) => `${v} — above about ${p}% of NHANES women`,
+      cardNote: 'FFIT nine-shape rules, 2020 revision. Measurements processed in the browser. Not a health assessment.',
+      needsHHName: 'a result that needs the high hip',
+      unitIn: 'in', unitCm: 'cm', topLabel: 'top',
+    },
+    zh: {
+      fillIn: '請填入胸圍、腰圍與臀圍。',
+      outOfRange: (k: string, v: string, u: string) => `${k} 填的 ${v} ${u} 超出受測成人的範圍——請檢查數值與單位。`,
+      needHH: '光靠這三個數字判不出來：它們同時滿足 Spoon 與 Bottom hourglass 的其他條件，而這兩條規則要用高臀圍 ÷ 腰圍。請補量高臀圍——在臀部上緣附近，依本站慣例約在腰下 3 吋（7–8 公分）——再按一次。',
+      eyebrow: '依 FFIT 規則判出的體型', family: (g: string) => `— ${g}`,
+      alsoCalled: (a: string) => `也叫：${a}。`,
+      barsNote: '長條與你輸入的圍度成比例。',
+      outlineNote: '示意圖：寬度按圍度等比例畫。這不是身體外形——圍度不等於正面寬度。',
+      numbersHead: '規則用到的數字', bust: '胸圍', waist: '腰圍', hips: '臀圍', highHip: '高臀圍',
+      fellBack: '沒有任何 FFIT 規則吻合這組數值；這是最相近的鄰近體型，由本站的兜底規則指定。',
+      ruleFired: (r: string) => `觸發的規則：${r}。`,
+      rulesTail: '規則採 FFIT 2020 修訂版，依序判斷；詳見',
+      methodLink: '判定是怎麼做的',
+      stableHead: '這個標籤有多穩？',
+      nearBoundary: (m: string, cm: string, dir: string, to: string) => `<strong>接近分界。</strong>你的${m}只要${dir} ${cm} 公分，結果就會變成 <em>${to}</em>。這在本站 2 公分的顯示門檻之內，所以先把${m}再量一次，再決定要不要相信這個標籤。`,
+      stable: (to: string, m: string, cm: string, dir: string) => `<strong>穩定。</strong>最接近的另一個結果是 <em>${to}</em>，你的${m}要${dir} ${cm} 公分才會走到那裡。`,
+      rockSolid: '<strong>穩定。</strong>任何單一圍度在 15 公分以內的變動都不會換成別的結果。',
+      larger: '大', smaller: '小',
+      whrHead: '腰臀比',
+      whrBody: (v: string, p: number, n: string) => `${v}——高於 NHANES（2017–2023）受測的 ${n} 位成年女性中約 ${p}% 的人。NHANES 是在髖骨上緣量腰圍而不是最細處，所以這只是個粗略定位，不是精確比較，也不是健康評分。`,
+      whrLink: '腰臀比的更多說明',
+      whatMeans: (g: string) => `${g}是什麼意思`, outfits: '穿搭方向',
+      copy: '複製結果連結', copied: '已複製', copyFail: '複製失敗',
+      download: '下載結果圖', shareNote: '連結裡帶著你輸入的量測值；本站不會留存任何資料。',
+      cardTitle: '體型結果', cardRule: '觸發的規則', cardFallback: '兜底（沒有 FFIT 規則吻合）',
+      cardStability: '穩定度', cardStable: '15 公分內都穩定',
+      cardFlip: (cm: string, m: string, to: string) => `${m}差 ${cm} 公分就變 ${to}`,
+      cardWhr: (v: string, p: number) => `${v}——高於約 ${p}% 的 NHANES 女性`,
+      cardNote: 'FFIT 九型規則 2020 修訂版。量測在瀏覽器裡完成。這不是健康評估。',
+      needsHHName: '一個需要高臀圍才能判的結果',
+      unitIn: '吋', unitCm: '公分', topLabel: '上圍',
+    },
+  };
   const RULE_TEXT: Record<string, string> = {
     hourglass: 'bust − hips ≤ 1 in, hips − bust < 3.6 in, and (bust − waist ≥ 9 in or hips − waist ≥ 10 in)',
     bottom_hourglass: 'hips − bust between 3.6 and 10 in, hips − waist ≥ 9 in, high hip ÷ waist < 1.193',
@@ -49,6 +137,14 @@ const { compact = false } = Astro.props;
   for (const root of document.querySelectorAll<HTMLElement>('.bsc')) {
     const form = root.querySelector('form')!, out = root.querySelector<HTMLElement>('.bsc-out')!;
     const err = root.querySelector<HTMLElement>('.bsc-err')!, hh = root.querySelector<HTMLElement>('.bsc-hh')!, hhNote = root.querySelector<HTMLElement>('.bsc-hh-note')!;
+    const L = (root.dataset.lang === 'zh' ? 'zh' : 'en') as 'en' | 'zh';
+    const S = STR[L];
+    const P = L === 'zh' ? '/zh' : '';                    // 內部連結的語言前綴
+    const RT = L === 'zh' ? RULE_ZH : RULE_TEXT;
+    const nameOf = (k: string) => SHAPES[k].name;          // FFIT 結果名不翻
+    const defOf = (k: string) => (L === 'zh' ? SHAPES_ZH[k].def : SHAPES[k].def);
+    const akaOf = (k: string) => (L === 'zh' ? (AKA_ZH[k] ?? []) : SHAPES[k].aka);
+    const groupOf = (g: string) => (L === 'zh' ? GROUPS_ZH[g] : GROUPS[g].name);
     const unit = () => (form.querySelector<HTMLInputElement>('input[name=unit]:checked')!.value);
     const setUnit = (u: string) => { const r = form.querySelector<HTMLInputElement>(`input[name=unit][value=${u}]`); if (r) r.checked = true; };
     const field = (name: string) => form.elements.namedItem(name) as HTMLInputElement;
@@ -58,54 +154,58 @@ const { compact = false } = Astro.props;
     function run() {
       err.hidden = true; out.hidden = true;
       const bust = read('bust'), waist = read('waist'), hips = read('hips'), highHip = hh.hidden ? null : read('highHip');
-      if (bust === null || waist === null || hips === null) { err.textContent = 'Please fill in bust, waist and hips.'; err.hidden = false; return; }
-      for (const [k, v] of Object.entries({ bust, waist, hips })) if (v < 45 || v > 220) { err.textContent = `${k} of ${fmt(unit() === 'in' ? v * IN : v)} ${unit()} is outside the range of measured adults — check the number and the unit.`; err.hidden = false; return; }
+      if (bust === null || waist === null || hips === null) { err.textContent = S.fillIn; err.hidden = false; return; }
+      for (const [k, v] of Object.entries({ bust, waist, hips })) if (v < 45 || v > 220) { err.textContent = S.outOfRange(k, fmt(unit() === 'in' ? v * IN : v), unit()); err.hidden = false; return; }
       const input = { bust, waist, hips, highHip };
       const shape = classifyFemale(input);
       if (shape === NEEDS_HIGH_HIP) {
         hh.hidden = false; hhNote.hidden = false;
-        hhNote.textContent = 'With these three numbers the result cannot be resolved: they satisfy the other conditions of Spoon or Bottom Hourglass, and those rules use high hip ÷ waist. Add the high hip — around the upper hip, about 3 in (7–8 cm) below your waist by this site’s convention — and press the button again.';
+        hhNote.textContent = S.needHH;
         hh.querySelector('input')!.focus(); return;
       }
-      const meta = SHAPES[shape], group = GROUPS[meta.group], fallback = isFallback(input);
+      const meta = SHAPES[shape], fallback = isFallback(input);
+      const shapeName = nameOf(shape), groupName = groupOf(meta.group), shapeDef = defOf(shape);
       const flip = flipDistance(input);
       const whr = waist / hips, p = percentileOf(whr, pct.whr.female);
-      const dIn = (a: number, b: number) => `${inch(a - b)} in (${fmt(a - b)} cm)`;
-      const aka = meta.aka.length ? ` Also called: ${meta.aka.join(', ')}.` : '';
-      const flipName = flip ? (SHAPES[flip.to]?.name ?? (flip.to === NEEDS_HIGH_HIP ? 'a result that needs the high hip' : flip.to)) : '';
+      const dIn = (a: number, b: number) => `${inch(a - b)} ${S.unitIn} (${fmt(a - b)} ${S.unitCm})`;
+      const akaList = akaOf(shape); const aka = akaList.length ? S.alsoCalled(akaList.join('、')) : '';
+      const flipName = flip ? (SHAPES[flip.to] ? nameOf(flip.to) : (flip.to === NEEDS_HIGH_HIP ? S.needsHHName : flip.to)) : '';
+      const MEAS: Record<string, string> = { bust: S.bust, waist: S.waist, hips: S.hips, highHip: S.highHip };
+      const measName = flip ? (MEAS[flip.measure] ?? flip.measure) : '';
+      const dirWord = flip ? (flip.direction > 0 ? S.larger : S.smaller) : '';
       const stableText = flip ? (flip.cm <= 2
-        ? `<strong>Near a boundary.</strong> If your ${flip.measure} were ${flip.cm} cm ${flip.direction > 0 ? 'larger' : 'smaller'}, the result would read <em>${flipName}</em>. That is within this site’s 2 cm display threshold, so measure your ${flip.measure} once more before relying on the label.`
-        : `<strong>Stable.</strong> The nearest other result is <em>${flipName}</em>, and your ${flip.measure} would have to be ${flip.cm} cm ${flip.direction > 0 ? 'larger' : 'smaller'} to get there.`)
-        : '<strong>Stable.</strong> No single measurement change of up to 15 cm moves you to another result.';
-      const bars: [string, number][] = [['Bust', bust], ['Waist', waist], ...(highHip ? [['High hip', highHip] as [string, number]] : []), ['Hips', hips]];
+        ? S.nearBoundary(measName, String(flip.cm), dirWord, flipName)
+        : S.stable(flipName, measName, String(flip.cm), dirWord))
+        : S.rockSolid;
+      const bars: [string, number][] = [[S.bust, bust], [S.waist, waist], ...(highHip ? [[S.highHip, highHip] as [string, number]] : []), [S.hips, hips]];
       out.innerHTML = `
         <div class="card">
-          <span class="eyebrow">Your shape under the FFIT rules</span>
-          <h3 style="margin-top:6px">${meta.name}${group.name !== meta.name ? ` <span class="muted">— ${group.name} family</span>` : ''}</h3>
-          <p>${meta.def}${aka}</p>
+          <span class="eyebrow">${S.eyebrow}</span>
+          <h3 style="margin-top:6px">${shapeName}${groupName !== shapeName ? ` <span class="muted">${S.family(groupName)}</span>` : ''}</h3>
+          <p>${shapeDef}${aka}</p>
           <div class="rc-visual">
-            <div>${barsSvg(bars, unit())}<p class="rc-schematic">Bars are proportional to the circumferences you entered.</p></div>
-            <div>${outlineSvg(bust, waist, hips, highHip)}<p class="rc-schematic" style="max-width:220px">Schematic: widths drawn proportional to circumference. Not a body outline — circumference is not front-view width.</p></div>
+            <div>${barsSvg(bars, unit())}<p class="rc-schematic">${S.barsNote}</p></div>
+            <div>${outlineSvg(bust, waist, hips, highHip, { top: S.topLabel, waist: S.waist, highHip: S.highHip, hips: S.hips })}<p class="rc-schematic" style="max-width:220px">${S.outlineNote}</p></div>
           </div>
           <div class="formula">
-            <h4>The numbers the rule used</h4>
-            <code>bust − hips = ${dIn(bust, hips)}<br>bust − waist = ${dIn(bust, waist)}<br>hips − waist = ${dIn(hips, waist)}${highHip ? `<br>high hip ÷ waist = ${fmt(highHip / waist * 1000) / 1000}` : ''}</code>
-            <p class="muted">${fallback ? 'No FFIT rule matched these measurements; this is the most similar neighbouring shape, assigned by this site’s fallback.' : `Rule that fired: ${RULE_TEXT[shape]}.`} Rules are the FFIT set as revised in 2020, checked in order; see <a href="/methodology/">how the classification works</a>.</p>
+            <h4>${S.numbersHead}</h4>
+            <code>${S.bust} − ${S.hips} = ${dIn(bust, hips)}<br>${S.bust} − ${S.waist} = ${dIn(bust, waist)}<br>${S.hips} − ${S.waist} = ${dIn(hips, waist)}${highHip ? `<br>${S.highHip} ÷ ${S.waist} = ${fmt(highHip / waist * 1000) / 1000}` : ''}</code>
+            <p class="muted">${fallback ? S.fellBack : S.ruleFired(RT[shape])} ${S.rulesTail} <a href="${P}/methodology/">${S.methodLink}</a>.</p>
           </div>
-          <h4>How stable is this label?</h4>
+          <h4>${S.stableHead}</h4>
           ${gaugeSvg(flip)}
           <p>${stableText}</p>
-          <h4>Waist-to-hip ratio</h4>
-          <p>${whr.toFixed(2)} — higher than about ${p}% of ${pct.n.female.toLocaleString()} adult women measured in NHANES (2017–2023). NHANES measures the waist just above the hip bone rather than at the narrowest point, so this is a rough placement, not an exact comparison, and not a health score. <a href="/waist-to-hip-ratio/">More on this ratio</a>.</p>
-          <p class="btn-row"><a class="btn" href="/shapes/${meta.slug}/">What ${group.name.toLowerCase()} means</a><a class="btn plain" href="/shapes/${meta.slug}/outfits/">Outfit options</a></p>
-          <div class="rc-share"><button type="button" class="btn plain rc-copy">Copy result link</button><button type="button" class="btn plain rc-dl">Download result image</button><span class="muted">The link contains the measurements you entered; nothing is stored on this site.</span></div>
+          <h4>${S.whrHead}</h4>
+          <p>${S.whrBody(whr.toFixed(2), p, pct.n.female.toLocaleString())} <a href="${P}/waist-to-hip-ratio/">${S.whrLink}</a>.</p>
+          <p class="btn-row"><a class="btn" href="${P}/shapes/${meta.slug}/">${S.whatMeans(groupName)}</a><a class="btn plain" href="${P}/shapes/${meta.slug}/outfits/">${S.outfits}</a></p>
+          <div class="rc-share"><button type="button" class="btn plain rc-copy">${S.copy}</button><button type="button" class="btn plain rc-dl">${S.download}</button><span class="muted">${S.shareNote}</span></div>
         </div>`;
       out.hidden = false; out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      out.querySelector<HTMLButtonElement>('.rc-copy')!.onclick = async (e) => { const b = e.currentTarget as HTMLButtonElement; const ok = await copyText(encodeShare(input, unit())); b.textContent = ok ? 'Link copied' : 'Copy failed'; setTimeout(() => (b.textContent = 'Copy result link'), 2000); };
+      out.querySelector<HTMLButtonElement>('.rc-copy')!.onclick = async (e) => { const b = e.currentTarget as HTMLButtonElement; const ok = await copyText(encodeShare(input, unit())); b.textContent = ok ? S.copied : S.copyFail; setTimeout(() => (b.textContent = S.copy), 2000); };
       out.querySelector<HTMLButtonElement>('.rc-dl')!.onclick = () => downloadCard({
-        title: 'Body shape result', shape: meta.name, sub: `${group.name !== meta.name ? group.name + ' family · ' : ''}${meta.def}`,
-        bars, lines: [['Rule that fired', fallback ? 'Fallback (no FFIT rule matched)' : RULE_TEXT[shape]], ['Stability', flip ? `${flip.cm} cm on the ${flip.measure} to ${flipName}` : 'Stable within 15 cm'], ['Waist-to-hip ratio', `${whr.toFixed(2)} — above about ${p}% of NHANES women`]],
-        note: 'FFIT nine-shape rules, 2020 revision. Measurements processed in the browser. Not a health assessment.', file: `body-shape-${meta.slug}.png`,
+        title: S.cardTitle, shape: shapeName, sub: `${groupName !== shapeName ? groupName + ' · ' : ''}${shapeDef}`,
+        bars, lines: [[S.cardRule, fallback ? S.cardFallback : RT[shape]], [S.cardStability, flip ? S.cardFlip(String(flip.cm), measName, flipName) : S.cardStable], [S.whrHead, S.cardWhr(whr.toFixed(2), p)]],
+        note: S.cardNote, file: `body-shape-${meta.slug}.png`,
       });
     }
     form.addEventListener('submit', (e) => { e.preventDefault(); run(); });

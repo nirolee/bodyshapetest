@@ -12,7 +12,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 const meta = { title: 'Page not found', description: 'This URL does not exist. Head back to the face rating test.' };
 ---
-<BaseLayout title={meta.title} description={meta.description} lang="en" noindex={true}>
+<BaseLayout langs={['en']} title={meta.title} description={meta.description} lang="en" noindex={true}>
   <div id="nf-en">
     <h1>Page not found</h1>
     <p class="lead">That URL does not exist on this site.</p>
