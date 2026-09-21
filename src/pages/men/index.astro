@@ -15,7 +15,7 @@ const faq: [string, string][] = [
 const jsonLd = [{ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) }];
 const rows = Object.values(MALE).map((m) => [m.name, m.def, '']);
 ---
-<BaseLayout langs={['en']} title={title} description={description} jsonLd={jsonLd} lang="en" bleed>
+<BaseLayout langs={['en', 'zh']} title={title} description={description} jsonLd={jsonLd} lang="en" bleed>
   <section class="band dark tight"><div class="wrap prose"><span class="eyebrow">Free · Nothing uploaded · Rules in the open</span><h1>Men’s body type calculator</h1><p class="lead" style="margin-top:14px">Chest, waist and hips, three explicit cut-offs, and the same two extras as the women’s calculator: how far you are from the next type, and where your waist-to-hip ratio sits among 5,229 men measured in a national health survey.</p></div></section>
   <section class="band"><div class="wrap"><RatioCalculator mode="men" /></div></section>
   <section class="band warm"><div class="wrap prose">

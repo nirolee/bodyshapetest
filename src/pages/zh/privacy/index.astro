@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { SUPPORT_EMAIL } from '../../../lib/site-config';
+import c from '../../../content/pages-zh.json';
+---
+<BaseLayout langs={['en', 'zh']} title={c.privacy_title} description={c.privacy_desc} lang="zh" noindex>
+  <h1>{c.privacy_h1}</h1>
+  {c.privacy_paras.map(([h, b]: [string, string]) => <p><strong>{h}</strong>{b}</p>)}
+  <p><strong>聯絡。</strong> <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a></p>
+  <p class="muted">{c.privacy_updated}</p>
+</BaseLayout>

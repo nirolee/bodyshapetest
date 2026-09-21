@@ -1,29 +1,85 @@
 ---
 /** mode="men"：男性五型（本站規則，見 body-shape.js classifyMale）。mode="whr"：腰臀比 + NHANES 百分位（男女）。 */
-export interface Props { mode: 'men' | 'whr' }
-const { mode } = Astro.props;
+export interface Props { mode: 'men' | 'whr'; lang?: 'en' | 'zh' }
+const { mode, lang = 'en' } = Astro.props;
+const T = {
+  en: { sex: 'Sex', cmpW: 'Compare with women', cmpM: 'Compare with men', chest: 'Chest', chestHint: 'fullest point, arms down',
+        waist: 'Waist', waistHint: 'narrowest point', hips: 'Hips', hipsHint: 'fullest point',
+        submitMen: 'Find my body type', submitWhr: 'Calculate my ratio', privacy: 'Nothing is uploaded.', units: 'Units' },
+  zh: { sex: '性別', cmpW: '和女性比較', cmpM: '和男性比較', chest: '胸圍', chestHint: '最豐滿處，手臂自然下垂',
+        waist: '腰圍', waistHint: '最細處', hips: '臀圍', hipsHint: '最豐滿處',
+        submitMen: '算出我的體型', submitWhr: '算我的腰臀比', privacy: '不會上傳任何資料。', units: '單位' },
+}[lang];
 ---
-<div class="bsc rc" data-mode={mode}>
+<div class="bsc rc" data-mode={mode} data-lang={lang}>
   <form class="bsc-form" novalidate>
     <div class="bsc-units" role="radiogroup" aria-label="Units"><label><input type="radio" name="unit" value="cm" checked /> cm</label><label><input type="radio" name="unit" value="in" /> inches</label></div>
-    {mode === 'whr' && <div class="bsc-units" role="radiogroup" aria-label="Sex"><label><input type="radio" name="sex" value="female" checked /> Compare with women</label><label><input type="radio" name="sex" value="male" /> Compare with men</label></div>}
+    {mode === 'whr' && <div class="bsc-units" role="radiogroup" aria-label={T.sex}><label><input type="radio" name="sex" value="female" checked /> {T.cmpW}</label><label><input type="radio" name="sex" value="male" /> {T.cmpM}</label></div>}
     <div class="bsc-grid">
-      {mode === 'men' && <label>Chest <span class="muted">fullest point, arms down</span><input name="chest" type="number" inputmode="decimal" step="0.1" min="0" required /></label>}
-      <label>Waist <span class="muted">narrowest point</span><input name="waist" type="number" inputmode="decimal" step="0.1" min="0" required /></label>
-      <label>Hips <span class="muted">fullest point</span><input name="hips" type="number" inputmode="decimal" step="0.1" min="0" required /></label>
+      {mode === 'men' && <label>{T.chest} <span class="muted">{T.chestHint}</span><input name="chest" type="number" inputmode="decimal" step="0.1" min="0" required /></label>}
+      <label>{T.waist} <span class="muted">{T.waistHint}</span><input name="waist" type="number" inputmode="decimal" step="0.1" min="0" required /></label>
+      <label>{T.hips} <span class="muted">{T.hipsHint}</span><input name="hips" type="number" inputmode="decimal" step="0.1" min="0" required /></label>
     </div>
-    <div class="btn-row"><button class="btn" type="submit">{mode === 'men' ? 'Find my body type' : 'Calculate my ratio'}</button><span class="muted">Nothing is uploaded.</span></div>
+    <div class="btn-row"><button class="btn" type="submit">{mode === 'men' ? T.submitMen : T.submitWhr}</button><span class="muted">{T.privacy}</span></div>
     <p class="bsc-err" role="alert" hidden></p>
   </form>
   <div class="bsc-out" hidden></div>
 </div>
 <script>
   import { classifyMale, flipDistance, percentileOf, IN } from '../lib/body-shape.js';
-  import { MALE } from '../lib/shapes.js';
+  import { MALE, MALE_ZH } from '../lib/shapes.js';
   import { barsSvg, outlineSvg, gaugeSvg, encodeShare, decodeShare, copyText, downloadCard } from '../lib/result-card.js';
   import pct from '../data/whr_percentiles.json';
   const fmt = (n: number) => (Math.round(n * 10) / 10).toString(), inch = (cm: number) => fmt(cm * IN);
   for (const root of document.querySelectorAll<HTMLElement>('.rc')) {
+    const L = (root.dataset.lang === 'zh' ? 'zh' : 'en') as 'en' | 'zh';
+    const P = L === 'zh' ? '/zh' : '';
+    const S = {
+      en: { fillAll: 'Please fill in every field.', oor: 'One measurement is outside the range of measured adults — check the number and the unit.',
+        eyebrowMen: 'Your body type under this site’s rules', barsNote: 'Bars are proportional to the circumferences you entered.',
+        outlineNote: 'Schematic: widths drawn proportional to circumference. Not a body outline.',
+        numbers: 'The numbers', chest: 'chest', waist: 'waist', hips: 'hips',
+        cutoffs: 'Cut-offs: 3.6 in for a clear chest–hip difference, 9 in for a defined waist, borrowed from FFIT. These are this site’s rules, not a published standard — see',
+        methodology: 'methodology', stableHead: 'How stable is this label?',
+        near: (m: string, cm: string, d: string, to: string) => `<strong>Near a boundary.</strong> If your ${m} were ${cm} cm ${d} the result would read <em>${to}</em> — within this site’s 2 cm display threshold, so re-measure the ${m}.`,
+        stable: (to: string, cm: string, m: string) => `<strong>Stable.</strong> The nearest other result is <em>${to}</em>, ${cm} cm away on the ${m}.`,
+        rock: '<strong>Stable.</strong>', larger: 'larger', smaller: 'smaller',
+        whrHead: 'Waist-to-hip ratio',
+        whrMen: (v: string, p: number, n: string) => `${v} — higher than about ${p}% of ${n} adult men measured in NHANES. NHANES measures the waist just above the hip bone, so this is a rough placement. A proportion, not a health score.`,
+        whatMeans: (n: string) => `What ${n.toLowerCase()} means`,
+        copy: 'Copy result link', copied: 'Link copied', copyFail: 'Copy failed', download: 'Download result image',
+        shareNote: 'The link contains the measurements you entered; nothing is stored on this site.',
+        cardTitle: 'Men’s body type result', cardRule: 'Rule', cardStability: 'Stability', cardStable: 'Stable within 15 cm',
+        cardFlip: (cm: string, m: string, to: string) => `${cm} cm on the ${m} to ${to}`,
+        cardWhr: (v: string, p: number) => `${v} — above about ${p}% of NHANES men`,
+        cardNote: 'This site’s five-type men’s rules (FFIT cut-offs borrowed). Measurements processed in the browser. Not a health assessment.',
+        unitIn: 'in', unitCm: 'cm',
+        whrBody: (w: string, h: string, n: string, sx: string, p: number, wp: number, hp: number) => `Waist ${w} cm ÷ hips ${h} cm. Among ${n} adult ${sx} measured in NHANES 2017–2023, this ratio is higher than about <strong>${p}%</strong>. Your waist alone is higher than about ${wp}% and your hips than about ${hp}%.`,
+        women: 'women', men: 'men',
+        whrNote: (med: string) => `The sample median is ${med}. Percentiles are within the pooled, unweighted examined sample, not US population estimates, and NHANES measures the waist just above the hip bone rather than at the narrowest point, so treat this as a rough placement. It is a proportion between two circumferences, not a diagnosis.` },
+      zh: { fillAll: '請把每一欄都填好。', oor: '有一個圍度超出受測成人的範圍——請檢查數值與單位。',
+        eyebrowMen: '依本站規則判出的體型', barsNote: '長條與你輸入的圍度成比例。',
+        outlineNote: '示意圖：寬度按圍度等比例畫。這不是身體外形。',
+        numbers: '用到的數字', chest: '胸圍', waist: '腰圍', hips: '臀圍',
+        cutoffs: '判準：胸臀差 3.6 吋算明顯、腰線 9 吋算清楚，兩個門檻借自 FFIT。這是本站自訂的規則，不是已發表的標準——見',
+        methodology: '方法說明', stableHead: '這個標籤有多穩？',
+        near: (m: string, cm: string, d: string, to: string) => `<strong>接近分界。</strong>你的${m}只要${d} ${cm} 公分，結果就會變成 <em>${to}</em>——這在本站 2 公分的顯示門檻之內，建議把${m}再量一次。`,
+        stable: (to: string, cm: string, m: string) => `<strong>穩定。</strong>最接近的另一個結果是 <em>${to}</em>，你的${m}要差 ${cm} 公分才會走到那裡。`,
+        rock: '<strong>穩定。</strong>', larger: '大', smaller: '小',
+        whrHead: '腰臀比',
+        whrMen: (v: string, p: number, n: string) => `${v}——高於 NHANES 受測的 ${n} 位成年男性中約 ${p}% 的人。NHANES 是在髖骨上緣量腰圍，所以這只是粗略定位。它是一個比例，不是健康評分。`,
+        whatMeans: (n: string) => `${n} 是什麼意思`,
+        copy: '複製結果連結', copied: '已複製', copyFail: '複製失敗', download: '下載結果圖',
+        shareNote: '連結裡帶著你輸入的量測值；本站不會留存任何資料。',
+        cardTitle: '男性體型結果', cardRule: '規則', cardStability: '穩定度', cardStable: '15 公分內都穩定',
+        cardFlip: (cm: string, m: string, to: string) => `${m}差 ${cm} 公分就變 ${to}`,
+        cardWhr: (v: string, p: number) => `${v}——高於約 ${p}% 的 NHANES 男性`,
+        cardNote: '本站自訂的男性五型規則（門檻借自 FFIT）。量測在瀏覽器裡完成。這不是健康評估。',
+        unitIn: '吋', unitCm: '公分',
+        whrBody: (w: string, h: string, n: string, sx: string, p: number, wp: number, hp: number) => `腰圍 ${w} 公分 ÷ 臀圍 ${h} 公分。在 NHANES 2017–2023 受測的 ${n} 位成年${sx}中，這個比例高於約 <strong>${p}%</strong> 的人。單看腰圍高於約 ${wp}%、臀圍高於約 ${hp}%。`,
+        women: '女性', men: '男性',
+        whrNote: (med: string) => `樣本中位數是 ${med}。百分位是在合併後、未加權的受檢樣本內計算，不是美國人口推估值；而且 NHANES 是在髖骨上緣量腰圍而非最細處，所以請當成粗略定位。它是兩個圍度之間的比例，不是診斷。` },
+    }[L];
     const mode = root.dataset.mode, form = root.querySelector('form')!, out = root.querySelector<HTMLElement>('.bsc-out')!, err = root.querySelector<HTMLElement>('.bsc-err')!;
     const unit = () => form.querySelector<HTMLInputElement>('input[name=unit]:checked')!.value;
     const read = (n: string) => { const el = form.elements.namedItem(n) as HTMLInputElement | null; if (!el) return null; const v = parseFloat(el.value); return isFinite(v) && v > 0 ? (unit() === 'in' ? v / IN : v) : null; };
@@ -31,30 +87,36 @@ const { mode } = Astro.props;
     form.addEventListener('submit', (e) => {
       e.preventDefault(); err.hidden = true; out.hidden = true;
       const waist = read('waist'), hips = read('hips'), chest = read('chest');
-      if (waist === null || hips === null || (mode === 'men' && chest === null)) { err.textContent = 'Please fill in every field.'; err.hidden = false; return; }
-      for (const v of [waist, hips, chest ?? 100]) if (v < 45 || v > 220) { err.textContent = 'One measurement is outside the range of measured adults — check the number and the unit.'; err.hidden = false; return; }
+      if (waist === null || hips === null || (mode === 'men' && chest === null)) { err.textContent = S.fillAll; err.hidden = false; return; }
+      for (const v of [waist, hips, chest ?? 100]) if (v < 45 || v > 220) { err.textContent = S.oor; err.hidden = false; return; }
       const whr = waist / hips;
       if (mode === 'men') {
         const input = { chest: chest!, waist, hips }, shape = classifyMale(input), meta = MALE[shape], flip = flipDistance(input, classifyMale as any);
         const p = percentileOf(whr, pct.whr.male);
-        const flipName = flip ? (MALE[flip.to]?.name ?? flip.to) : '';
-        const stable = flip ? (flip.cm <= 2 ? `<strong>Near a boundary.</strong> If your ${flip.measure} were ${flip.cm} cm ${flip.direction > 0 ? 'larger' : 'smaller'} the result would read <em>${flipName}</em> — within this site’s 2 cm display threshold, so re-measure the ${flip.measure}.` : `<strong>Stable.</strong> The nearest other result is <em>${flipName}</em>, ${flip.cm} cm away on the ${flip.measure}.`) : '<strong>Stable.</strong>';
-        const bars: [string, number][] = [['Chest', chest!], ['Waist', waist], ['Hips', hips]];
-        out.innerHTML = `<div class="card"><span class="eyebrow">Your body type under this site’s rules</span><h3 style="margin-top:6px">${meta.name}</h3><p>${meta.def}</p>
-          <div class="rc-visual"><div>${barsSvg(bars, unit())}<p class="rc-schematic">Bars are proportional to the circumferences you entered.</p></div><div>${outlineSvg(chest!, waist, hips)}<p class="rc-schematic" style="max-width:220px">Schematic: widths drawn proportional to circumference. Not a body outline.</p></div></div>
-          <div class="formula"><h4>The numbers</h4><code>chest − hips = ${inch(chest! - hips)} in (${fmt(chest! - hips)} cm)<br>chest − waist = ${inch(chest! - waist)} in (${fmt(chest! - waist)} cm)<br>waist ÷ hips = ${whr.toFixed(2)}</code><p class="muted">Cut-offs: 3.6 in for a clear chest–hip difference, 9 in for a defined waist, borrowed from FFIT. These are this site’s rules, not a published standard — see <a href="/methodology/">methodology</a>.</p></div>
-          <h4>How stable is this label?</h4>${gaugeSvg(flip)}<p>${stable}</p>
-          <h4>Waist-to-hip ratio</h4><p>${whr.toFixed(2)} — higher than about ${p}% of ${pct.n.male.toLocaleString()} adult men measured in NHANES. NHANES measures the waist just above the hip bone, so this is a rough placement. A proportion, not a health score.</p>
-          <p class="btn-row"><a class="btn" href="/men/${shape.replace('_', '-')}/">What ${meta.name.toLowerCase()} means</a></p>
-          <div class="rc-share"><button type="button" class="btn plain rc-copy">Copy result link</button><button type="button" class="btn plain rc-dl">Download result image</button><span class="muted">The link contains the measurements you entered; nothing is stored on this site.</span></div></div>`;
-        out.querySelector<HTMLButtonElement>('.rc-copy')!.onclick = async (e) => { const b = e.currentTarget as HTMLButtonElement; const ok = await copyText(encodeShare(input, unit())); b.textContent = ok ? 'Link copied' : 'Copy failed'; setTimeout(() => (b.textContent = 'Copy result link'), 2000); };
-        out.querySelector<HTMLButtonElement>('.rc-dl')!.onclick = () => downloadCard({ title: 'Men’s body type result', shape: meta.name, sub: meta.def, bars, lines: [['Rule', meta.def], ['Stability', flip ? `${flip.cm} cm on the ${flip.measure} to ${flipName}` : 'Stable within 15 cm'], ['Waist-to-hip ratio', `${whr.toFixed(2)} — above about ${p}% of NHANES men`]], note: 'This site’s five-type men’s rules (FFIT cut-offs borrowed). Measurements processed in the browser. Not a health assessment.', file: `body-type-${shape}.png` });
+        const nameOf = (k: string) => (L === 'zh' ? (MALE_ZH[k]?.name ?? MALE[k]?.name) : MALE[k]?.name);
+        const shapeName = nameOf(shape);
+        const flipName = flip ? (nameOf(flip.to) ?? flip.to) : '';
+        const MEAS: Record<string, string> = { chest: S.chest, waist: S.waist, hips: S.hips };
+        const measName = flip ? (MEAS[flip.measure] ?? flip.measure) : '';
+        const dirW = flip ? (flip.direction > 0 ? S.larger : S.smaller) : '';
+        const stable = flip ? (flip.cm <= 2 ? S.near(measName, String(flip.cm), dirW, flipName) : S.stable(flipName, String(flip.cm), measName)) : S.rock;
+        const defOf = L === 'zh' ? MALE_ZH[shape].def : meta.def;
+        const bars: [string, number][] = [[S.chest, chest!], [S.waist, waist], [S.hips, hips]];
+        out.innerHTML = `<div class="card"><span class="eyebrow">${S.eyebrowMen}</span><h3 style="margin-top:6px">${shapeName}</h3><p>${defOf}</p>
+          <div class="rc-visual"><div>${barsSvg(bars, unit())}<p class="rc-schematic">${S.barsNote}</p></div><div>${outlineSvg(chest!, waist, hips, null, { top: S.chest, waist: S.waist, highHip: S.hips, hips: S.hips })}<p class="rc-schematic" style="max-width:220px">${S.outlineNote}</p></div></div>
+          <div class="formula"><h4>${S.numbers}</h4><code>${S.chest} − ${S.hips} = ${inch(chest! - hips)} ${S.unitIn} (${fmt(chest! - hips)} ${S.unitCm})<br>${S.chest} − ${S.waist} = ${inch(chest! - waist)} ${S.unitIn} (${fmt(chest! - waist)} ${S.unitCm})<br>${S.waist} ÷ ${S.hips} = ${whr.toFixed(2)}</code><p class="muted">${S.cutoffs} <a href="${P}/methodology/">${S.methodology}</a>.</p></div>
+          <h4>${S.stableHead}</h4>${gaugeSvg(flip)}<p>${stable}</p>
+          <h4>${S.whrHead}</h4><p>${S.whrMen(whr.toFixed(2), p, pct.n.male.toLocaleString())}</p>
+          <p class="btn-row"><a class="btn" href="${P}/men/${shape.replace('_', '-')}/">${S.whatMeans(shapeName)}</a></p>
+          <div class="rc-share"><button type="button" class="btn plain rc-copy">${S.copy}</button><button type="button" class="btn plain rc-dl">${S.download}</button><span class="muted">${S.shareNote}</span></div></div>`;
+        out.querySelector<HTMLButtonElement>('.rc-copy')!.onclick = async (e) => { const b = e.currentTarget as HTMLButtonElement; const ok = await copyText(encodeShare(input, unit())); b.textContent = ok ? S.copied : S.copyFail; setTimeout(() => (b.textContent = S.copy), 2000); };
+        out.querySelector<HTMLButtonElement>('.rc-dl')!.onclick = () => downloadCard({ title: S.cardTitle, shape: shapeName, sub: defOf, bars, lines: [[S.cardRule, defOf], [S.cardStability, flip ? S.cardFlip(String(flip.cm), measName, flipName) : S.cardStable], [S.whrHead, S.cardWhr(whr.toFixed(2), p)]], note: S.cardNote, file: `body-type-${shape}.png` });
       } else {
         const sex = form.querySelector<HTMLInputElement>('input[name=sex]:checked')!.value as 'female' | 'male';
         const p = percentileOf(whr, pct.whr[sex]), wp = percentileOf(waist, pct.waist_cm[sex]), hp = percentileOf(hips, pct.hip_cm[sex]);
-        out.innerHTML = `<div class="card"><span class="eyebrow">Waist-to-hip ratio</span><h3 style="margin-top:6px">${whr.toFixed(2)}</h3>
-          <p>Waist ${fmt(waist)} cm ÷ hips ${fmt(hips)} cm. Among ${pct.n[sex].toLocaleString()} adult ${sex === 'female' ? 'women' : 'men'} measured in NHANES 2017–2023, this ratio is higher than about <strong>${p}%</strong>. Your waist alone is higher than about ${wp}% and your hips than about ${hp}%.</p>
-          <p class="muted">The sample median is ${pct.whr[sex][49].toFixed(2)}. Percentiles are within the pooled, unweighted examined sample, not US population estimates, and NHANES measures the waist just above the hip bone rather than at the narrowest point, so treat this as a rough placement. It is a proportion between two circumferences, not a diagnosis.</p></div>`;
+        out.innerHTML = `<div class="card"><span class="eyebrow">${S.whrHead}</span><h3 style="margin-top:6px">${whr.toFixed(2)}</h3>
+          <p>${S.whrBody(fmt(waist), fmt(hips), pct.n[sex].toLocaleString(), sex === 'female' ? S.women : S.men, p, wp, hp)}</p>
+          <p class="muted">${S.whrNote(pct.whr[sex][49].toFixed(2))}</p></div>`;
       }
       out.hidden = false; out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });

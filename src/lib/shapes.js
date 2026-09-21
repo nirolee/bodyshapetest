@@ -66,10 +66,13 @@ export const AKA_ZH = {
 export const GROUPS_ZH = {
   hourglass: '沙漏型', pear: '梨形', 'inverted-triangle': '倒三角', rectangle: '矩形', apple: '蘋果型',
 };
+/** 男版五型與女版的處理不同：女版九型是 FFIT 已發表的術語所以保留英文，
+ *  男版是**本站自訂的約定**（頁面自己寫明「沒有已發表的男性版 FFIT」），
+ *  既然不是文獻術語，就用繁中名——而且「倒三角身材」本來就是台港在搜的說法。 */
 export const MALE_ZH = {
-  trapezoid:         { def: '胸圍比臀圍寬至少 3.6 吋，或腰線明顯：肩與胸撐起寬度，腰圍比胸圍小至少 9 吋。' },
-  inverted_triangle: { def: '胸圍比臀圍大至少 3.6 吋，胸腰差不到 9 吋。' },
-  rectangle:         { def: '胸圍與臀圍相差在 3.6 吋以內，腰圍比胸圍小不到 9 吋。' },
-  triangle:          { def: '臀圍比胸圍大至少 3.6 吋。' },
-  oval:              { def: '腰圍大於臀圍，且不大於胸圍。' },
+  trapezoid:         { name: '梯形',  def: '胸圍比臀圍寬至少 3.6 吋，或腰線明顯：肩與胸撐起寬度，腰圍比胸圍小至少 9 吋。' },
+  inverted_triangle: { name: '倒三角', def: '胸圍比臀圍大至少 3.6 吋，胸腰差不到 9 吋。' },
+  rectangle:         { name: '矩形',  def: '胸圍與臀圍相差在 3.6 吋以內，腰圍比胸圍小不到 9 吋。' },
+  triangle:          { name: '三角形', def: '臀圍比胸圍大至少 3.6 吋。' },
+  oval:              { name: '橢圓形', def: '腰圍大於臀圍，且不大於胸圍。' },
 };

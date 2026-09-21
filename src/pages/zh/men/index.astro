@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import RatioCalculator from '../../../components/RatioCalculator.astro';
+import GuideTable from '../../../components/GuideTable.astro';
+import { MALE, MALE_ZH } from '../../../lib/shapes.js';
+import c from '../../../content/pages-zh.json';
+const jsonLd = [{ '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: 'zh-Hant', mainEntity: c.men_faq.map(([q, a]: [string, string]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) }];
+const rows = Object.keys(MALE).map((k) => [MALE_ZH[k].name, MALE_ZH[k].def, '']);
+const slugs = ['trapezoid', 'inverted-triangle', 'rectangle', 'triangle', 'oval'];
+---
+<BaseLayout langs={['en', 'zh']} title={c.men_title} description={c.men_desc} jsonLd={jsonLd} lang="zh" bleed>
+  <section class="band dark tight"><div class="wrap prose"><span class="eyebrow">{c.men_eyebrow}</span><h1>{c.men_h1}</h1><p class="lead" style="margin-top:14px">{c.men_lead}</p></div></section>
+  <section class="band"><div class="wrap"><RatioCalculator mode="men" lang="zh" /></div></section>
+  <section class="band warm"><div class="wrap prose">
+    <h2>{c.men_h2a}</h2>
+    <GuideTable head={c.men_tablehead} cols={c.men_tablecols} rows={rows} />
+    <p>{c.men_order}</p>
+    <h2>{c.men_h2b}</h2>
+    <ul>{c.men_list.map(([n, d]: [string, string], i: number) => <li><a href={`/zh/men/${slugs[i]}/`}>{n}</a> — {d}</li>)}</ul>
+    <p><a href="/zh/how-to-measure/">{c.men_links[0]}</a> · <a href="/zh/">{c.men_links[1]}</a></p>
+  </div></section>
+  <section class="band"><div class="wrap prose"><span class="eyebrow">常見問題</span><h2>大家會問的</h2><div class="faq" style="margin-top:22px">{c.men_faq.map(([q, a]: [string, string]) => <details><summary>{q}</summary><p>{a}</p></details>)}</div></div></section>
+</BaseLayout>
