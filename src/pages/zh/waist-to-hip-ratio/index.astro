@@ -5,7 +5,16 @@ import References from '../../../components/References.astro';
 import { refsFor } from '../../../lib/references.js';
 import pct from '../../../data/whr_percentiles.json';
 import c from '../../../content/pages-zh.json';
-const jsonLd = [{ '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: 'zh-Hant', mainEntity: c.whr_faq.map(([q, a]: [string, string]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) }];
+// 2026-09-23：whr_faq 那條中位數答案原本存著英文版的 JS 模板字面量
+// （`${pct.whr.female[49].toFixed(2)}` 等），翻譯腳本把它當正文翻了，繁中頁與 FAQPage
+// 結構化資料上顯示的都是那串程式碼而不是數字。JSON 改成命名佔位符，數字在這裡注入。
+const NUMS: Record<string, string> = {
+  f50: pct.whr.female[49].toFixed(2), m50: pct.whr.male[49].toFixed(2),
+  f25: pct.whr.female[24].toFixed(2), f75: pct.whr.female[74].toFixed(2),
+};
+const fillNums = (t: string) => t.replace(/\{(f50|m50|f25|f75)\}/g, (_, k) => NUMS[k]);
+const whrFaq = (c.whr_faq as [string, string][]).map(([q, a]) => [q, fillNums(a)] as [string, string]);
+const jsonLd = [{ '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: 'zh-Hant', mainEntity: whrFaq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) }];
 const rowsF = [10, 25, 50, 75, 90].map((q) => [`${q}`, pct.whr.female[q - 1].toFixed(2), pct.whr.male[q - 1].toFixed(2)]);
 ---
 <BaseLayout langs={['en', 'zh']} title={c.whr_title} description={c.whr_desc} jsonLd={jsonLd} lang="zh" bleed>
@@ -18,5 +27,5 @@ const rowsF = [10, 25, 50, 75, 90].map((q) => [`${q}`, pct.whr.female[q - 1].toF
     <p>{c.whr_tail}</p>
   </div></section>
   <References lang="zh" refs={refsFor('/waist-to-hip-ratio/')} />
-  <section class="band"><div class="wrap prose"><span class="eyebrow">常見問題</span><h2>大家會問的</h2><div class="faq" style="margin-top:22px">{c.whr_faq.map(([q, a]: [string, string]) => <details><summary>{q}</summary><p>{a}</p></details>)}</div></div></section>
+  <section class="band"><div class="wrap prose"><span class="eyebrow">常見問題</span><h2>大家會問的</h2><div class="faq" style="margin-top:22px">{whrFaq.map(([q, a]) => <details><summary>{q}</summary><p>{a}</p></details>)}</div></div></section>
 </BaseLayout>

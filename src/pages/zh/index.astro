@@ -5,6 +5,7 @@
  * 「身材比例計算」4 條（含計算機女/男）、「身材類型計算」2 條，所以全站一律用「身材」。
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { localizeLinks } from '../../lib/localize-links.js';
 import BodyCalculator from '../../components/BodyCalculator.astro';
 import GuideTable from '../../components/GuideTable.astro';
 import References from '../../components/References.astro';
@@ -37,7 +38,7 @@ const jsonLd = [
   <section class="band">
     <div class="wrap prose">
       <GuideTable head={c.rules_head} cols={c.rules_cols} rows={c.rules_rows} />
-      <p class="muted" style="max-width:70ch" set:html={c.rules_note} />
+      <p class="muted" style="max-width:70ch" set:html={localizeLinks(c.rules_note, "zh")} />
     </div>
   </section>
   <section class="band warm">

@@ -16,7 +16,7 @@
  "men_list": [
   [
    "梯形",
-   "胸圍比腰圍小 9 吋，且胸圍大於或等於臀圍。"
+   "腰圍比胸圍小至少 9 吋，且胸圍大於或等於臀圍。"
   ],
   [
    "倒三角",
@@ -81,7 +81,7 @@
   ],
   [
    "正常的腰臀比是多少？",
-   "在本頁比較的 NHANES 成人樣本中，女性中位數為 ${pct.whr.female[49].toFixed(2)}，男性為 ${pct.whr.male[49].toFixed(2)}；女性中間一半介於 ${pct.whr.female[24].toFixed(2)} 與 ${pct.whr.female[74].toFixed(2)} 之間。這些是對實測樣本的描述，不是門檻值。"
+   "在本頁比較的 NHANES 成人樣本中，女性中位數為 {f50}，男性為 {m50}；女性中間一半介於 {f25} 與 {f75} 之間。這些是對實測樣本的描述，不是門檻值。"
   ],
   [
    "這是健康檢測嗎？",
@@ -99,28 +99,17 @@
  "privacy_title": "隱私權",
  "privacy_desc": "本網站會與不會蒐集的資料。",
  "privacy_h1": "隱私權",
- "privacy_paras": [
-  [
-   "測量數據。",
-   "你在本網站任何計算器輸入的數字會在瀏覽器中處理，不會傳送至伺服器、儲存或記錄。重新載入頁面即會清除。如使用「複製結果連結」，測量數據會編碼在你複製的連結中——僅與你希望其查看的人分享；連結由你的裝置產生，本網站不會接收。"
-  ],
-  [
-   "分析。",
-   "{GA_MEASUREMENT_ID ? '本網站使用 Google Analytics 4 統計瀏覽量並了解哪些頁面被閱讀。它會記錄頁面、約略位置與裝置類型；不會接收你輸入的測量數據。你可使用任何內容封鎖工具封鎖它，不會影響計算器。' : '本網站目前未使用分析工具。'}"
-  ],
-  [
-   "Cookie。",
-   "本網站不會自行設定 Cookie。{GA_MEASUREMENT_ID ? 'Google Analytics 可能會設定自己的 Cookie；請參閱 Google 的政策。' : ''}"
-  ],
-  [
-   "託管。",
-   "頁面由 Cloudflare 提供服務；Cloudflare 依其自身政策為安全與效能保留標準伺服器記錄（IP 位址、請求、使用者代理）。"
-  ],
-  [
-   "聯絡方式。",
-   "<a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>"
-  ]
- ],
+ "privacy_measure_h": "測量數據。",
+ "privacy_measure_b": "你在本網站任何計算器輸入的數字會在瀏覽器中處理，不會傳送至伺服器、儲存或記錄。重新載入頁面即會清除。如使用「複製結果連結」，測量數據會編碼在你複製的連結中——僅與你希望其查看的人分享；連結由你的裝置產生，本網站不會接收。",
+ "privacy_analytics_h": "分析。",
+ "privacy_analytics_on": "本網站使用 Google Analytics 4 統計瀏覽量並了解哪些頁面被閱讀。它會記錄頁面、約略位置與裝置類型；不會接收你輸入的測量數據。你可使用任何內容封鎖工具封鎖它，不會影響計算器。",
+ "privacy_analytics_off": "本網站目前未使用分析工具。",
+ "privacy_cookies_h": "Cookie。",
+ "privacy_cookies_b": "本網站不會自行設定 Cookie。",
+ "privacy_cookies_ga": "Google Analytics 可能會設定自己的 Cookie；請參閱 Google 的政策。",
+ "privacy_hosting_h": "託管。",
+ "privacy_hosting_b": "頁面由 Cloudflare 提供服務；Cloudflare 依其自身政策為安全與效能保留標準伺服器記錄（IP 位址、請求、使用者代理）。",
+ "privacy_contact_h": "聯絡方式。",
  "privacy_updated": "最後更新：2026-09-15。",
  "terms_title": "使用條款",
  "terms_desc": "bodyshapetest.org 的使用條款。",

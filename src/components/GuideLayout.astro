@@ -7,7 +7,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BodyCalculator from './BodyCalculator.astro';
 import RatioCalculator from './RatioCalculator.astro';
-import { UI, type Lang } from '../i18n';
+import { UI, LOCALE, type Lang } from '../i18n';
 import References from './References.astro';
 import { refsFor } from '../lib/references.js';
 
@@ -34,8 +34,8 @@ const t = UI[lang];
 // 參考文獻按路徑查表（去掉 /zh 前綴，兩個語言共用同一份書目），頁面不必逐個傳參
 const refs = refsFor(Astro.url.pathname);
 const jsonLd = [
-  { '@context': 'https://schema.org', '@type': 'Article', headline: title, description, inLanguage: 'en', datePublished: updated, dateModified: updated, author: { '@type': 'Organization', name: 'Body Shape Test' } },
-  { '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: 'en', mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) },
+  { '@context': 'https://schema.org', '@type': 'Article', headline: title, description, inLanguage: LOCALE[lang], datePublished: updated, dateModified: updated, author: { '@type': 'Organization', name: 'Body Shape Test' } },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: LOCALE[lang], mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) },
   ...extraJsonLd,
 ];
 ---

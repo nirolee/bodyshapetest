@@ -11,22 +11,24 @@
  */
 import GuideTable from './GuideTable.astro';
 import { tableFor } from '../lib/guide-tables.js';
+import { localizeLinks } from '../lib/localize-links.js';
 
 export interface Props { blocks: any[]; tableKey: string | null; tableData?: any; lang: string }
 const { blocks, tableKey, tableData = null, lang } = Astro.props;
 // 多数页面的表格来自 guide-tables.js 查表；少数页面自带页内表格字面量
+const L = (h: string) => localizeLinks(h, lang);
 const table = tableData ?? (tableKey ? tableFor(tableKey, lang) : null);
 ---
 {blocks.map((b) => {
-  if (b.t === 'h2') return <h2 set:html={b.s} />;
-  if (b.t === 'p') return <p set:html={b.s} />;
-  if (b.t === 'ul') return <ul>{b.items.map((it: string) => <li set:html={it} />)}</ul>;
+  if (b.t === 'h2') return <h2 set:html={L(b.s)} />;
+  if (b.t === 'p') return <p set:html={L(b.s)} />;
+  if (b.t === 'ul') return <ul>{b.items.map((it: string) => <li set:html={L(it)} />)}</ul>;
   if (b.t === 'card') return (
     <div class="card">
-      {b.items.map((it: string[]) => <><h3 set:html={it[0]} />{it.slice(1).map((p) => <p set:html={p} />)}</>)}
+      {b.items.map((it: string[]) => <><h3 set:html={L(it[0])} />{it.slice(1).map((p) => <p set:html={L(p)} />)}</>)}
     </div>
   );
-  if (b.t === 'html') return <div class="figure" set:html={b.s} />;
+  if (b.t === 'html') return <div class="figure" set:html={L(b.s)} />;
   if (b.t === 'table') return table ? <GuideTable head={table.head} cols={table.cols} rows={table.rows} /> : null;
   return null;
 })}

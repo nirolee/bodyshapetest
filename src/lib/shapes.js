@@ -33,7 +33,7 @@ export const MALE = {
   inverted_triangle: { name: 'Inverted triangle', def: 'Chest at least 3.6 inches larger than hips, with less than 9 inches between chest and waist.' },
   rectangle:         { name: 'Rectangle',         def: 'Chest and hips within 3.6 inches, waist less than 9 inches smaller than the chest.' },
   triangle:          { name: 'Triangle',          def: 'Hips at least 3.6 inches larger than the chest.' },
-  oval:              { name: 'Oval',              def: 'Waist larger than the hips and no larger than the bust.' },
+  oval:              { name: 'Oval',              def: 'Waist at least as large as the chest, or at least as large as the hips — either one on its own is enough.' },
 };
 
 /* ── 繁中層（2026-09-21 加）─────────────────────────────────────────
@@ -74,5 +74,5 @@ export const MALE_ZH = {
   inverted_triangle: { name: '倒三角', def: '胸圍比臀圍大至少 3.6 吋，胸腰差不到 9 吋。' },
   rectangle:         { name: '矩形',  def: '胸圍與臀圍相差在 3.6 吋以內，腰圍比胸圍小不到 9 吋。' },
   triangle:          { name: '三角形', def: '臀圍比胸圍大至少 3.6 吋。' },
-  oval:              { name: '橢圓形', def: '腰圍大於臀圍，且不大於胸圍。' },
+  oval:              { name: '橢圓形', def: '腰圍達到胸圍，或達到臀圍——兩者有其一即可。' },
 };

@@ -1,11 +1,18 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { SUPPORT_EMAIL } from '../../../lib/site-config';
+import { SUPPORT_EMAIL, GA_MEASUREMENT_ID } from '../../../lib/site-config';
 import c from '../../../content/pages-zh.json';
 ---
 <BaseLayout langs={['en', 'zh']} title={c.privacy_title} description={c.privacy_desc} lang="zh" noindex>
   <h1>{c.privacy_h1}</h1>
-  {c.privacy_paras.map(([h, b]: [string, string]) => <p><strong>{h}</strong>{b}</p>)}
-  <p><strong>聯絡。</strong> <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a></p>
+  {/* 2026-09-23：原本整頁 map 一個 privacy_paras 陣列，而那個陣列是翻譯腳本從英文 .astro
+      直接翻出來的——連 `{GA_MEASUREMENT_ID ? '…' : '…'}` 和 `<a href={`mailto:${SUPPORT_EMAIL}`}>`
+      都當成正文翻了，讀者在繁中隱私頁上看到的是這串程式碼。條件式與設定值必須留在程式碼裡，
+      JSON 只放文案。結構與英文版一一對應。 */}
+  <p><strong>{c.privacy_measure_h}</strong>{c.privacy_measure_b}</p>
+  <p><strong>{c.privacy_analytics_h}</strong>{GA_MEASUREMENT_ID ? c.privacy_analytics_on : c.privacy_analytics_off}</p>
+  <p><strong>{c.privacy_cookies_h}</strong>{c.privacy_cookies_b}{GA_MEASUREMENT_ID ? ` ${c.privacy_cookies_ga}` : ''}</p>
+  <p><strong>{c.privacy_hosting_h}</strong>{c.privacy_hosting_b}</p>
+  <p><strong>{c.privacy_contact_h}</strong> <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a></p>
   <p class="muted">{c.privacy_updated}</p>
 </BaseLayout>

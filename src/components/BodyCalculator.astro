@@ -30,7 +30,11 @@ const howToHref = lang === 'zh' ? '/zh/how-to-measure/' : '/how-to-measure/';
       <label class="bsc-hh" hidden>{T.hh} <span class="muted">{T.hhHint}</span><input name="highHip" type="number" inputmode="decimal" step="0.1" min="0" /></label>
     </div>
     <p class="bsc-hh-note muted" hidden></p>
-    <div class="btn-row"><button class="btn" type="submit">{T.submit}</button><span class="muted">{T.privacy} <a href={howToHref}>{T.howTo}</a>.</span></div>
+  <!-- 2026-09-23：按钮初始 disabled，脚本绑定好才启用。没有这一步时，JS 没跑起来
+       （被禁用、模块加载失败、绑定前抢先点）按钮仍可点，浏览器按 HTML 默认以 GET 提交，
+       胸腰臀就进了当前页 URL 上到托管端——和按钮旁边「不會上傳任何資料」直接冲突。
+       Kibbe 组件从一开始就是这么写的，这里把两个老计算器补齐。 -->
+    <div class="btn-row"><button class="btn" type="submit" disabled>{T.submit}</button><span class="muted">{T.privacy} <a href={howToHref}>{T.howTo}</a>.</span></div>
     <p class="bsc-err" role="alert" hidden></p>
   </form>
   <div class="bsc-out" hidden></div>
@@ -135,6 +139,8 @@ const howToHref = lang === 'zh' ? '/zh/how-to-measure/' : '/how-to-measure/';
 
   for (const root of document.querySelectorAll<HTMLElement>('.bsc[data-compact]')) {
     const form = root.querySelector('form')!, out = root.querySelector<HTMLElement>('.bsc-out')!;
+    // 绑定成功才放行提交按钮（见上方注释）
+    form.querySelector<HTMLButtonElement>('button[type=submit]')!.disabled = false;
     const err = root.querySelector<HTMLElement>('.bsc-err')!, hh = root.querySelector<HTMLElement>('.bsc-hh')!, hhNote = root.querySelector<HTMLElement>('.bsc-hh-note')!;
     const L = (root.dataset.lang === 'zh' ? 'zh' : 'en') as 'en' | 'zh';
     const S = STR[L];

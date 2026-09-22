@@ -10,6 +10,20 @@
  * ⚠️ 頁面上所有關於分類的文案都以這個檔為準；改了阈值要同步 methodology 頁與 flipDistance 的說明。
  */
 export const IN = 1 / 2.54;
+/**
+ * 阈值比較的容差（2026-09-23 加）。
+ * 規則單位是英寸，輸入一律先換成 cm 再換回英寸，往返一次就會有浮點誤差：
+ * 32.3 / 23.3 / 32.3 英寸的胸腰差數學上正好是 9，程式算出 8.999999999999996，
+ * 於是 `b - w >= 9` 為假，Hourglass 被判成 Rectangle（男版同樣把 Trapezoid 判成 Rectangle）。
+ * 1e-9 英寸 ≈ 2.5e-9 公分，遠小於任何真實量測（介面 step 是 0.1 cm ≈ 0.039 in），
+ * 只吃掉浮點噪音，不會讓兩個真的不同的量測被當成相等。
+ * ge/le 把「正好等於阈值」算進去，gt/lt 把它排除——和改之前的嚴格性完全一致。
+ */
+const EPS = 1e-9;
+const ge = (a, b) => a - b >= -EPS;
+const le = (a, b) => a - b <= EPS;
+const gt = (a, b) => a - b > EPS;
+const lt = (a, b) => a - b < -EPS;
 export const NEEDS_HIGH_HIP = 'needs_high_hip';
 
 export const FEMALE_SHAPES = ['hourglass', 'bottom_hourglass', 'top_hourglass', 'spoon', 'triangle', 'inverted_triangle', 'rectangle', 'diamond', 'oval'];
@@ -17,26 +31,26 @@ export const FEMALE_SHAPES = ['hourglass', 'bottom_hourglass', 'top_hourglass', 
 export function classifyFemale({ bust, waist, hips, highHip = null }, opts = {}) {
   const b = bust * IN, w = waist * IN, h = hips * IN;
   const r = highHip ? (highHip * IN) / w : null;
-  if (b - h <= 1 && h - b < 3.6 && (b - w >= 9 || h - w >= 10)) return 'hourglass';
-  if (h - b >= 3.6 && h - b < 10 && h - w >= 9) {
+  if (le(b - h, 1) && lt(h - b, 3.6) && (ge(b - w, 9) || ge(h - w, 10))) return 'hourglass';
+  if (ge(h - b, 3.6) && lt(h - b, 10) && ge(h - w, 9)) {
     if (r === null) return NEEDS_HIGH_HIP;
-    if (r < 1.193) return 'bottom_hourglass';
+    if (lt(r, 1.193)) return 'bottom_hourglass';
   }
-  if (b - h > 1 && b - h < 10 && b - w >= 9) return 'top_hourglass';
-  if (h - b > 2 && h - w >= 7) {
+  if (gt(b - h, 1) && lt(b - h, 10) && ge(b - w, 9)) return 'top_hourglass';
+  if (gt(h - b, 2) && ge(h - w, 7)) {
     if (r === null) return NEEDS_HIGH_HIP;
-    if (r >= 1.193) return 'spoon';
+    if (ge(r, 1.193)) return 'spoon';
   }
   // Triangle：2020 版第二分支是獨立的（論文 Table 10 #3：臀胸差 2.95 吋、胸<腰、腰≤臀 → Triangle），不是嵌在 3.6 吋條件下。
-  if ((h - b >= 3.6 && h - w >= 0 && h - w < 9) || (b - w < 0 && h - w >= 0)) return 'triangle';
-  if (b - h >= 3.6 && b - w < 9 && h - w >= 0) return 'inverted_triangle';
-  if (h - b < 3.6 && b - h < 3.6 && b - w >= 0 && b - w < 9 && h - w >= 0 && h - w < 10) return 'rectangle';
-  if (h - w < 0 && b - w < 0) return 'diamond';
-  if (h - w < 0 && b - w >= 0) return 'oval';
+  if ((ge(h - b, 3.6) && ge(h - w, 0) && lt(h - w, 9)) || (lt(b - w, 0) && ge(h - w, 0))) return 'triangle';
+  if (ge(b - h, 3.6) && lt(b - w, 9) && ge(h - w, 0)) return 'inverted_triangle';
+  if (lt(h - b, 3.6) && lt(b - h, 3.6) && ge(b - w, 0) && lt(b - w, 9) && ge(h - w, 0) && lt(h - w, 10)) return 'rectangle';
+  if (lt(h - w, 0) && lt(b - w, 0)) return 'diamond';
+  if (lt(h - w, 0) && ge(b - w, 0)) return 'oval';
   if (opts.strict) return null;
   // 沒有規則命中（例如胸比臀大 10 吋整、或差距超過 10 吋）：本站兜底——按最像的鄰型回傳，介面要標示這是兜底。
-  if (b - h >= 10) return b - w >= 9 ? 'top_hourglass' : 'inverted_triangle';
-  if (h - b >= 10) return h - w >= 9 ? 'bottom_hourglass' : 'triangle';
+  if (ge(b - h, 10)) return ge(b - w, 9) ? 'top_hourglass' : 'inverted_triangle';
+  if (ge(h - b, 10)) return ge(h - w, 9) ? 'bottom_hourglass' : 'triangle';
   return 'rectangle';
 }
 /** 是否走了兜底（九條規則都沒命中）。 */
@@ -49,10 +63,10 @@ export function isFallback(input) { return classifyFemale(input, { strict: true 
 export const MALE_SHAPES = ['trapezoid', 'inverted_triangle', 'rectangle', 'triangle', 'oval'];
 export function classifyMale({ chest, waist, hips }) {
   const c = chest * IN, w = waist * IN, h = hips * IN;
-  if (w >= c || w >= h) return 'oval';
-  if (c - h >= 3.6) return c - w >= 9 ? 'trapezoid' : 'inverted_triangle';
-  if (h - c >= 3.6) return 'triangle';
-  return c - w >= 9 ? 'trapezoid' : 'rectangle';
+  if (ge(w, c) || ge(w, h)) return 'oval';
+  if (ge(c - h, 3.6)) return ge(c - w, 9) ? 'trapezoid' : 'inverted_triangle';
+  if (ge(h - c, 3.6)) return 'triangle';
+  return ge(c - w, 9) ? 'trapezoid' : 'rectangle';
 }
 
 /** 最小的單一圍度改動（cm）能翻掉標籤：回 { cm, measure, to }，找不到（>limit）回 null。 */
