@@ -9,6 +9,17 @@ import { GA_MEASUREMENT_ID } from '../lib/site-config';
     function gtag() { window.dataLayer.push(arguments); }
     window.gtag = gtag;
     gtag('js', new Date());
+    // Share links contain measurements. Strip query AND hash from both GA URL
+    // fields before config's automatic page_view and all subsequent events.
+    // https://developers.google.com/analytics/devguides/collection/ga4/reference/config
+    function analyticsUrl(value) {
+      try { var u = new URL(value); return u.origin + u.pathname; }
+      catch (_) { return ''; }
+    }
+    gtag('set', {
+      page_location: analyticsUrl(location.href),
+      page_referrer: analyticsUrl(document.referrer)
+    });
     gtag('config', id, { anonymize_ip: true });
     (function () {
       var loaded = false;

@@ -41,6 +41,9 @@ const howToHref = lang === 'zh' ? '/zh/how-to-measure/' : '/how-to-measure/';
   import { SHAPES, GROUPS, SHAPES_ZH, AKA_ZH, GROUPS_ZH } from '../lib/shapes.js';
   import { barsSvg, outlineSvg, gaugeSvg, encodeShare, decodeShare, copyText, downloadCard } from '../lib/result-card.js';
   import pct from '../data/whr_percentiles.json';
+  import { SHAPE_ADVICE, affiliateLinks } from '../lib/shape-advice.js';
+  import { SHAPE_AFFILIATES } from '../data/shape-affiliates.js';
+  import { EVENTS, track, resultParams } from '../lib/analytics.js';
 
   const fmt = (n: number) => (Math.round(n * 10) / 10).toString();
   const inch = (cm: number) => fmt(cm * IN);
@@ -82,8 +85,6 @@ const howToHref = lang === 'zh' ? '/zh/how-to-measure/' : '/how-to-measure/';
       copy: 'Copy result link', copied: 'Link copied', copyFail: 'Copy failed',
       download: 'Download result image', shareNote: 'The link contains the measurements you entered; nothing is stored on this site.',
       cardTitle: 'Body shape result', cardRule: 'Rule that fired', cardFallback: 'Fallback (no FFIT rule matched)',
-      cardStability: 'Stability', cardStable: 'Stable within 15 cm',
-      cardFlip: (cm: string, m: string, to: string) => `${cm} cm on the ${m} to ${to}`,
       cardWhr: (v: string, p: number) => `${v} — above about ${p}% of NHANES women`,
       cardNote: 'FFIT nine-shape rules, 2020 revision. Measurements processed in the browser. Not a health assessment.',
       needsHHName: 'a result that needs the high hip',
@@ -114,8 +115,6 @@ const howToHref = lang === 'zh' ? '/zh/how-to-measure/' : '/how-to-measure/';
       copy: '複製結果連結', copied: '已複製', copyFail: '複製失敗',
       download: '下載結果圖', shareNote: '連結裡帶著你輸入的量測值；本站不會留存任何資料。',
       cardTitle: '體型結果', cardRule: '觸發的規則', cardFallback: '兜底（沒有 FFIT 規則吻合）',
-      cardStability: '穩定度', cardStable: '15 公分內都穩定',
-      cardFlip: (cm: string, m: string, to: string) => `${m}差 ${cm} 公分就變 ${to}`,
       cardWhr: (v: string, p: number) => `${v}——高於約 ${p}% 的 NHANES 女性`,
       cardNote: 'FFIT 九型規則 2020 修訂版。量測在瀏覽器裡完成。這不是健康評估。',
       needsHHName: '一個需要高臀圍才能判的結果',
@@ -134,7 +133,7 @@ const howToHref = lang === 'zh' ? '/zh/how-to-measure/' : '/how-to-measure/';
     oval: 'waist larger than hips but not larger than bust',
   };
 
-  for (const root of document.querySelectorAll<HTMLElement>('.bsc')) {
+  for (const root of document.querySelectorAll<HTMLElement>('.bsc[data-compact]')) {
     const form = root.querySelector('form')!, out = root.querySelector<HTMLElement>('.bsc-out')!;
     const err = root.querySelector<HTMLElement>('.bsc-err')!, hh = root.querySelector<HTMLElement>('.bsc-hh')!, hhNote = root.querySelector<HTMLElement>('.bsc-hh-note')!;
     const L = (root.dataset.lang === 'zh' ? 'zh' : 'en') as 'en' | 'zh';
@@ -159,6 +158,7 @@ const howToHref = lang === 'zh' ? '/zh/how-to-measure/' : '/how-to-measure/';
       const input = { bust, waist, hips, highHip };
       const shape = classifyFemale(input);
       if (shape === NEEDS_HIGH_HIP) {
+        track(EVENTS.needsHighHip);
         hh.hidden = false; hhNote.hidden = false;
         hhNote.textContent = S.needHH;
         hh.querySelector('input')!.focus(); return;
@@ -177,11 +177,16 @@ const howToHref = lang === 'zh' ? '/zh/how-to-measure/' : '/how-to-measure/';
         ? S.nearBoundary(measName, String(flip.cm), dirWord, flipName)
         : S.stable(flipName, measName, String(flip.cm), dirWord))
         : S.rockSolid;
+      const advice = SHAPE_ADVICE[L][shape];
       const bars: [string, number][] = [[S.bust, bust], [S.waist, waist], ...(highHip ? [[S.highHip, highHip] as [string, number]] : []), [S.hips, hips]];
       out.innerHTML = `
         <div class="card">
           <span class="eyebrow">${S.eyebrow}</span>
           <h3 style="margin-top:6px">${shapeName}${groupName !== shapeName ? ` <span class="muted">${S.family(groupName)}</span>` : ''}</h3>
+          <section class="rc-stability-hero" aria-label="${S.stableHead}">
+            <p class="rc-stability-text">${stableText}</p>
+            ${gaugeSvg(flip)}
+          </section>
           <p>${shapeDef}${aka}</p>
           <div class="rc-visual">
             <div>${barsSvg(bars, unit())}<p class="rc-schematic">${S.barsNote}</p></div>
@@ -192,23 +197,37 @@ const howToHref = lang === 'zh' ? '/zh/how-to-measure/' : '/how-to-measure/';
             <code>${S.bust} − ${S.hips} = ${dIn(bust, hips)}<br>${S.bust} − ${S.waist} = ${dIn(bust, waist)}<br>${S.hips} − ${S.waist} = ${dIn(hips, waist)}${highHip ? `<br>${S.highHip} ÷ ${S.waist} = ${fmt(highHip / waist * 1000) / 1000}` : ''}</code>
             <p class="muted">${fallback ? S.fellBack : S.ruleFired(RT[shape])} ${S.rulesTail} <a href="${P}/methodology/">${S.methodLink}</a>.</p>
           </div>
-          <h4>${S.stableHead}</h4>
-          ${gaugeSvg(flip)}
-          <p>${stableText}</p>
           <h4>${S.whrHead}</h4>
           <p>${S.whrBody(whr.toFixed(2), p, pct.n.female.toLocaleString())} <a href="${P}/waist-to-hip-ratio/">${S.whrLink}</a>.</p>
+          <section class="rc-advice">
+            <h4>${S.whatMeans(shapeName)}</h4>
+            <p>${advice.meaning}</p>
+            <h4>${S.outfits}</h4>
+            <ul>${advice.cuts.map((cut: string) => `<li>${cut}</li>`).join('')}</ul>
+            ${affiliateLinks(SHAPE_AFFILIATES[L][shape])}
+          </section>
           <p class="btn-row"><a class="btn" href="${P}/shapes/${meta.slug}/">${S.whatMeans(groupName)}</a><a class="btn plain" href="${P}/shapes/${meta.slug}/outfits/">${S.outfits}</a></p>
           <div class="rc-share"><button type="button" class="btn plain rc-copy">${S.copy}</button><button type="button" class="btn plain rc-dl">${S.download}</button><span class="muted">${S.shareNote}</span></div>
         </div>`;
-      out.hidden = false; out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      out.querySelector<HTMLButtonElement>('.rc-copy')!.onclick = async (e) => { const b = e.currentTarget as HTMLButtonElement; const ok = await copyText(encodeShare(input, unit())); b.textContent = ok ? S.copied : S.copyFail; setTimeout(() => (b.textContent = S.copy), 2000); };
-      out.querySelector<HTMLButtonElement>('.rc-dl')!.onclick = () => downloadCard({
-        title: S.cardTitle, shape: shapeName, sub: `${groupName !== shapeName ? groupName + ' · ' : ''}${shapeDef}`,
-        bars, lines: [[S.cardRule, fallback ? S.cardFallback : RT[shape]], [S.cardStability, flip ? S.cardFlip(String(flip.cm), measName, flipName) : S.cardStable], [S.whrHead, S.cardWhr(whr.toFixed(2), p)]],
-        note: S.cardNote, file: `body-shape-${meta.slug}.png`,
-      });
+      out.hidden = false;
+      track(EVENTS.resultShown, resultParams(shape, flip, p));
+      out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      out.querySelector<HTMLButtonElement>('.rc-copy')!.onclick = async (e) => { const b = e.currentTarget as HTMLButtonElement; const ok = await copyText(encodeShare(input, unit())); if (ok) track(EVENTS.shareCopy); b.textContent = ok ? S.copied : S.copyFail; setTimeout(() => (b.textContent = S.copy), 2000); };
+      out.querySelector<HTMLButtonElement>('.rc-dl')!.onclick = async () => {
+        const ok = await downloadCard({
+          title: S.cardTitle, shape: shapeName, sub: `${groupName !== shapeName ? groupName + ' · ' : ''}${shapeDef}`,
+          hero: out.querySelector('.rc-stability-text')!.textContent!,
+          bars, lines: [[S.cardRule, fallback ? S.cardFallback : RT[shape]], [S.whrHead, S.cardWhr(whr.toFixed(2), p)]],
+          note: S.cardNote, file: `body-shape-${meta.slug}.png`,
+        });
+        if (ok) track(EVENTS.shareDownload);
+      };
     }
-    form.addEventListener('submit', (e) => { e.preventDefault(); run(); });
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      track(EVENTS.findShape, { has_high_hip: !hh.hidden && read('highHip') !== null });
+      run();
+    });
     // 分享連結還原：?bust=..&waist=..&hips=..&highHip=..&u=cm
     const shared = decodeShare(location.search);
     if (shared && shared.bust && !root.dataset.compact?.startsWith('1')) {
@@ -232,5 +251,12 @@ const howToHref = lang === 'zh' ? '/zh/how-to-measure/' : '/how-to-measure/';
   .bsc-hh-note { margin-top: 12px; max-width: 64ch; }
   .bsc-out { margin-top: 22px; }
   .bsc-out h4 { margin-top: 18px; }
+  .rc-stability-hero { margin: 14px 0 22px; padding: 18px 20px; border-left: 4px solid var(--accent); border-radius: 0 var(--r) var(--r) 0; background: var(--accent-wash); }
+  .rc-stability-hero .rc-stability-text { margin: 0; font-size: clamp(18px, 2.2vw, 23px); line-height: 1.55; color: var(--ink); }
+  .rc-stability-hero strong { color: var(--accent); }
+  .rc-stability-hero .rc-gauge { display: block; max-width: 520px; margin-top: 18px; }
+  .rc-advice { margin-top: 22px; }
+  .rc-advice li { margin: 8px 0; }
+  .rc-affiliates { padding-top: 12px; border-top: 1px solid var(--line); }
   .bsc-out .formula code { display: block; white-space: pre-wrap; line-height: 1.7; }
 </style>

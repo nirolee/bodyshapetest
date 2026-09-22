@@ -72,7 +72,7 @@ const jsonLd = [
       <span class="eyebrow">Free · Nothing uploaded</span>
       <h2>{ctaHead}</h2>
       <p class="lead" style="margin-top:12px;max-width:62ch">{ctaNote}</p>
-      <div style="margin-top:26px">{tool === 'men' ? <RatioCalculator mode="men" /> : <BodyCalculator compact />}</div>
+      <div style="margin-top:26px">{tool === 'men' ? <RatioCalculator mode="men" lang={lang} /> : <BodyCalculator compact lang={lang} />}</div>
     </div>
   </section>
 </BaseLayout>

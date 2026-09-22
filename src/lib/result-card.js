@@ -70,30 +70,69 @@ export async function copyText(text) {
   catch { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); const ok = document.execCommand('copy'); ta.remove(); return ok; }
 }
 
-/** 用 canvas 畫一張 1080×1350 的結果卡並下載。lines: [[label, value], ...]；bars: [[label, cm]] */
-export function downloadCard({ title, shape, sub, lines, bars, note, site = 'bodyshapetest.org', file = 'body-shape-result.png' }) {
-  const W = 1080, H = 1350, c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d');
-  const ink = '#f5f3ee', muted = '#a8a5a0', acc = '#e8c39a';
-  g.fillStyle = '#141417'; g.fillRect(0, 0, W, H);
-  g.fillStyle = acc; g.font = '600 26px system-ui, sans-serif'; g.letterSpacing = '4px'; g.fillText(title.toUpperCase(), 72, 110); g.letterSpacing = '0px';
-  g.fillStyle = ink; g.font = '700 86px system-ui, sans-serif'; g.fillText(shape, 72, 215);
-  g.fillStyle = muted; g.font = '400 30px system-ui, sans-serif'; wrap(g, sub, 72, 270, W - 144, 40);
-  let y = 400; const max = Math.max(...bars.map((b) => b[1]));
-  for (const [label, cm] of bars) {
-    g.fillStyle = muted; g.font = '500 28px system-ui, sans-serif'; g.fillText(label, 72, y + 30);
-    g.fillStyle = '#2a2a30'; rr(g, 260, y, 640, 42, 12); g.fill();
-    g.fillStyle = acc; rr(g, 260, y, Math.max(8, (cm / max) * 640), 42, 12); g.fill();
-    g.fillStyle = ink; g.font = '600 26px system-ui, sans-serif'; g.fillText(`${fmt(cm)} cm / ${fmt(cm * IN)} in`, 920 - 0, y + 30 - 0);
-    y += 70;
-  }
-  y += 30; g.strokeStyle = '#2a2a30'; g.lineWidth = 2; g.beginPath(); g.moveTo(72, y); g.lineTo(W - 72, y); g.stroke(); y += 50;
-  for (const [label, value] of lines) {
-    g.fillStyle = muted; g.font = '500 26px system-ui, sans-serif'; g.fillText(label, 72, y);
-    g.fillStyle = ink; g.font = '500 30px system-ui, sans-serif'; y = wrap(g, value, 72, y + 42, W - 144, 40) + 34;
-  }
-  g.fillStyle = muted; g.font = '400 24px system-ui, sans-serif'; wrap(g, note, 72, H - 150, W - 144, 32);
-  g.fillStyle = acc; g.font = '600 28px system-ui, sans-serif'; g.fillText(site, 72, H - 60);
-  c.toBlob((blob) => { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = file; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); }, 'image/png');
+/** Canvas result image. Optional hero reuses the on-page stability text.
+ * Minimum 1080×1350; grow vertically for longer translations rather than clip.
+ * Returns true when the browser download is triggered (not a saved-file receipt).
+ */
+export function downloadCard({ title, shape, sub, hero = '', lines, bars, note, site = 'bodyshapetest.org', file = 'body-shape-result.png' }) {
+  return new Promise((resolve) => {
+    const W = 1080, c = document.createElement('canvas'); c.width = W; c.height = 1350;
+    const g = c.getContext('2d');
+    if (!g) { resolve(false); return; }
+    const ink = '#f5f3ee', muted = '#a8a5a0', acc = '#e8c39a';
+    const draw = () => {
+      g.fillStyle = '#141417'; g.fillRect(0, 0, W, c.height);
+      g.fillStyle = acc; g.font = '600 26px system-ui, sans-serif'; g.fillText(title.toUpperCase(), 72, 100);
+      g.fillStyle = ink; g.font = '700 76px system-ui, sans-serif';
+      let y = wrap(g, shape, 72, 195, W - 144, 88) + 60;
+      if (hero) {
+        g.fillStyle = acc; g.font = '600 36px system-ui, sans-serif';
+        y = wrap(g, hero, 72, y, W - 144, 50) + 56;
+      }
+      g.fillStyle = muted; g.font = '400 28px system-ui, sans-serif';
+      y = wrap(g, sub, 72, y, W - 144, 38) + 48;
+      const max = Math.max(...bars.map((b) => b[1]));
+      for (const [label, cm] of bars) {
+        g.fillStyle = muted; g.font = '500 26px system-ui, sans-serif'; g.fillText(label, 72, y + 29);
+        g.fillStyle = '#2a2a30'; rr(g, 235, y, 495, 40, 12); g.fill();
+        g.fillStyle = acc; rr(g, 235, y, Math.max(8, (cm / max) * 495), 40, 12); g.fill();
+        g.fillStyle = ink; g.font = '600 24px system-ui, sans-serif'; g.fillText(`${fmt(cm)} cm / ${fmt(cm * IN)} in`, 750, y + 29);
+        y += 65;
+      }
+      y += 12; g.strokeStyle = '#2a2a30'; g.lineWidth = 2; g.beginPath(); g.moveTo(72, y); g.lineTo(W - 72, y); g.stroke(); y += 48;
+      for (const [label, value] of lines) {
+        g.fillStyle = muted; g.font = '500 26px system-ui, sans-serif'; g.fillText(label, 72, y);
+        g.fillStyle = ink; g.font = '500 30px system-ui, sans-serif'; y = wrap(g, value, 72, y + 42, W - 144, 40) + 50;
+      }
+      g.fillStyle = muted; g.font = '400 24px system-ui, sans-serif';
+      y = wrap(g, note, 72, y + 12, W - 144, 32) + 72;
+      g.fillStyle = acc; g.font = '600 28px system-ui, sans-serif'; g.fillText(site, 72, Math.max(y, c.height - 60));
+      return y + 60;
+    };
+    const height = Math.max(1350, Math.ceil(draw()));
+    if (height !== c.height) { c.height = height; draw(); }
+    c.toBlob((blob) => {
+      if (!blob) { resolve(false); return; }
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = file;
+      a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); resolve(true);
+    }, 'image/png');
+  });
 }
 function rr(g, x, y, w, h, r) { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
-function wrap(g, text, x, y, maxW, lh) { const words = String(text).split(' '); let line = ''; for (const w of words) { const t = line ? line + ' ' + w : w; if (g.measureText(t).width > maxW && line) { g.fillText(line, x, y); y += lh; line = w; } else line = t; } if (line) g.fillText(line, x, y); return y; }
+// Word boundaries for English, character boundaries for Chinese; split any
+// overlong token too, so no translated sentence can extend beyond the canvas.
+function wrap(g, text, x, y, maxW, lh) {
+  const tokens = String(text).match(/[\u2e80-\u9fff\uf900-\ufaff\u3000-\u303f\uff00-\uffef]|[^\s\u2e80-\u9fff\uf900-\ufaff\u3000-\u303f\uff00-\uffef]+|\s+/gu) || [];
+  let line = '';
+  for (const token of tokens) {
+    const parts = g.measureText(token).width > maxW ? Array.from(token) : [token];
+    for (const part of parts) {
+      if (line && g.measureText(line + part).width > maxW) {
+        g.fillText(line.trimEnd(), x, y); y += lh; line = '';
+      }
+      line += line ? part : part.trimStart();
+    }
+  }
+  if (line) g.fillText(line.trimEnd(), x, y);
+  return y;
+}
