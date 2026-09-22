@@ -1,0 +1,179 @@
+---
+import { DIMENSIONS, QUESTIONS, OPTIONS, KIBBE, PROFILES } from '../lib/kibbe.js';
+export interface Props { lang?: 'en' | 'zh' }
+const { lang = 'en' } = Astro.props;
+const T = {
+  en: {
+    heading: '13 questions. All visible before you start.',
+    intro: 'Choose the closest description at your current weight, standing naturally. Use a mirror if helpful; no photo is needed. These are observations, not measurements of attractiveness, gender or health. If two choices fit, try both and compare the boundary note.',
+    convention: 'Height ranges are this site’s bins; they are not Kibbe’s height limits. Use centimetres at a boundary; feet and inches are approximate. No single answer excludes a type.',
+    scale: 'Answer key: A → E runs from yang toward yin. The five categories stay separate in the calculation; sharp and blunt yang are not interchangeable, and a mixture of extremes is not treated as balance.',
+    submit: 'See my result and the rules', reset: 'Clear answers', privacy: 'Answers stay in this browser tab. No photos, uploads or saved answers.',
+    nojs: 'Enable JavaScript to calculate locally. You can still read every question and the reference profiles below.',
+    profiles: 'The complete reference profiles',
+    profilesNote: 'These are this site’s reference answer patterns, not a scoring key published by Kibbe. Letters are grouped by dimension; their order within a group does not affect the score. Each dimension has equal weight (20%). The displayed row order also breaks exact ties.',
+    type: '1987 name', caption: 'Reference answers by dimension (A–E)',
+  },
+  zh: {
+    heading: '13 題，開始前就能看完。',
+    intro: '以目前體重、自然站立的狀態，選最接近的描述。可以照鏡子，不需要照片。這些是外形觀察，不是外貌吸引力、性別或健康的評分。若兩個選項都合適，可以分別試算，比較分界提示。',
+    convention: '身高區間是本站的分組，並非 Kibbe 的身高限制。接近分界時請用公分判斷；英尺與英吋只是約數。任何單一答案都不會排除某一型。',
+    scale: '選項對照：A → E 由 yang 走向 yin。計算時保留五個類別；鮮明與鈍角 yang 不混為一談，兩端特徵並存也不會直接視為均衡。',
+    submit: '看我的結果與規則', reset: '清除答案', privacy: '答案只留在這個瀏覽器分頁。不用照片、不上傳，也不儲存答案。',
+    nojs: '請啟用 JavaScript，才能在瀏覽器內計算。所有題目與參考組合仍可直接閱讀。',
+    profiles: '完整參考組合',
+    profilesNote: '這些是本站設定的參考答案組合，不是 Kibbe 發表的計分表。字母按維度分組，同組內的順序不影響計分。每個維度權重相同，皆為 20%。完全同分時，依此表的列序顯示。',
+    type: '1987 年英文名', caption: '各維度的參考答案（A–E）',
+  },
+}[lang];
+---
+<div class="bsc kq" data-lang={lang}>
+  <h2>{T.heading}</h2>
+  <p>{T.intro}</p>
+  <p class="muted">{T.convention}</p>
+  <div class="notice"><p>{T.scale}</p><ul class="kq-key">{OPTIONS.map((o) => <li><b>{o.letter}</b> · {o[lang]}</li>)}</ul></div>
+  <noscript><p class="notice">{T.nojs}</p></noscript>
+  <form class="bsc-form" autocomplete="off" novalidate>
+    {DIMENSIONS.map((dim) => <section class="kq-dimension" aria-labelledby={`kq-${lang}-${dim.key}`}>
+      <h3 id={`kq-${lang}-${dim.key}`}>{dim[lang]}</h3>
+      {dim.questions.map((index) => <fieldset data-question={index}>
+        <legend>{index + 1}. {QUESTIONS[index][lang]}</legend>
+        <div class="kq-options">{QUESTIONS[index].options[lang].map((text, option) => <label>
+          <input type="radio" name={`q${index}`} value={option} required />
+          <span><b>{OPTIONS[option].letter}</b> · {text}</span>
+        </label>)}</div>
+      </fieldset>)}
+    </section>)}
+    <div class="btn-row"><button class="btn primary" type="submit" disabled>{T.submit}</button><button class="btn" type="reset">{T.reset}</button></div>
+    <p class="muted">{T.privacy}</p>
+    <p class="bsc-err" role="alert" hidden></p>
+  </form>
+  <div class="bsc-out" tabindex="-1" role="region" aria-label={lang === 'zh' ? '測驗結果' : 'Quiz result'} hidden></div>
+  <section class="kq-profiles">
+    <h3>{T.profiles}</h3><p class="muted">{T.profilesNote}</p>
+    <div class="kq-table" tabindex="0" role="region" aria-label={T.caption}><table>
+      <caption>{T.caption}</caption>
+      <thead><tr><th scope="col">{T.type}</th>{DIMENSIONS.map((d) => <th scope="col">{d[lang]}</th>)}</tr></thead>
+      <tbody>{Object.entries(PROFILES).map(([key, profile]) => <tr><th scope="row">{KIBBE[key].name}</th>{profile.map((letters) => <td><code>{letters}</code></td>)}</tr>)}</tbody>
+    </table></div>
+  </section>
+</div>
+<script>
+  import { scoreQuiz, QUESTIONS, OPTIONS, DIMENSIONS, KIBBE, KIBBE_ZH, RULES } from '../lib/kibbe.js';
+  const STR = {
+    en: {
+      fill: 'Please answer all 13 questions. The first unanswered question is focused.',
+      heading: 'Closest reference under this site’s rules', why: 'Why this result?',
+      caveat: 'An independent exploration of the 1987 vocabulary, not an official Kibbe assessment. The closest reference can still be a poor match; these distances are not probabilities or confidence scores.',
+      mix: 'Yin / yang composition', adjacent: 'How it differs from nearby types', distribution: 'Your five dimensions',
+      dim: 'Dimension', answers: 'Your answers', yin: 'Yin (D + E)', balance: 'Balanced (C)', yang: 'Yang (A + B)',
+      rules: 'The exact rule used',
+      formula: 'For each dimension, p is your fraction of A, B, C, D and E answers; t is the reference fraction. Dimension distance = 100 × (|pA − tA| + |pB − tB| + |pC − tC| + |pD − tD| + |pE − tE|) ÷ 2. Overall distance = the average of the five dimension distances. Lowest distance wins. Zero means identical distributions; 100 means no category overlap. No height override or hidden weighting is applied.',
+      tieRule: 'Distances within 0.000000001 are treated as tied. Ties use the reference table’s row order, not stronger evidence. Displayed numbers are rounded only after ranking.',
+      whyText: (name: string, d: string) => `${name} has the lowest overall distance: ${d} / 100. The comparison below shows how each dimension contributes; each contributes one fifth of its distance.`,
+      near: 'Nearest competing reference',
+      nearText: (name: string, d: string, margin: string) => `${name}: distance ${d} / 100, a gap of ${margin} points from the displayed result. This is a score gap, not the number of answers you must change.`,
+      tie: 'Equal best matches', current: 'Displayed result', rival: 'Nearest competitor', total: 'Overall distance',
+      changes: 'Which answers would change the result?',
+      changesNote: 'Every change below was recalculated separately with the other 12 answers fixed. A one-step change moves to the next letter on A–E. The new result may differ from the current nearest competitor.',
+      oneStep: 'One-step changes', noStep: 'No one-step change switches the displayed result. This does not prove the label is correct.',
+      others: 'Other single-question changes (two or more steps)', none: 'No replacement of just one answer switches the displayed result. Changes to two or more answers are not searched.',
+      q: 'Question', from: 'From', to: 'To', result: 'Recalculated result', tied: '(tied; row order used)',
+      ranking: 'All 13 distances',
+    },
+    zh: {
+      fill: '請回答全部 13 題。游標已移到第一題未作答的題目。',
+      heading: '依本站規則，最接近的參考組合', why: '為什麼是這一型？',
+      caveat: '這是認識 1987 年分類用語的獨立工具，不是 Kibbe 官方判定。最接近的組合仍可能不太吻合；距離不是機率，也不是可信度。',
+      mix: 'yin／yang 組成', adjacent: '與相鄰型的差別', distribution: '你的五個維度',
+      dim: '維度', answers: '你的答案', yin: 'yin（D＋E）', balance: '均衡（C）', yang: 'yang（A＋B）',
+      rules: '實際用到的規則',
+      formula: '每個維度中，p 是你的 A、B、C、D、E 答案比例，t 是參考組合的比例。維度距離＝100 ×（|pA − tA|＋|pB − tB|＋|pC − tC|＋|pD − tD|＋|pE − tE|）÷ 2。總距離＝五個維度距離的平均。距離最小者排第一。0 代表分布相同，100 代表類別完全不重疊。沒有身高優先判定，也沒有隱藏權重。',
+      tieRule: '距離相差不超過 0.000000001 時視為同分，依參考表列序顯示，不代表證據更強。排名完成後才將顯示數字四捨五入。',
+      whyText: (name: string, d: string) => `${name} 的總距離最小：${d}／100。下表列出各維度的差異；每個維度貢獻其距離的五分之一。`,
+      near: '最近的另一個參考組合',
+      nearText: (name: string, d: string, margin: string) => `${name}：距離 ${d}／100，比目前顯示的結果多 ${margin} 分。這是分數差距，不是必須改幾題的意思。`,
+      tie: '並列最接近的組合', current: '目前結果', rival: '最近另一型', total: '總距離',
+      changes: '改哪些答案會換型？',
+      changesNote: '以下每個改動都固定其他 12 題，單獨重算。「一步」指移到 A–E 的相鄰字母。重算結果不一定是目前最近的另一型。',
+      oneStep: '移動一步就換型', noStep: '沒有任何單題移動一步會改變目前結果。這不代表分類一定正確。',
+      others: '其他單題改動（移動兩步以上）', none: '任一單題換成其他選項，都不會改變目前結果。沒有搜尋同時改兩題以上的情況。',
+      q: '題目', from: '原選項', to: '改成', result: '重算結果', tied: '（同分，依列序顯示）',
+      ranking: '全部 13 型的距離',
+    },
+  };
+  const fmt = (n: number) => n.toFixed(2);
+  const percent = (n: number) => `${Math.round(n * 100)}%`;
+  // All interpolated text below comes from our static dictionaries, never user-supplied HTML.
+  for (const root of document.querySelectorAll<HTMLElement>('.kq')) {
+    const L = root.dataset.lang === 'zh' ? 'zh' : 'en', S = STR[L];
+    const form = root.querySelector('form')!, out = root.querySelector<HTMLElement>('.bsc-out')!, err = root.querySelector<HTMLElement>('.bsc-err')!;
+    // Keep a non-JavaScript form from sending answers through a native GET submission.
+    form.reset();
+    form.querySelector<HTMLButtonElement>('button[type=submit]')!.disabled = false;
+    const nameOf = (key: string) => KIBBE[key].name;
+    const clearResult = () => { out.hidden = true; out.replaceChildren(); err.hidden = true; };
+    form.addEventListener('change', clearResult);
+    form.addEventListener('reset', clearResult);
+    form.addEventListener('submit', (event) => {
+      event.preventDefault(); clearResult();
+      const data = new FormData(form);
+      const missing = QUESTIONS.findIndex((_, i) => !data.has(`q${i}`));
+      if (missing !== -1) {
+        err.textContent = S.fill; err.hidden = false;
+        form.querySelector<HTMLInputElement>(`input[name="q${missing}"]`)!.focus(); return;
+      }
+      const result = scoreQuiz(QUESTIONS.map((_, i) => Number(data.get(`q${i}`))));
+      const { winner, runnerUp } = result;
+      const meta = L === 'zh' ? KIBBE_ZH[winner.key] : KIBBE[winner.key];
+      const flipTable = (flips: typeof result.flips) => `<div class="kq-table" tabindex="0" role="region" aria-label="${S.changes}"><table><thead><tr><th>${S.q}</th><th>${S.from}</th><th>${S.to}</th><th>${S.result}</th></tr></thead><tbody>${flips.map((f) => `<tr><th scope="row">${f.question + 1}. ${QUESTIONS[f.question][L]}</th><td>${OPTIONS[f.from].letter} · ${QUESTIONS[f.question].options[L][f.from]}</td><td>${OPTIONS[f.to].letter} · ${QUESTIONS[f.question].options[L][f.to]}</td><td>${nameOf(f.key)} ${f.tied ? S.tied : ''}</td></tr>`).join('')}</tbody></table></div>`;
+      out.innerHTML = `<div class="card">
+        <span class="eyebrow">${S.heading}</span><h3>${nameOf(winner.key)}</h3><p>${meta.def}</p>
+        <p><strong>${S.mix}:</strong> ${meta.composition}</p><p><strong>${S.adjacent}:</strong> ${meta.adjacent}</p>
+        <p class="notice">${S.caveat}</p>
+        ${result.ties.length > 1 ? `<p class="notice"><strong>${S.tie}:</strong> ${result.ties.map(nameOf).join(' · ')}</p>` : ''}
+        <h4>${S.distribution}</h4>
+        <div class="kq-table" tabindex="0" role="region" aria-label="${S.distribution}"><table><thead><tr><th>${S.dim}</th><th>${S.answers}</th><th>${S.yin}</th><th>${S.balance}</th><th>${S.yang}</th></tr></thead><tbody>${result.distributions.map((d, i) => `<tr><th scope="row">${DIMENSIONS[i][L]}</th><td><code>${d.letters}</code></td><td>${percent(d.yin)}</td><td>${percent(d.balanced)}</td><td>${percent(d.yang)}</td></tr>`).join('')}</tbody></table></div>
+        <div class="formula"><h4>${S.rules}</h4><p>${S.formula}</p><p>${S.tieRule}</p></div>
+        <h4>${S.why}</h4><p>${S.whyText(nameOf(winner.key), fmt(winner.distance))}</p>
+        <h4>${S.near}</h4><p>${S.nearText(nameOf(runnerUp.key), fmt(runnerUp.distance), fmt(result.margin))}</p>
+        <div class="kq-table" tabindex="0" role="region" aria-label="${S.why}"><table><thead><tr><th>${S.dim}</th><th>${S.current}: ${nameOf(winner.key)}</th><th>${S.rival}: ${nameOf(runnerUp.key)}</th></tr></thead><tbody>${DIMENSIONS.map((d, i) => `<tr><th scope="row">${d[L]} (20%)</th><td>${fmt(winner.parts[i])}</td><td>${fmt(runnerUp.parts[i])}</td></tr>`).join('')}<tr><th scope="row">${S.total}</th><td>${fmt(winner.distance)}</td><td>${fmt(runnerUp.distance)}</td></tr></tbody></table></div>
+        <h4>${S.changes}</h4><p>${S.changesNote}</p><h5>${S.oneStep}</h5>
+        ${result.adjacentFlips.length ? flipTable(result.adjacentFlips) : `<p>${S.noStep}</p>`}
+        ${result.flips.some((f) => f.steps > 1) ? `<details><summary>${S.others}</summary>${flipTable(result.flips.filter((f) => f.steps > 1))}</details>` : ''}
+        ${!result.flips.length ? `<p>${S.none}</p>` : ''}
+        <details><summary>${S.ranking}</summary><ol>${result.ranking.map((r) => `<li>${nameOf(r.key)}: ${fmt(r.distance)} / ${RULES.scale}</li>`).join('')}</ol></details>
+      </div>`;
+      out.hidden = false; out.focus({ preventScroll: true });
+      out.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    });
+  }
+</script>
+<style is:global>
+  .kq { max-width: 900px; margin-inline: auto; }
+  .kq p { margin-top: 12px; }
+  .kq .kq-key { display: flex; flex-wrap: wrap; gap: 8px 24px; padding: 0; list-style: none; margin-top: 12px; }
+  .kq .kq-dimension { margin-top: 32px; }
+  .kq fieldset { min-width: 0; border: 1px solid var(--line); border-radius: var(--r); padding: 16px; margin: 20px 0 0; }
+  .kq legend { font-weight: 600; padding: 0 6px; max-width: 100%; }
+  .kq .kq-options { display: grid; gap: 8px; }
+  .kq .kq-options label { display: flex; align-items: baseline; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; cursor: pointer; }
+  .kq .kq-options label:has(input:checked) { border-color: var(--accent); background: var(--accent-wash); }
+  .kq input { accent-color: var(--accent); flex-shrink: 0; }
+  .kq :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .kq .bsc-out, .kq .kq-profiles { margin-top: 32px; }
+  .kq .bsc-out { scroll-margin-top: 130px; }
+  .kq .bsc-out h3 { margin-top: 8px; }
+  .kq h4, .kq h5 { margin-top: 24px; }
+  .kq .formula { max-width: none; overflow-wrap: anywhere; }
+  .kq .bsc-err { color: #b3261e; }
+  .kq .kq-table { overflow-x: auto; margin: 16px 0; }
+  .kq table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .kq caption { text-align: left; color: var(--ink-2); margin-bottom: 8px; }
+  .kq th, .kq td { text-align: left; border-bottom: 1px solid var(--line); padding: 10px 12px; vertical-align: top; min-width: 100px; }
+  .kq th:first-child { min-width: 170px; }
+  .kq details { margin-top: 20px; }
+  .kq summary { cursor: pointer; font-weight: 600; }
+  .kq details ol { padding-left: 24px; margin-top: 12px; }
+  @media (max-width: 540px) { .kq fieldset { padding: 12px; } .kq .card { padding: 16px; } }
+</style>

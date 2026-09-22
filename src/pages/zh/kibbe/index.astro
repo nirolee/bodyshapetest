@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import KibbeQuiz from '../../../components/KibbeQuiz.astro';
+import References from '../../../components/References.astro';
+import { refsFor } from '../../../lib/references.js';
+import { KIBBE, KIBBE_ZH } from '../../../lib/kibbe.js';
+import c from '../../../content/pages-zh.json';
+const title = c.kibbe_title;
+const description = c.kibbe_desc;
+const faq = c.kibbe_faq;
+const jsonLd = [{ '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: 'zh-Hant', mainEntity: faq.map(([q, a]: [string, string]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) }];
+---
+<BaseLayout langs={['en', 'zh']} title={title} description={description} jsonLd={jsonLd} lang="zh" bleed>
+  <section class="band dark tight"><div class="wrap prose"><span class="eyebrow">{c.kibbe_eyebrow}</span><h1>{c.kibbe_h1}</h1><p class="lead" style="margin-top:14px">{c.kibbe_lead}</p><p>{c.kibbe_independent}</p></div></section>
+  <section class="band"><div class="wrap"><KibbeQuiz lang="zh" /></div></section>
+  <section class="band warm"><div class="wrap prose">
+    <h2>{c.kibbe_version_h2}</h2>{c.kibbe_version_paras.map((p) => <p>{p}</p>)}
+    <h2>{c.kibbe_method_h2}</h2>{c.kibbe_method_paras.map((p) => <p>{p}</p>)}
+    <h2>{c.kibbe_types_h2}</h2><p>{c.kibbe_types_intro}</p>
+    {Object.entries(KIBBE).map(([key, type]) => <article id={`type-${key}`}><h3>{type.name}</h3><p>{KIBBE_ZH[key].def}</p><p><strong>{c.kibbe_composition}</strong>{KIBBE_ZH[key].composition}</p><p><strong>{c.kibbe_adjacent}</strong>{KIBBE_ZH[key].adjacent}</p></article>)}
+    <p class="muted">{c.kibbe_checked}</p>
+  </div></section>
+  <References lang="zh" refs={refsFor('/kibbe/')} />
+  <section class="band"><div class="wrap prose"><span class="eyebrow">{c.kibbe_faq_eyebrow}</span><h2>{c.kibbe_faq_h2}</h2><div class="faq" style="margin-top:22px">{faq.map(([q, a]: [string, string]) => <details><summary>{q}</summary><p>{a}</p></details>)}</div></div></section>
+</BaseLayout>

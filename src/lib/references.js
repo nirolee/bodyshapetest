@@ -40,3 +40,38 @@ export function refsFor(path) {
   const keys = MAP[path] || (path.startsWith('/shapes/') ? ['simmons2004', 'sokolowski2020'] : path.includes('-vs-') ? ['simmons2004', 'sokolowski2020', 'ansur2'] : []);
   return keys.map((k) => REFS[k]);
 }
+
+// Kibbe tool only: appended entries leave all existing references and routes unchanged.
+Object.assign(REFS, {
+  kibbe1987: {
+    authors: 'David Kibbe', year: 1987,
+    title: 'David Kibbe’s Metamorphosis: Discover Your Image Identity and Dazzle as Only You Can',
+    venue: 'Atheneum', id: 'ISBN 9780689118470',
+    url: 'https://openlibrary.org/isbn/9780689118470',
+    note: {
+      en: 'Historical source of the 13 Image Identity names and yin/yang framework (chapters 3–4). Definitions here are brief paraphrases. This site’s new questions, numerical profiles and distance formula are not the book’s quiz or scoring key.',
+      zh: '十三個 Image Identity 英文名與 yin／yang 架構的歷史來源（第 3–4 章）。本站定義為簡短轉述；題目、數值參考組合與距離公式是本站另訂，不是原書測驗或計分表。',
+    },
+  },
+  kibbe2025: {
+    authors: 'David Kibbe', year: 2025,
+    title: 'David Kibbe’s Power of Style: A Guided Journey to Help You Discover Your Authentic Style',
+    venue: 'Rodale Books', id: 'ISBN 9780593581148',
+    url: 'https://www.penguinrandomhouse.com/books/723284/david-kibbes-power-of-style-by-david-kibbe/',
+    note: {
+      en: 'The publisher dates this book January 7, 2025, not 2022, and describes an updated Image Identity system and a guided process. It is not the basis of this historical 13-type quiz.',
+      zh: '出版社確認出版日為 2025 年 1 月 7 日，並非 2022 年，且說明書中更新了 Image Identity 系統與探索方式。本站十三型測驗不採用此新版的判定方法。',
+    },
+  },
+  kibbeComparison2025: {
+    authors: 'Doctor T Designs', year: 2025,
+    title: 'Book Review: David Kibbe’s Power of Style',
+    venue: 'Comparative book review, February 26', id: 'Secondary source · Changes Since the 80s',
+    url: 'https://doctortdesigns.com/2025/02/26/book-review-david-kibbes-power-of-style/',
+    note: {
+      en: 'Secondary corroboration for the 13-to-10 comparison: Natural, Classic and Gamine are no longer standalone identities. Its comparison table separates the retained type names from the revised descriptive style titles. This review is not an official scoring source.',
+      zh: '用於核對十三型與十型差異的二手書評：Natural、Classic、Gamine 不再單列。對照表區分保留的類型名與更新的風格稱號。這篇書評不是官方計分依據。',
+    },
+  },
+});
+MAP['/kibbe/'] = ['kibbe1987', 'kibbe2025', 'kibbeComparison2025'];

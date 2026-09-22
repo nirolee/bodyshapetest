@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import KibbeQuiz from '../../components/KibbeQuiz.astro';
+import References from '../../components/References.astro';
+import { refsFor } from '../../lib/references.js';
+import { KIBBE } from '../../lib/kibbe.js';
+const title = 'Kibbe Body Type Test: 13 Types, Rules & Boundary Notes';
+const description = 'A 13-question Kibbe body type test (quiz) for the 1987 types: your yin/yang profile, the scoring rules and which answers change the result. No photos.';
+const faq: [string, string][] = [
+  ['Which version of Kibbe does this quiz use?', 'The 13 Image Identity names from David Kibbe’s Metamorphosis (Atheneum, 1987). It retains Natural, Classic and Gamine so readers can explore the historical 13-type vocabulary. The questions and numerical scoring are this site’s interpretation, not a reproduction of Kibbe’s original quiz or an official assessment.'],
+  ['Was Power of Style published in 2022, and what changed?', 'No. Rodale Books published David Kibbe’s Power of Style on January 7, 2025. The comparative book review cited below documents 10 identities: Natural, Classic and Gamine are no longer standalone results; the other 10 type names remain. Descriptive style titles also changed, for example Dramatic’s “Regal Lady” became “The Deco Dynamo”. The newer guided approach is not this 13-type questionnaire.'],
+  ['How is the result calculated?', 'Answers form separate A–E distributions in five dimensions: vertical line, bone structure, body flesh, facial bones and facial flesh. Each dimension has 20% weight. The result is the nearest of 13 site-defined reference distributions. All profiles, the distance formula, competing scores and tie rule are printed beside the tool. Neither weights nor numerical profiles were published by Kibbe.'],
+  ['What does a small gap or a changed answer mean?', 'A small distance gap means two reference patterns fit similarly under this site’s rules; it is not a confidence percentage. We recalculate every single-question replacement and list those that switch the result, highlighting moves to an adjacent option. We do not search combinations of two or more changed answers.'],
+  ['Do I need a photo, measurements or an account?', 'No photo or account is needed. Only the height question uses a measurement; the others ask for observations. All answers are processed in this browser tab. They are not uploaded, saved in browser storage, or added to the URL. Reloading clears them.'],
+  ['Is a Kibbe result the same as an hourglass or a health assessment?', 'No. This is an independent style exploration using historical terminology. It is not a circumference-based shape classification, a health assessment, an attractiveness score, or a personal assessment by David Kibbe. A short questionnaire cannot establish your Image Identity with certainty.'],
+];
+const jsonLd = [{ '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: 'en', mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) }];
+---
+<BaseLayout langs={['en', 'zh']} title={title} description={description} jsonLd={jsonLd} lang="en" bleed>
+  <section class="band dark tight"><div class="wrap prose"><span class="eyebrow">Free · No photos · Nothing uploaded</span><h1>Kibbe body type test</h1><p class="lead" style="margin-top:14px">A test — or quiz, if you prefer — for the 13 types from 1987, with all 13 questions visible before you start. Get your five-dimension yin/yang profile, the exact scoring rules and the answers that could change your result.</p><p>This independent tool uses our own scoring model. It is not an official Kibbe assessment.</p></div></section>
+  <section class="band"><div class="wrap"><KibbeQuiz /></div></section>
+  <section class="band warm"><div class="wrap prose">
+    <h2>Which Kibbe system is this?</h2>
+    <p><strong>The vocabulary comes from the 1987 edition</strong>. David Kibbe’s <em>Metamorphosis</em> (Atheneum) describes 13 Image Identities. We keep all 13 so this tool addresses the historical system readers mean when looking for a thirteen-type quiz.</p>
+    <p><em>Power of Style</em> was published by Rodale Books on <strong>January 7, 2025</strong>, not in 2022. The publisher describes an updated system; the cited comparative book review documents 10 identities, without standalone Natural, Classic or Gamine. Its retained type names and revised descriptive style titles are different things. We do not mix its identification method into this quiz.</p>
+    <h2>What belongs to Kibbe, and what belongs to this site?</h2>
+    <p>The historical names and yin/yang relationships belong to Kibbe’s framework. The 13 questions, height bins, reference answer patterns, equal dimension weights and distance formula are our editorial choices. They have not been validated as a way to identify a person’s Kibbe type.</p>
+    <p>Vertical line is grouped separately for clarity; the other dimensions distinguish body bones, body flesh, facial bones and facial flesh. We retain each answer category instead of averaging everything onto one number: sharp and blunt structure differ, and contrasting features are not the same as moderate features throughout. The percentages count your answers, not the physical percentage of yin or yang in your body.</p>
+    <h2>The 13 historical types</h2>
+    <p>Brief paraphrases of the historical yin/yang relationships, not quotations or numerical definitions from the book. Every name stays in English in both language versions.</p>
+    {Object.entries(KIBBE).map(([key, type]) => <article id={`type-${key}`}><h3>{type.name}</h3><p>{type.def}</p><p><strong>Composition:</strong> {type.composition}</p><p><strong>Nearby types:</strong> {type.adjacent}</p></article>)}
+    <p class="muted">Sources checked September 22, 2026. The edition comparison uses the publisher’s publication record and the explicitly identified secondary book review below.</p>
+  </div></section>
+  <References lang="en" refs={refsFor('/kibbe/')} />
+  <section class="band"><div class="wrap prose"><span class="eyebrow">FAQ</span><h2>Questions people ask</h2><div class="faq" style="margin-top:22px">{faq.map(([q, a]) => <details><summary>{q}</summary><p>{a}</p></details>)}</div></div></section>
+</BaseLayout>
