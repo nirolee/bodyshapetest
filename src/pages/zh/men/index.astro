@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import MeasurementHelp from '../../../components/MeasurementHelp.astro';
+import { localizeLinks } from '../../../lib/localize-links.js';
 import RatioCalculator from '../../../components/RatioCalculator.astro';
 import GuideTable from '../../../components/GuideTable.astro';
 import { MALE, MALE_ZH } from '../../../lib/shapes.js';
@@ -10,11 +12,11 @@ const slugs = ['trapezoid', 'inverted-triangle', 'rectangle', 'triangle', 'oval'
 ---
 <BaseLayout langs={['en', 'zh']} title={c.men_title} description={c.men_desc} jsonLd={jsonLd} lang="zh" bleed>
   <section class="band dark tight"><div class="wrap prose"><span class="eyebrow">{c.men_eyebrow}</span><h1>{c.men_h1}</h1><p class="lead" style="margin-top:14px">{c.men_lead}</p></div></section>
-  <section class="band"><div class="wrap"><RatioCalculator mode="men" lang="zh" /></div></section>
+  <section class="band"><div class="wrap"><MeasurementHelp men /><RatioCalculator mode="men" lang="zh" /></div></section>
   <section class="band warm"><div class="wrap prose">
     <h2>{c.men_h2a}</h2>
     <GuideTable head={c.men_tablehead} cols={c.men_tablecols} rows={rows} />
-    <p>{c.men_order}</p>
+    <p set:html={localizeLinks(c.men_order, "zh")} />
     <h2>{c.men_h2b}</h2>
     <ul>{c.men_list.map(([n, d]: [string, string], i: number) => <li><a href={`/zh/men/${slugs[i]}/`}>{n}</a> — {d}</li>)}</ul>
     <p><a href="/zh/how-to-measure/">{c.men_links[0]}</a> · <a href="/zh/">{c.men_links[1]}</a></p>

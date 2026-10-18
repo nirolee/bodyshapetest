@@ -13,12 +13,12 @@ const T = {
 ---
 <div class="bsc rc" data-mode={mode} data-lang={lang}>
   <form class="bsc-form" novalidate>
-    <div class="bsc-units" role="radiogroup" aria-label="Units"><label><input type="radio" name="unit" value="cm" checked /> cm</label><label><input type="radio" name="unit" value="in" /> inches</label></div>
+    <div class="bsc-units" role="radiogroup" aria-label={T.units}><label><input type="radio" name="unit" value="cm" checked /> {lang === 'zh' ? '公分（cm）' : 'cm'}</label><label><input type="radio" name="unit" value="in" /> {lang === 'zh' ? '英吋（in）' : 'inches'}</label></div>
     {mode === 'whr' && <div class="bsc-units" role="radiogroup" aria-label={T.sex}><label><input type="radio" name="sex" value="female" checked /> {T.cmpW}</label><label><input type="radio" name="sex" value="male" /> {T.cmpM}</label></div>}
     <div class="bsc-grid">
-      {mode === 'men' && <label>{T.chest} <span class="muted">{T.chestHint}</span><input name="chest" type="number" inputmode="decimal" step="0.1" min="0" required /></label>}
-      <label>{T.waist} <span class="muted">{T.waistHint}</span><input name="waist" type="number" inputmode="decimal" step="0.1" min="0" required /></label>
-      <label>{T.hips} <span class="muted">{T.hipsHint}</span><input name="hips" type="number" inputmode="decimal" step="0.1" min="0" required /></label>
+      {mode === 'men' && <label>{T.chest} <span class="muted">{T.chestHint} · <span data-measure-unit>cm</span></span><input name="chest" type="number" inputmode="decimal" step="any" min="0" required /></label>}
+      <label>{T.waist} <span class="muted">{T.waistHint} · <span data-measure-unit>cm</span></span><input name="waist" type="number" inputmode="decimal" step="any" min="0" required /></label>
+      <label>{T.hips} <span class="muted">{T.hipsHint} · <span data-measure-unit>cm</span></span><input name="hips" type="number" inputmode="decimal" step="any" min="0" required /></label>
     </div>
   <!-- 2026-09-23：按钮初始 disabled，脚本绑定好才启用。没有这一步时，JS 没跑起来
        （被禁用、模块加载失败、绑定前抢先点）按钮仍可点，浏览器按 HTML 默认以 GET 提交，
@@ -27,9 +27,10 @@ const T = {
     <div class="btn-row"><button class="btn" type="submit" disabled>{mode === 'men' ? T.submitMen : T.submitWhr}</button><span class="muted">{T.privacy}</span></div>
     <p class="bsc-err" role="alert" hidden></p>
   </form>
-  <div class="bsc-out" hidden></div>
+  <div class="bsc-out" role="region" aria-label={lang === 'zh' ? '計算結果' : 'Calculation result'} tabindex="-1" hidden></div>
 </div>
 <script>
+  import { setupMeasurements } from '../lib/measurement-form.js';
   import { classifyMale, flipDistance, percentileOf, IN } from '../lib/body-shape.js';
   import { MALE, MALE_ZH } from '../lib/shapes.js';
   import { barsSvg, outlineSvg, gaugeSvg, encodeShare, decodeShare, copyText, downloadCard } from '../lib/result-card.js';
@@ -41,7 +42,7 @@ const T = {
     root.querySelector<HTMLButtonElement>('button[type=submit]')!.disabled = false;
     const P = L === 'zh' ? '/zh' : '';
     const S = {
-      en: { fillAll: 'Please fill in every field.', oor: 'One measurement is outside the range of measured adults — check the number and the unit.',
+      en: { fillAll: 'Please fill in every field.', oor: 'Enter 45–220 cm (about 17.72–86.61 inches), this calculator’s input range. Check the number and unit.',
         eyebrowMen: 'Your body type under this site’s rules', barsNote: 'Bars are proportional to the circumferences you entered.',
         outlineNote: 'Schematic: widths drawn proportional to circumference. Not a body outline.',
         numbers: 'The numbers', chest: 'chest', waist: 'waist', hips: 'hips',
@@ -63,7 +64,7 @@ const T = {
         whrBody: (w: string, h: string, n: string, sx: string, p: number, wp: number, hp: number) => `Waist ${w} cm ÷ hips ${h} cm. Among ${n} adult ${sx} measured in NHANES 2017–2023, this ratio is higher than about <strong>${p}%</strong>. Your waist alone is higher than about ${wp}% and your hips than about ${hp}%.`,
         women: 'women', men: 'men',
         whrNote: (med: string) => `The sample median is ${med}. Percentiles are within the pooled, unweighted examined sample, not US population estimates, and NHANES measures the waist just above the hip bone rather than at the narrowest point, so treat this as a rough placement. It is a proportion between two circumferences, not a diagnosis.` },
-      zh: { fillAll: '請把每一欄都填好。', oor: '有一個圍度超出受測成人的範圍——請檢查數值與單位。',
+      zh: { fillAll: '請把每一欄都填好。', oor: '請輸入 45–220 公分（約 17.72–86.61 英吋）；這是本站輸入範圍，請確認數值與單位。',
         eyebrowMen: '依本站規則判出的體型', barsNote: '長條與你輸入的圍度成比例。',
         outlineNote: '示意圖：寬度按圍度等比例畫。這不是身體外形。',
         numbers: '用到的數字', chest: '胸圍', waist: '腰圍', hips: '臀圍',
@@ -88,13 +89,13 @@ const T = {
     }[L];
     const mode = root.dataset.mode, form = root.querySelector('form')!, out = root.querySelector<HTMLElement>('.bsc-out')!, err = root.querySelector<HTMLElement>('.bsc-err')!;
     const unit = () => form.querySelector<HTMLInputElement>('input[name=unit]:checked')!.value;
-    const read = (n: string) => { const el = form.elements.namedItem(n) as HTMLInputElement | null; if (!el) return null; const v = parseFloat(el.value); return isFinite(v) && v > 0 ? (unit() === 'in' ? v / IN : v) : null; };
+    const { read, invalid, syncUnits } = setupMeasurements(form, { lang: L, onEdit: () => { out.hidden = true; err.hidden = true; } });
     const shared = decodeShare(location.search);
     form.addEventListener('submit', (e) => {
       e.preventDefault(); err.hidden = true; out.hidden = true;
       const waist = read('waist'), hips = read('hips'), chest = read('chest');
-      if (waist === null || hips === null || (mode === 'men' && chest === null)) { err.textContent = S.fillAll; err.hidden = false; return; }
-      for (const v of [waist, hips, chest ?? 100]) if (v < 45 || v > 220) { err.textContent = S.oor; err.hidden = false; return; }
+      if (waist === null || hips === null || (mode === 'men' && chest === null)) { err.textContent = S.fillAll; err.hidden = false; invalid(waist === null ? 'waist' : hips === null ? 'hips' : 'chest'); return; }
+      for (const [key, value] of Object.entries({ waist, hips, ...(chest !== null ? { chest } : {}) })) if (value < 45 || value > 220) { err.textContent = ({ waist: S.waist, hips: S.hips, chest: S.chest })[key] + ': ' + S.oor; err.hidden = false; invalid(key); return; }
       const whr = waist / hips;
       if (mode === 'men') {
         const input = { chest: chest!, waist, hips }, shape = classifyMale(input), meta = MALE[shape], flip = flipDistance(input, classifyMale as any);
@@ -124,14 +125,14 @@ const T = {
           <p>${S.whrBody(fmt(waist), fmt(hips), pct.n[sex].toLocaleString(), sex === 'female' ? S.women : S.men, p, wp, hp)}</p>
           <p class="muted">${S.whrNote(pct.whr[sex][49].toFixed(2))}</p></div>`;
       }
-      out.hidden = false; out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      out.hidden = false; out.focus({ preventScroll: true }); out.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
     });
     if (shared && ((mode === 'men' && shared.chest) || mode === 'whr')) {
       const w = (n: string, cm: number | null) => { const el = form.elements.namedItem(n) as HTMLInputElement | null; if (el && cm != null) el.value = fmt(shared.unit === 'in' ? cm * IN : cm); };
       const r = form.querySelector<HTMLInputElement>(`input[name=unit][value=${shared.unit}]`); if (r) r.checked = true;
       w('chest', shared.chest); w('waist', shared.waist); w('hips', shared.hips);
       if (mode === 'whr' && shared.sex) { const sr = form.querySelector<HTMLInputElement>(`input[name=sex][value=${shared.sex}]`); if (sr) sr.checked = true; }
-      form.requestSubmit();
+      syncUnits(); form.requestSubmit();
     }
   }
 </script>

@@ -60,3 +60,18 @@ shapes, all stability states, event payloads, sanitized GA URLs, sharing, PNG
 text bounds, mobile layout, compact guides, unavailable GA and men's/WHR
 regressions. PNGs/screenshots go to `/tmp/bodyshape-results` by default.
 Stop the preview with `fuser -k 4321/tcp`; do not kill by process-name matching.
+
+Chinese measurement-path verification (same preview and external Playwright setup):
+
+```sh
+PLAYWRIGHT_MODULE=/path/to/playwright-core/index.mjs CHROME_PATH=/path/to/chrome node scripts/measurement-smoke.mjs
+```
+
+This blocks external requests and checks Chinese/English calculators and the
+Chinese waist-to-hip tool at 320, 390 and 1280 px: validation, 45/220 cm input
+limits, high-hip follow-up, repeated unit conversion and exact rule boundaries,
+restored inch results, stale-result clearing, keyboard focus, header clearance,
+and all five men's result-to-guide links. Synthetic screenshots and a JSON
+summary go to `./measurement-evidence` (override with `RESULT_ARTIFACTS`). Unit
+conversion preserves the original measurement precision until the user edits
+that field; changing units clears the old result and requires recalculation.

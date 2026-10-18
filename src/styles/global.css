@@ -559,3 +559,7 @@ html[lang='en'] .xbar { grid-template-columns: 138px 1fr 40px; }
 .rc-schematic { font-size: 12.5px; color: var(--ink-3); margin-top: 4px; }
 .rc-share { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; align-items: center; }
 .rc-share .muted { font-size: 12.5px; }
+
+/* Keep focused results below the fixed header, including the two-row mobile nav. */
+.bsc-out { scroll-margin-top: 132px; }
+.bsc input[aria-invalid='true'] { border-color: #b3261e; outline-color: #b3261e; }

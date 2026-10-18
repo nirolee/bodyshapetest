@@ -1,0 +1,27 @@
+---
+export interface Props { men?: boolean }
+const { men = false } = Astro.props;
+---
+<aside class="measure-help prose" aria-label="三圍測量與適用範圍">
+  <h2>{men ? '男生三圍怎麼量？需要肩圍嗎？' : '先量胸、腰、臀，再開始計算'}</h2>
+  <p>{men
+    ? '此工具使用胸圍、腰圍、臀圍，不使用肩寬或肩圍。肩寬是左右肩點的直線距離，肩圍是繞肩部一圈；兩者都不能代替胸圍。'
+    : '這裡採用主要用於女性服裝體型分類的 FFIT 規則。男生請使用男性計算器的胸腰臀路徑；兩套規則的名稱與判準不同。'}</p>
+  <details>
+  <summary>展開三圍測量步驟與單位說明</summary>
+  <ol>
+    <li><strong>胸圍：</strong>軟尺繞胸部最豐滿處一圈，背後保持同一高度，放下雙臂再讀數。</li>
+    <li><strong>腰圍：</strong>繞軀幹最細處一圈；若不明顯，可側彎找到自然腰線，再站直測量。自然吐氣，不吸腹，也不要直接用褲頭尺寸。</li>
+    <li><strong>臀圍：</strong>雙腳併攏，繞臀部最豐滿處一圈；不是髖骨上緣。用鏡子確認背後的軟尺沒有往上滑。</li>
+  </ol>
+  <p>軟尺保持水平、貼身但不勒緊，穿薄貼身衣物或內衣測量。每項量兩次；差超過 1 公分時再量一次，取中間值。三項須使用相同單位：1 英吋 = 2.54 公分，切換單位會換算已填數字。</p>
+  {!men && <p><strong>高臀圍只在工具要求時補量：</strong>依本站慣例，在自然腰線下約 7–8 公分繞一圈；它與臀部最豐滿處的臀圍不同。補填後再按一次計算。</p>}
+  </details>
+  {men && <p><strong>適用限制：</strong>這是本站自訂的五型穿搭比例參考，門檻借用女性 FFIT 分類，未經男性分類標準驗證。結果不是男性科學診斷，也不判斷體重、體脂或健康。輸入檢查範圍為 45–220 公分，不代表這個區間已驗證分類準確度。</p>}
+  <p><a href="/zh/how-to-measure/">查看測量示意與完整教學</a> · <a href="/zh/methodology/">閱讀分類方法與限制</a>{!men && <> · <a href="/zh/men/">使用男性三圍計算器</a></>}</p>
+</aside>
+<style>
+  .measure-help { margin-bottom: 28px; padding: 22px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+  .measure-help h2 { font-size: 22px; margin-top: 0; }
+  .measure-help li + li { margin-top: 8px; }
+</style>

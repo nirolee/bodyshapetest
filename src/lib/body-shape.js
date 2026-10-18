@@ -58,7 +58,7 @@ export function isFallback(input) { return classifyFemale(input, { strict: true 
 
 /**
  * 男性五型：本站自己的規則，沒有 FFIT 那樣的期刊出處，頁面上必須寫明「這是本站的判法」。
- * 用肩圍/胸圍(chest)、腰、臀三個數。阈值沿用 FFIT 的 3.6 吋當「明顯差距」、9 吋當「有腰身」。
+ * 用胸圍(chest)、腰、臀三個圍度；肩寬或肩圍不能代替胸圍。阈值沿用 FFIT 的 3.6 吋當「明顯差距」、9 吋當「有腰身」。
  */
 export const MALE_SHAPES = ['trapezoid', 'inverted_triangle', 'rectangle', 'triangle', 'oval'];
 export function classifyMale({ chest, waist, hips }) {

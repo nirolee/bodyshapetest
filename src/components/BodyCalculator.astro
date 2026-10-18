@@ -20,14 +20,14 @@ const howToHref = lang === 'zh' ? '/zh/how-to-measure/' : '/how-to-measure/';
 <div class="bsc" data-compact={compact ? '1' : '0'} data-lang={lang}>
   <form class="bsc-form" novalidate>
     <div class="bsc-units" role="radiogroup" aria-label={T.units}>
-      <label><input type="radio" name="unit" value="cm" checked /> cm</label>
-      <label><input type="radio" name="unit" value="in" /> inches</label>
+      <label><input type="radio" name="unit" value="cm" checked /> {lang === 'zh' ? '公分（cm）' : 'cm'}</label>
+      <label><input type="radio" name="unit" value="in" /> {lang === 'zh' ? '英吋（in）' : 'inches'}</label>
     </div>
     <div class="bsc-grid">
-      <label>{T.bust} <span class="muted">{T.bustHint}</span><input name="bust" type="number" inputmode="decimal" step="0.1" min="0" required /></label>
-      <label>{T.waist} <span class="muted">{T.waistHint}</span><input name="waist" type="number" inputmode="decimal" step="0.1" min="0" required /></label>
-      <label>{T.hips} <span class="muted">{T.hipsHint}</span><input name="hips" type="number" inputmode="decimal" step="0.1" min="0" required /></label>
-      <label class="bsc-hh" hidden>{T.hh} <span class="muted">{T.hhHint}</span><input name="highHip" type="number" inputmode="decimal" step="0.1" min="0" /></label>
+      <label>{T.bust} <span class="muted">{T.bustHint} · <span data-measure-unit>cm</span></span><input name="bust" type="number" inputmode="decimal" step="any" min="0" required /></label>
+      <label>{T.waist} <span class="muted">{T.waistHint} · <span data-measure-unit>cm</span></span><input name="waist" type="number" inputmode="decimal" step="any" min="0" required /></label>
+      <label>{T.hips} <span class="muted">{T.hipsHint} · <span data-measure-unit>cm</span></span><input name="hips" type="number" inputmode="decimal" step="any" min="0" required /></label>
+      <label class="bsc-hh" hidden>{T.hh} <span class="muted">{T.hhHint} · <span data-measure-unit>cm</span></span><input name="highHip" type="number" inputmode="decimal" step="any" min="0" /></label>
     </div>
     <p class="bsc-hh-note muted" hidden></p>
   <!-- 2026-09-23：按钮初始 disabled，脚本绑定好才启用。没有这一步时，JS 没跑起来
@@ -37,10 +37,11 @@ const howToHref = lang === 'zh' ? '/zh/how-to-measure/' : '/how-to-measure/';
     <div class="btn-row"><button class="btn" type="submit" disabled>{T.submit}</button><span class="muted">{T.privacy} <a href={howToHref}>{T.howTo}</a>.</span></div>
     <p class="bsc-err" role="alert" hidden></p>
   </form>
-  <div class="bsc-out" hidden></div>
+  <div class="bsc-out" role="region" aria-label={lang === 'zh' ? '計算結果' : 'Calculation result'} tabindex="-1" hidden></div>
 </div>
 
 <script>
+  import { setupMeasurements } from '../lib/measurement-form.js';
   import { classifyFemale, flipDistance, percentileOf, isFallback, NEEDS_HIGH_HIP, IN } from '../lib/body-shape.js';
   import { SHAPES, GROUPS, SHAPES_ZH, AKA_ZH, GROUPS_ZH } from '../lib/shapes.js';
   import { barsSvg, outlineSvg, gaugeSvg, encodeShare, decodeShare, copyText, downloadCard } from '../lib/result-card.js';
@@ -66,7 +67,7 @@ const howToHref = lang === 'zh' ? '/zh/how-to-measure/' : '/how-to-measure/';
   const STR = {
     en: {
       fillIn: 'Please fill in bust, waist and hips.',
-      outOfRange: (k: string, v: string, u: string) => `${k} of ${v} ${u} is outside the range of measured adults — check the number and the unit.`,
+      outOfRange: (k: string, v: string, u: string) => `${k} of ${v} ${u} is outside this calculator’s input range (45–220 cm / about 17.72–86.61 inches) — check the number and unit.`,
       needHH: 'With these three numbers the result cannot be resolved: they satisfy the other conditions of Spoon or Bottom Hourglass, and those rules use high hip ÷ waist. Add the high hip — around the upper hip, about 3 in (7–8 cm) below your waist by this site’s convention — and press the button again.',
       eyebrow: 'Your shape under the FFIT rules', family: (g: string) => `— ${g} family`,
       alsoCalled: (a: string) => ` Also called: ${a}.`,
@@ -96,7 +97,7 @@ const howToHref = lang === 'zh' ? '/zh/how-to-measure/' : '/how-to-measure/';
     },
     zh: {
       fillIn: '請填入胸圍、腰圍與臀圍。',
-      outOfRange: (k: string, v: string, u: string) => `${k} 填的 ${v} ${u} 超出受測成人的範圍——請檢查數值與單位。`,
+      outOfRange: (k: string, v: string, u: string) => `${k} 填的 ${v} ${u} 超出本站輸入範圍（45–220 公分／約 17.72–86.61 英吋），請檢查數值與單位。`,
       needHH: '光靠這三個數字判不出來：它們同時滿足 Spoon 與 Bottom hourglass 的其他條件，而這兩條規則要用高臀圍 ÷ 腰圍。請補量高臀圍——在臀部上緣附近，依本站慣例約在腰下 3 吋（7–8 公分）——再按一次。',
       eyebrow: '依 FFIT 規則判出的體型', family: (g: string) => `— ${g}`,
       alsoCalled: (a: string) => `也叫：${a}。`,
@@ -153,14 +154,15 @@ const howToHref = lang === 'zh' ? '/zh/how-to-measure/' : '/how-to-measure/';
     const unit = () => (form.querySelector<HTMLInputElement>('input[name=unit]:checked')!.value);
     const setUnit = (u: string) => { const r = form.querySelector<HTMLInputElement>(`input[name=unit][value=${u}]`); if (r) r.checked = true; };
     const field = (name: string) => form.elements.namedItem(name) as HTMLInputElement;
-    const read = (name: string) => { const v = parseFloat(field(name).value); return isFinite(v) && v > 0 ? (unit() === 'in' ? v / IN : v) : null; };
+    const { read, invalid, syncUnits } = setupMeasurements(form, { lang: L, onEdit: () => { out.hidden = true; err.hidden = true; } });
     const write = (name: string, cm: number | null) => { if (cm != null) field(name).value = fmt(unit() === 'in' ? cm * IN : cm); };
 
     function run() {
       err.hidden = true; out.hidden = true;
       const bust = read('bust'), waist = read('waist'), hips = read('hips'), highHip = hh.hidden ? null : read('highHip');
-      if (bust === null || waist === null || hips === null) { err.textContent = S.fillIn; err.hidden = false; return; }
-      for (const [k, v] of Object.entries({ bust, waist, hips })) if (v < 45 || v > 220) { err.textContent = S.outOfRange(k, fmt(unit() === 'in' ? v * IN : v), unit()); err.hidden = false; return; }
+      if (bust === null || waist === null || hips === null) { err.textContent = S.fillIn; err.hidden = false; invalid(bust === null ? 'bust' : waist === null ? 'waist' : 'hips'); return; }
+      if (!hh.hidden && field('highHip').value !== '' && highHip === null) { err.textContent = S.fillIn + (L === 'zh' ? ' 高臀圍請填正數。' : ' Enter a positive high hip.'); err.hidden = false; invalid('highHip'); return; }
+      for (const [k, v] of Object.entries({ bust, waist, hips, ...(highHip !== null ? { highHip } : {}) })) if (v < 45 || v > 220) { err.textContent = S.outOfRange(({ bust: S.bust, waist: S.waist, hips: S.hips, highHip: S.highHip })[k] ?? k, fmt(unit() === 'in' ? v * IN : v), unit()); err.hidden = false; invalid(k); return; }
       const input = { bust, waist, hips, highHip };
       const shape = classifyFemale(input);
       if (shape === NEEDS_HIGH_HIP) {
@@ -217,7 +219,7 @@ const howToHref = lang === 'zh' ? '/zh/how-to-measure/' : '/how-to-measure/';
         </div>`;
       out.hidden = false;
       track(EVENTS.resultShown, resultParams(shape, flip, p));
-      out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      out.focus({ preventScroll: true }); out.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
       out.querySelector<HTMLButtonElement>('.rc-copy')!.onclick = async (e) => { const b = e.currentTarget as HTMLButtonElement; const ok = await copyText(encodeShare(input, unit())); if (ok) track(EVENTS.shareCopy); b.textContent = ok ? S.copied : S.copyFail; setTimeout(() => (b.textContent = S.copy), 2000); };
       out.querySelector<HTMLButtonElement>('.rc-dl')!.onclick = async () => {
         const ok = await downloadCard({
@@ -239,7 +241,7 @@ const howToHref = lang === 'zh' ? '/zh/how-to-measure/' : '/how-to-measure/';
     if (shared && shared.bust && !root.dataset.compact?.startsWith('1')) {
       setUnit(shared.unit); write('bust', shared.bust); write('waist', shared.waist); write('hips', shared.hips);
       if (shared.highHip) { hh.hidden = false; write('highHip', shared.highHip); }
-      run();
+      syncUnits(); run();
     }
   }
 </script>
