@@ -44,7 +44,7 @@ const howToHref = lang === 'zh' ? '/zh/how-to-measure/' : '/how-to-measure/';
   import { setupMeasurements } from '../lib/measurement-form.js';
   import { classifyFemale, flipDistance, percentileOf, isFallback, NEEDS_HIGH_HIP, IN } from '../lib/body-shape.js';
   import { SHAPES, GROUPS, SHAPES_ZH, AKA_ZH, GROUPS_ZH } from '../lib/shapes.js';
-  import { barsSvg, outlineSvg, gaugeSvg, encodeShare, decodeShare, copyText, downloadCard } from '../lib/result-card.js';
+  import { barsSvg, outlineSvg, gaugeSvg, encodeShare, decodeShare, copyText, downloadCard, privateCardData } from '../lib/result-card.js';
   import pct from '../data/whr_percentiles.json';
   import { SHAPE_ADVICE, affiliateLinks } from '../lib/shape-advice.js';
   import { SHAPE_AFFILIATES } from '../data/shape-affiliates.js';
@@ -88,7 +88,11 @@ const howToHref = lang === 'zh' ? '/zh/how-to-measure/' : '/how-to-measure/';
       whrLink: 'More on this ratio',
       whatMeans: (g: string) => `What ${g.toLowerCase()} means`, outfits: 'Outfit options',
       copy: 'Copy result link', copied: 'Link copied', copyFail: 'Copy failed',
-      download: 'Download result image', shareNote: 'The link contains the measurements you entered; nothing is stored on this site.',
+      download: 'Download full result image (includes measurements)', shareNote: 'The link contains the measurements you entered; nothing is stored on this site.',
+      privateDownload: 'Download a share card (no measurements)',
+      privateNote: 'Shows only your shape name and this site. No measurements, ratios or percentiles. Download it first, then choose whether to share it.',
+      privateSaved: 'Image download started. Check your downloads before sharing.',
+      privateFailed: 'The image could not be created. Please try again.',
       cardTitle: 'Body shape result', cardRule: 'Rule that fired', cardFallback: 'Fallback (no FFIT rule matched)',
       cardWhr: (v: string, p: number) => `${v} — above about ${p}% of NHANES women`,
       cardNote: 'FFIT nine-shape rules, 2020 revision. Measurements processed in the browser. Not a health assessment.',
@@ -118,7 +122,11 @@ const howToHref = lang === 'zh' ? '/zh/how-to-measure/' : '/how-to-measure/';
       whrLink: '腰臀比的更多說明',
       whatMeans: (g: string) => `${g}是什麼意思`, outfits: '穿搭方向',
       copy: '複製結果連結', copied: '已複製', copyFail: '複製失敗',
-      download: '下載結果圖', shareNote: '連結裡帶著你輸入的量測值；本站不會留存任何資料。',
+      download: '下載完整結果圖（含尺寸）', shareNote: '連結裡帶著你輸入的量測值；本站不會留存任何資料。',
+      privateDownload: '下載分享卡（不含尺寸）',
+      privateNote: '只顯示體型名稱與本站網址，不含三圍、比例或百分位。先下載，再自行決定是否分享。',
+      privateSaved: '已啟動圖片下載，分享前請先確認下載檔案。',
+      privateFailed: '未能產生圖片，請再試一次。',
       cardTitle: '體型結果', cardRule: '觸發的規則', cardFallback: '兜底（沒有 FFIT 規則吻合）',
       cardWhr: (v: string, p: number) => `${v}——高於約 ${p}% 的 NHANES 女性`,
       cardNote: 'FFIT 九型規則 2020 修訂版。量測在瀏覽器裡完成。這不是健康評估。',
@@ -191,6 +199,11 @@ const howToHref = lang === 'zh' ? '/zh/how-to-measure/' : '/how-to-measure/';
         <div class="card">
           <span class="eyebrow">${S.eyebrow}</span>
           <h3 style="margin-top:6px">${shapeName}${groupName !== shapeName ? ` <span class="muted">${S.family(groupName)}</span>` : ''}</h3>
+          <div class="rc-private-share">
+            <button type="button" class="btn rc-dl-private">${S.privateDownload}</button>
+            <p class="muted">${S.privateNote}</p>
+            <p class="rc-private-status muted" role="status"></p>
+          </div>
           <section class="rc-stability-hero" aria-label="${S.stableHead}">
             <p class="rc-stability-text">${stableText}</p>
             ${gaugeSvg(flip)}
@@ -220,6 +233,24 @@ const howToHref = lang === 'zh' ? '/zh/how-to-measure/' : '/how-to-measure/';
       out.hidden = false;
       track(EVENTS.resultShown, resultParams(shape, flip, p));
       out.focus({ preventScroll: true }); out.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
+      const privateButton = out.querySelector<HTMLButtonElement>('.rc-dl-private')!;
+      const privateStatus = out.querySelector<HTMLElement>('.rc-private-status')!;
+      privateButton.onclick = async () => {
+        privateButton.disabled = true;
+        privateStatus.textContent = '';
+        try {
+          const ok = await downloadCard(privateCardData({
+            title: S.cardTitle, shape: groupName !== shapeName ? `${groupName} · ${shapeName}` : shapeName, note: S.cardNote,
+            file: `body-shape-${meta.slug}-share.png`,
+          }));
+          if (ok) track(EVENTS.sharePrivateDownload);
+          privateStatus.textContent = ok ? S.privateSaved : S.privateFailed;
+        } catch {
+          privateStatus.textContent = S.privateFailed;
+        } finally {
+          privateButton.disabled = false;
+        }
+      };
       out.querySelector<HTMLButtonElement>('.rc-copy')!.onclick = async (e) => { const b = e.currentTarget as HTMLButtonElement; const ok = await copyText(encodeShare(input, unit())); if (ok) track(EVENTS.shareCopy); b.textContent = ok ? S.copied : S.copyFail; setTimeout(() => (b.textContent = S.copy), 2000); };
       out.querySelector<HTMLButtonElement>('.rc-dl')!.onclick = async () => {
         const ok = await downloadCard({

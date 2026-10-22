@@ -71,12 +71,18 @@ export async function copyText(text) {
 }
 
 /** Canvas result image. Optional hero reuses the on-page stability text.
- * Minimum 1080×1350; grow vertically for longer translations rather than clip.
+ * 完整結果圖至少 1080×1350，分享卡至少 1080×720；長文案自動增高。
  * Returns true when the browser download is triggered (not a saved-file receipt).
  */
-export function downloadCard({ title, shape, sub, hero = '', lines, bars, note, site = 'bodyshapetest.org', file = 'body-shape-result.png' }) {
+export function privateCardData({ title, shape, note, file }) {
+  return { title, shape, sub: '', hero: '', lines: [], bars: [], note, site: 'bodyshapetest.org', file, layout: 'share' };
+}
+
+export function downloadCard({ title, shape, sub, hero = '', lines, bars, note, site = 'bodyshapetest.org', file = 'body-shape-result.png', layout = 'full' }) {
   return new Promise((resolve) => {
-    const W = 1080, c = document.createElement('canvas'); c.width = W; c.height = 1350;
+    const W = 1080, c = document.createElement('canvas');
+    const minimumHeight = layout === 'share' ? 720 : 1350;
+    c.width = W; c.height = minimumHeight;
     const g = c.getContext('2d');
     if (!g) { resolve(false); return; }
     const ink = '#f5f3ee', muted = '#a8a5a0', acc = '#e8c39a';
@@ -109,7 +115,7 @@ export function downloadCard({ title, shape, sub, hero = '', lines, bars, note, 
       g.fillStyle = acc; g.font = '600 28px system-ui, sans-serif'; g.fillText(site, 72, Math.max(y, c.height - 60));
       return y + 60;
     };
-    const height = Math.max(1350, Math.ceil(draw()));
+    const height = Math.max(minimumHeight, Math.ceil(draw()));
     if (height !== c.height) { c.height = height; draw(); }
     c.toBlob((blob) => {
       if (!blob) { resolve(false); return; }

@@ -4,6 +4,7 @@ import { FEMALE_SHAPES } from './body-shape.js';
 export const EVENTS = Object.freeze({
   findShape: 'find_shape', resultShown: 'result_shown',
   shareCopy: 'share_copy', shareDownload: 'share_download', needsHighHip: 'needs_high_hip',
+  sharePrivateDownload: 'share_private_download',
 });
 const SCHEMA = {
   [EVENTS.findShape]: { has_high_hip: (v) => typeof v === 'boolean' },
@@ -13,6 +14,7 @@ const SCHEMA = {
     whr_bucket: (v) => ['p0_24', 'p25_49', 'p50_74', 'p75_100'].includes(v),
   },
   [EVENTS.shareCopy]: {}, [EVENTS.shareDownload]: {}, [EVENTS.needsHighHip]: {},
+  [EVENTS.sharePrivateDownload]: {},
 };
 export function resultParams(shape, flip, percentile) {
   return {
