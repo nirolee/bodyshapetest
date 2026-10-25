@@ -28,6 +28,28 @@ export const NEEDS_HIGH_HIP = 'needs_high_hip';
 
 export const FEMALE_SHAPES = ['hourglass', 'bottom_hourglass', 'top_hourglass', 'spoon', 'triangle', 'inverted_triangle', 'rectangle', 'diamond', 'oval'];
 
+/**
+ * @typedef {'hourglass' | 'bottom_hourglass' | 'top_hourglass' | 'spoon' | 'triangle' | 'inverted_triangle' | 'rectangle' | 'diamond' | 'oval'} FemaleShape
+ * @typedef {FemaleShape | 'needs_high_hip'} FemaleResult
+ * @typedef {{bust: number, waist: number, hips: number, highHip?: number | null}} FemaleMeasurements
+ */
+/**
+ * @overload
+ * @param {FemaleMeasurements} input
+ * @param {{strict: true}} opts
+ * @returns {FemaleResult | null}
+ */
+/**
+ * @overload
+ * @param {FemaleMeasurements} input
+ * @param {{strict?: false}} [opts]
+ * @returns {FemaleResult}
+ */
+/**
+ * @param {FemaleMeasurements} input
+ * @param {{strict?: boolean}} [opts]
+ * @returns {FemaleResult | null}
+ */
 export function classifyFemale({ bust, waist, hips, highHip = null }, opts = {}) {
   const b = bust * IN, w = waist * IN, h = hips * IN;
   const r = highHip ? (highHip * IN) / w : null;
@@ -70,6 +92,27 @@ export function classifyMale({ chest, waist, hips }) {
 }
 
 /** 最小的單一圍度改動（cm）能翻掉標籤：回 { cm, measure, to }，找不到（>limit）回 null。 */
+/**
+ * @typedef {{step?: number, limit?: number}} FlipOptions
+ * @template {string | null} R
+ * @typedef {{cm: number, measure: string, direction: number, to: R}} FlipResult
+ */
+/**
+ * @overload
+ * @param {FemaleMeasurements} input
+ * @param {undefined} [classify]
+ * @param {FlipOptions} [options]
+ * @returns {FlipResult<FemaleResult> | null}
+ */
+/**
+ * @template {Record<string, number | null | undefined>} T
+ * @template {string | null} R
+ * @overload
+ * @param {T} input
+ * @param {(input: T) => R} classify
+ * @param {FlipOptions} [options]
+ * @returns {FlipResult<R> | null}
+ */
 export function flipDistance(input, classify = classifyFemale, { step = 0.1, limit = 15 } = {}) {
   const base = classify(input);
   const keys = Object.keys(input).filter((k) => input[k] != null && k !== 'highHip');

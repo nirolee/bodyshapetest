@@ -9,10 +9,15 @@
     "preview": "astro preview",
     "test": "node --test tests/*.test.mjs",
     "lint:tdk": "node scripts/tdk-lint.mjs --all",
-    "check:links": "node scripts/check-built-links.mjs"
+    "check:links": "node scripts/check-built-links.mjs",
+    "check": "astro check"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.2.1",
     "astro": "^5.1.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.9",
+    "typescript": "5.9.3"
   }
 }

@@ -57,7 +57,7 @@ try {
       assert.deepEqual(await events(), [['event', 'result_shown', resultParams(shape, flipDistance(input), percentileOf(input.waist / input.hips, pct.whr.female))]]);
       const safeUrls = await page.evaluate(() => Array.from(window.dataLayer.find(x => x[0] === 'set'))[1]);
       assert.deepEqual(safeUrls, { page_location: base + path, page_referrer: base + '/' });
-      assert.equal(await page.locator('.bsc-out h3 + .rc-stability-hero').count(), 1);
+      assert.equal(await page.locator('.bsc-out h3 + .rc-private-share + .rc-stability-hero').count(), 1);
       const count = await page.locator('.rc-advice > ul > li').count();
       assert.ok(count >= 3 && count <= 5);
       assert.equal(await page.locator('.rc-affiliates').count(), 0);
@@ -76,6 +76,15 @@ try {
       const allText = drawn.map(x => x.text).join('').replace(/\s/g, '');
       assert.ok(allText.includes(hero.replace(/\s/g, '')), `Missing canvas hero: ${lang}/${shape}`);
       assert.ok(allText.indexOf(hero.replace(/\s/g, '')) < allText.indexOf(lang === 'zh' ? '觸發的規則' : 'Rulethatfired'));
+      // The newer private share entry precedes stability and must remain measurement-free.
+      const [privateDownload] = await Promise.all([page.waitForEvent('download'), page.locator('.rc-dl-private').click()]);
+      await privateDownload.saveAs(`${artifacts}/${lang}-${shape}-private.png`);
+      await page.waitForFunction(() => window.dataLayer.some(x => x[1] === 'share_private_download'));
+      const privateText = (await page.evaluate(() => window.canvasText.map(x => x.text).join(''))).replace(/\s/g, '');
+      assert.ok(privateText.includes('bodyshapetest.org'));
+      assert.ok(!privateText.includes(hero.replace(/\s/g, '')));
+      assert.ok(!privateText.includes(lang === 'zh' ? '觸發的規則' : 'Rulethatfired'));
+      for (const value of Object.values(input)) assert.ok(!privateText.includes(String(value)), 'Private card includes a measurement');
       if (shape === 'triangle') {
         await page.setViewportSize({ width: 390, height: 844 });
         await page.locator('.bsc-out').screenshot({ path: `${artifacts}/${lang}-mobile.png` });

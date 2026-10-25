@@ -215,7 +215,7 @@ const howToHref = lang === 'zh' ? '/zh/how-to-measure/' : '/how-to-measure/';
           </div>
           <div class="formula">
             <h4>${S.numbersHead}</h4>
-            <code>${S.bust} − ${S.hips} = ${dIn(bust, hips)}<br>${S.bust} − ${S.waist} = ${dIn(bust, waist)}<br>${S.hips} − ${S.waist} = ${dIn(hips, waist)}${highHip ? `<br>${S.highHip} ÷ ${S.waist} = ${fmt(highHip / waist * 1000) / 1000}` : ''}</code>
+            <code>${S.bust} − ${S.hips} = ${dIn(bust, hips)}<br>${S.bust} − ${S.waist} = ${dIn(bust, waist)}<br>${S.hips} − ${S.waist} = ${dIn(hips, waist)}${highHip ? `<br>${S.highHip} ÷ ${S.waist} = ${Number(fmt(highHip / waist * 1000)) / 1000}` : ''}</code>
             <p class="muted">${fallback ? S.fellBack : S.ruleFired(RT[shape])} ${S.rulesTail} <a href="${P}/methodology/">${S.methodLink}</a>.</p>
           </div>
           <h4>${S.whrHead}</h4>

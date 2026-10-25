@@ -1,4 +1,5 @@
 ---
+import { tableRow } from '../lib/table-row.js';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BodyCalculator from '../components/BodyCalculator.astro';
 import GuideTable from '../components/GuideTable.astro';
@@ -18,7 +19,7 @@ const jsonLd = [
   { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Body Shape Calculator', applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }, url: 'https://bodyshapetest.org/' },
   { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) },
 ];
-const rules = { head: 'The revised FFIT-based rules used on this site, checked in this order (inches)', cols: ['Shape', 'Rule', 'Common-name grouping used on this site'], rows: [
+const rules = { head: 'The revised FFIT-based rules used on this site, checked in this order (inches)', cols: tableRow(['Shape', 'Rule', 'Common-name grouping used on this site']), rows: [
   ['Hourglass', 'bust − hips ≤ 1; hips − bust < 3.6; and (bust − waist ≥ 9 or hips − waist ≥ 10)', 'hourglass'],
   ['Bottom hourglass', 'hips − bust from 3.6 to under 10; hips − waist ≥ 9; high hip ÷ waist < 1.193', 'hourglass (hips lead the bust; also listed with pear)'],
   ['Top hourglass', 'bust − hips over 1 and under 10; bust − waist ≥ 9', 'hourglass'],
@@ -28,7 +29,7 @@ const rules = { head: 'The revised FFIT-based rules used on this site, checked i
   ['Rectangle', '|bust − hips| < 3.6; 0 ≤ bust − waist < 9; 0 ≤ hips − waist < 10', 'rectangle, banana, straight'],
   ['Diamond', 'waist larger than both bust and hips', 'apple'],
   ['Oval', 'waist > hips and waist ≤ bust', 'apple'],
-] };
+].map(tableRow) };
 ---
 <BaseLayout langs={['en', 'zh']} title={title} description={description} jsonLd={jsonLd} lang="en" bleed>
   <section class="band dark tight">

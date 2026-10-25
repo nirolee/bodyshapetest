@@ -563,3 +563,6 @@ html[lang='en'] .xbar { grid-template-columns: 138px 1fr 40px; }
 /* Keep focused results below the fixed header, including the two-row mobile nav. */
 .bsc-out { scroll-margin-top: 132px; }
 .bsc input[aria-invalid='true'] { border-color: #b3261e; outline-color: #b3261e; }
+
+/* Result download labels must fit narrow screens in both languages. */
+.bsc-out .btn { max-width: 100%; white-space: normal; overflow-wrap: anywhere; text-align: center; }

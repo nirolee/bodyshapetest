@@ -1,4 +1,5 @@
 ---
+import { tableRow } from '../../../lib/table-row.js';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import MeasurementHelp from '../../../components/MeasurementHelp.astro';
 import { localizeLinks } from '../../../lib/localize-links.js';
@@ -7,7 +8,7 @@ import GuideTable from '../../../components/GuideTable.astro';
 import { MALE, MALE_ZH } from '../../../lib/shapes.js';
 import c from '../../../content/pages-zh.json';
 const jsonLd = [{ '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: 'zh-Hant', mainEntity: c.men_faq.map(([q, a]: [string, string]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) }];
-const rows = Object.keys(MALE).map((k) => [MALE_ZH[k].name, MALE_ZH[k].def, '']);
+const rows = Object.keys(MALE).map((k) => tableRow([MALE_ZH[k].name, MALE_ZH[k].def, '']));
 const slugs = ['trapezoid', 'inverted-triangle', 'rectangle', 'triangle', 'oval'];
 ---
 <BaseLayout langs={['en', 'zh']} title={c.men_title} description={c.men_desc} jsonLd={jsonLd} lang="zh" bleed>
@@ -15,7 +16,7 @@ const slugs = ['trapezoid', 'inverted-triangle', 'rectangle', 'triangle', 'oval'
   <section class="band"><div class="wrap"><MeasurementHelp men /><RatioCalculator mode="men" lang="zh" /></div></section>
   <section class="band warm"><div class="wrap prose">
     <h2>{c.men_h2a}</h2>
-    <GuideTable head={c.men_tablehead} cols={c.men_tablecols} rows={rows} />
+    <GuideTable head={c.men_tablehead} cols={tableRow(c.men_tablecols)} rows={rows} />
     <p set:html={localizeLinks(c.men_order, "zh")} />
     <h2>{c.men_h2b}</h2>
     <ul>{c.men_list.map(([n, d]: [string, string], i: number) => <li><a href={`/zh/men/${slugs[i]}/`}>{n}</a> — {d}</li>)}</ul>

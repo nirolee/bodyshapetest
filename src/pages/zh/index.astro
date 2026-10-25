@@ -1,4 +1,5 @@
 ---
+import { tableRow } from '../../lib/table-row.js';
 /**
  * 繁中首頁。文案在 src/content/home-zh.json（由 scripts/translate-blob.mjs 產出後人工校過標題用詞）。
  * 標題與 h1 對準真實搜尋詞而不是直譯：Google TW 補全裡「身形計算」0 條、
@@ -38,7 +39,7 @@ const jsonLd = [
   </section>
   <section class="band">
     <div class="wrap prose">
-      <GuideTable head={c.rules_head} cols={c.rules_cols} rows={c.rules_rows} />
+      <GuideTable head={c.rules_head} cols={tableRow(c.rules_cols)} rows={c.rules_rows.map(tableRow)} />
       <p class="muted" style="max-width:70ch" set:html={localizeLinks(c.rules_note, "zh")} />
     </div>
   </section>

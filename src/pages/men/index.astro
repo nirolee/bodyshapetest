@@ -1,4 +1,5 @@
 ---
+import { tableRow } from '../../lib/table-row.js';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import RatioCalculator from '../../components/RatioCalculator.astro';
 import GuideTable from '../../components/GuideTable.astro';
@@ -13,7 +14,7 @@ const faq: [string, string][] = [
   ['Why does the result mention a boundary?', 'Because every rule is a cut-off, and if one of your measurements sits within 2 cm of one, a tape pulled slightly differently would give another label. The note tells you which measurement to re-take.'],
 ];
 const jsonLd = [{ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) }];
-const rows = Object.values(MALE).map((m) => [m.name, m.def, '']);
+const rows = Object.values(MALE).map((m) => tableRow([m.name, m.def, '']));
 ---
 <BaseLayout langs={['en', 'zh']} title={title} description={description} jsonLd={jsonLd} lang="en" bleed>
   <section class="band dark tight"><div class="wrap prose"><span class="eyebrow">Free · Nothing uploaded · Rules in the open</span><h1>Men’s body type calculator</h1><p class="lead" style="margin-top:14px">Chest, waist and hips, three explicit cut-offs, and the same two extras as the women’s calculator: how far you are from the next type, and where your waist-to-hip ratio sits among 5,229 men measured in a national health survey.</p></div></section>

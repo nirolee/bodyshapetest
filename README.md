@@ -5,7 +5,7 @@ Body shape calculator built on the FFIT nine-shape rules (Simmons, Istook & Deva
 - Rules: `src/lib/body-shape.js` (tests in `tests/`), display names in `src/lib/shapes.js`
 - Percentiles: `src/data/whr_percentiles.json` (NHANES BMX_J + BMX_L, adults 18+, unweighted)
 - Pages: `src/content/guides/*.js` (each exports `{ path, en }`), tool pages under `src/pages/`
-- Build: `npm run build`; test: `npm test`
+- Type check: `npm run check`; build: `npm run build`; test: `npm test`
 
 Result-card content lives in `BodyCalculator.astro` (English/Traditional Chinese).
 The order is shape → existing stability sentence + gauge → definition/visuals →
@@ -75,3 +75,9 @@ and all five men's result-to-guide links. Synthetic screenshots and a JSON
 summary go to `./measurement-evidence` (override with `RESULT_ARTIFACTS`). Unit
 conversion preserves the original measurement precision until the user edits
 that field; changing units clears the old result and requires recalculation.
+
+## 本地类型检查
+
+`npm ci` 后运行 `npm run check`。开发依赖固定为 `@astrojs/check@0.9.9` 与 `typescript@5.9.3`，与本轮基线诊断工具一致。表格仍要求三列；动态内容通过 `tableRow` 校验后构成元组，缺列、多列或非文字数据会让构建失败。没有关闭 strictNullChecks 或增加 any。
+
+本轮浏览器回归沿用上面的两个 smoke 脚本；Windows 下外部模块使用 `file:///C:/.../index.mjs`，`CHROME_PATH` 使用本机现有 Chromium，产物目录用 `RESULT_ARTIFACTS` 指到当前工作目录，且全部外部请求会被拦截。

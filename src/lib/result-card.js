@@ -26,6 +26,14 @@ export function barsSvg(rows, unit = 'cm') {
 }
 
 /** 輪廓示意：上／中／下三段寬度按圍度比例。keys 依序 top(胸/肩)、waist、hips。 */
+/**
+ * @param {number} top
+ * @param {number} waist
+ * @param {number} hips
+ * @param {number | null} [highHip]
+ * @param {{top: string, waist: string, highHip: string, hips: string} | null} [labels]
+ * @returns {string}
+ */
 export function outlineSvg(top, waist, hips, highHip = null, labels = null) {
   const LB = labels || { top: 'top', waist: 'waist', highHip: 'high hip', hips: 'hips' };
   const max = Math.max(top, waist, hips, highHip || 0);
