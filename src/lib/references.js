@@ -30,8 +30,8 @@ export const REFS = {
     title: 'ANSUR II: 2012 Anthropometric Survey of U.S. Army Personnel — public working databases',
     venue: 'U.S. Army Natick Soldier RDEC / Penn State OPEN Design Lab', id: 'ANSUR II Female Public',
     url: 'https://www.openlab.psu.edu/ansur2/',
-    note: { en: 'Used only to test how sensitive the FFIT labels are to small measurement changes (median 2.4 cm to flip; 43.6% of women within 2 cm). Army personnel are not a general-population sample, so it is not used for percentiles.',
-           zh: '僅用於檢驗 FFIT 標籤對微小量測變化有多敏感（中位數改變 2.4 公分就會翻型；43.6% 的女性落在 2 公分以內）。軍方人員不是一般人口樣本，因此不用來算百分位。' },
+    note: { en: 'Public measurement data used for this site\'s own FFIT stability calculations, described in the methodology section. Those calculations are results produced by this site, not findings reported by Gordon et al. Army personnel are not a general-population sample, so these data are not used for percentiles.',
+           zh: '公開測量資料用於本網站自行進行的 FFIT 穩定性計算，計算方式與結果見方法論章節。這些是本站計算結果，並非 Gordon 等人研究直接報告的結論。軍方人員不是一般人口樣本，因此不用來算百分位。' },
   },
 };
 const MAP = {
