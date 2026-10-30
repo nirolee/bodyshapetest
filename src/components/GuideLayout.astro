@@ -9,6 +9,7 @@ import BodyCalculator from './BodyCalculator.astro';
 import RatioCalculator from './RatioCalculator.astro';
 import { UI, LOCALE, type Lang } from '../i18n';
 import References from './References.astro';
+import MeasurementWorksheet from './MeasurementWorksheet.astro';
 import { refsFor } from '../lib/references.js';
 
 export interface Props {
@@ -51,6 +52,7 @@ const jsonLd = [
   <section class="band">
     <div class="wrap prose">
       <slot />
+      {Astro.url.pathname.endsWith('/how-to-measure/') && <MeasurementWorksheet lang={lang} />}
     </div>
   </section>
 

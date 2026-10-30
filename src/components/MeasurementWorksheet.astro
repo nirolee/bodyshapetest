@@ -1,0 +1,71 @@
+---
+const { lang = 'en' } = Astro.props;
+const copy = lang === 'zh' ? {
+  heading: '先重測，再決定要不要相信標籤',
+  lead: '選同一個部位、同一種單位，各讀三次。這個小工具只整理讀數，不替你判斷測量位置是否正確。',
+  unit: '單位', reading: '第', suffix: '次讀數', calculate: '比較三次讀數', example: '載入虛構範例',
+  empty: '請填三個大於零、且使用相同單位的數字。', median: '中間值', range: '最大與最小相差',
+  remeasure: '跨度超過 1 cm。先檢查軟尺的高度、水平與鬆緊，再重測；不要只挑讓你喜歡的體型標籤出現的數字。',
+  stable: '這三次的跨度未超過 1 cm，依本站整理慣例可記中間值；不代表測量一定準確。',
+  boundary: '1 cm 是本站提示門檻，不是醫療標準。中間值能減少單次異常讀數的影響，但三次都量錯位置時仍會一起偏差。單位變更會清空讀數，避免把英寸當公分。',
+  privacy: '數值只在這個頁面計算，不儲存、不上傳；請把整理後的讀數自行記下。'
+} : {
+  heading: 'Remeasure before trusting the label',
+  lead: 'Take three readings of the same circumference in the same unit. This worksheet organizes readings; it cannot tell whether the tape is in the right place.',
+  unit: 'Unit', reading: 'Reading ', suffix: '', calculate: 'Compare three readings', example: 'Load a fictional example',
+  empty: 'Enter three positive numbers using the same unit.', median: 'Middle reading', range: 'Largest minus smallest',
+  remeasure: 'The spread exceeds 1 cm. Check tape height, level and tension, then remeasure. Do not choose a number just to obtain a preferred shape label.',
+  stable: 'The spread is at most 1 cm. You can record the middle value under this site’s convention; this does not establish measurement accuracy.',
+  boundary: 'The 1 cm alert is this site’s display convention, not a medical standard. A middle value reduces one unusual reading’s influence, but three readings taken in the wrong place can all be biased. Changing units clears the readings to prevent mixing inches and centimetres.',
+  privacy: 'Calculated on this page only: no saving or uploading. Record the reading yourself if you want to keep it.'
+};
+---
+<section class="worksheet" data-reading-worksheet data-lang={lang} data-copy={JSON.stringify(copy)}>
+  <h2>{copy.heading}</h2>
+  <p>{copy.lead}</p>
+  <div data-fields>
+    <label>{copy.unit}<select name="unit"><option value="cm">cm</option><option value="in">inches</option></select></label>
+    <div class="reading-grid">
+      {[1, 2, 3].map(number => <label>{copy.reading}{number}{copy.suffix}<input name={`reading-${number}`} type="number" min="0.01" step="any" required inputmode="decimal" /></label>)}
+    </div>
+    <div class="actions"><button class="btn" type="button" data-calculate>{copy.calculate}</button><button class="btn" type="button" data-example>{copy.example}</button></div>
+  </div>
+  <output aria-live="polite" hidden></output>
+  <p class="muted">{copy.boundary}</p>
+  <p class="muted">{copy.privacy}</p>
+</section>
+<script>
+  import { summarizeReadings } from '../lib/measurement-readings.js';
+  document.querySelectorAll<HTMLElement>('[data-reading-worksheet]').forEach(root => {
+    const copy = JSON.parse(root.dataset.copy!);
+    const fields = root.querySelector('[data-fields]')!;
+    const inputs = [...root.querySelectorAll<HTMLInputElement>('input')];
+    const unit = root.querySelector<HTMLSelectElement>('select')!;
+    const output = root.querySelector('output')!;
+    const calculate = () => {
+      const summary = summarizeReadings(inputs.map(input => input.value));
+      output.hidden = false;
+      if (!summary) { output.textContent = copy.empty; return; }
+      const display = (value: number) => value.toLocaleString(root.dataset.lang === 'zh' ? 'zh-TW' : 'en-US', { maximumFractionDigits: 3 });
+      const spreadCm = summary.range * (unit.value === 'in' ? 2.54 : 1);
+      output.textContent = `${copy.median}: ${display(summary.median)} ${unit.value}. ${copy.range}: ${display(summary.range)} ${unit.value}. ${spreadCm > 1 + 1e-9 ? copy.remeasure : copy.stable}`;
+    };
+    root.querySelector('[data-calculate]')!.addEventListener('click', calculate);
+    unit.addEventListener('change', () => { inputs.forEach(input => { input.value = ''; }); output.hidden = true; output.textContent = ''; });
+    fields.addEventListener('input', () => { output.hidden = true; output.textContent = ''; });
+    root.querySelector('[data-example]')!.addEventListener('click', () => {
+      unit.value = 'cm';
+      [69.8, 70, 71.5].forEach((value, index) => { inputs[index].value = String(value); });
+      calculate();
+    });
+  });
+</script>
+<style>
+  .worksheet { border: 1px solid var(--line, #7775); border-radius: 12px; padding: 22px; margin: 30px 0; }
+  .reading-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 16px 0; }
+  label { display: grid; gap: 6px; font-size: 14px; }
+  input, select { width: 100%; min-width: 0; padding: 10px; border: 1px solid #7778; border-radius: 6px; background: transparent; color: inherit; font: inherit; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  output:not([hidden]) { display: block; border-left: 3px solid #9f1239; padding: 12px; margin: 16px 0; }
+  @media (max-width: 450px) { .worksheet { padding: 14px; } .reading-grid { grid-template-columns: 1fr; } }
+</style>
